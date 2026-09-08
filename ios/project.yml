@@ -1,0 +1,72 @@
+# XcodeGen spec.
+#
+# The repository also contains a ready-made Briefly.xcodeproj, so you can just
+# open it. This file exists so the project can be regenerated deterministically
+# — useful after a merge, or if you want to change the bundle identifier and
+# team without hand-editing a pbxproj.
+#
+#   brew install xcodegen && xcodegen generate
+name: Briefly
+options:
+  bundleIdPrefix: com.briefly
+  deploymentTarget:
+    iOS: "17.0"
+  createIntermediateGroups: true
+  developmentLanguage: en
+
+settings:
+  base:
+    SWIFT_VERSION: "5.9"
+    MARKETING_VERSION: "1.0"
+    CURRENT_PROJECT_VERSION: "1"
+    ENABLE_USER_SCRIPT_SANDBOXING: YES
+    SWIFT_STRICT_CONCURRENCY: complete
+    # Public base URL of your Briefly backend. Leave empty to ship in sample
+    # mode. Never put a credential here — the app has no use for one.
+    BRIEFLY_API_BASE_URL: ""
+
+targets:
+  Briefly:
+    type: application
+    platform: iOS
+    sources:
+      - path: Briefly
+    resources:
+      - path: Briefly/Resources
+    info:
+      path: Briefly/Resources/Info.plist
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.briefly.app
+        PRODUCT_NAME: Briefly
+        INFOPLIST_FILE: Briefly/Resources/Info.plist
+        ASSETCATALOG_COMPILER_APPICON_NAME: AppIcon
+        ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME: AccentColor
+        TARGETED_DEVICE_FAMILY: "1"
+        SUPPORTS_MACCATALYST: NO
+        GENERATE_INFOPLIST_FILE: NO
+
+  BrieflyTests:
+    type: bundle.unit-test
+    platform: iOS
+    sources:
+      - path: BrieflyTests
+    dependencies:
+      - target: Briefly
+    settings:
+      base:
+        PRODUCT_BUNDLE_IDENTIFIER: com.briefly.app.tests
+        GENERATE_INFOPLIST_FILE: YES
+
+schemes:
+  Briefly:
+    build:
+      targets:
+        Briefly: all
+    run:
+      config: Debug
+    test:
+      config: Debug
+      gatherCoverageData: true
+      targets:
+        - BrieflyTests

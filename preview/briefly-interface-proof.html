@@ -1,0 +1,1289 @@
+<title>Briefly Interface Proof</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Newsreader:opsz,wght@6..72,400;6..72,600;6..72,700&family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans:wght@400;450;500;600&display=swap">
+
+<style>
+/* ============================================================================
+   Page chrome — a proof sheet. Neutrals carry a green bias taken from the
+   app's own accent, so the warm paper of the phone screens reads as the
+   subject and everything around it stays quiet.
+   ========================================================================== */
+:root {
+  --ground:        #E9EBE7;
+  --panel:         #F4F5F1;
+  --panel-edge:    #D4D9D4;
+  --chrome-ink:    #232A27;
+  --chrome-muted:  #5F6C66;
+  --chrome-faint:  #8A968F;
+  --pine:          #0F5C4E;
+  --rule:          #CDD4CE;
+
+  --font-display: "Newsreader", Georgia, "Times New Roman", serif;
+  --font-ui: "IBM Plex Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  --font-mono: "IBM Plex Mono", ui-monospace, "SF Mono", Menlo, monospace;
+
+  --measure: 62ch;
+  --gutter: clamp(20px, 5vw, 64px);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --ground:       #141A18;
+    --panel:        #1C2422;
+    --panel-edge:   #2C3735;
+    --chrome-ink:   #DDE4E0;
+    --chrome-muted: #97A39D;
+    --chrome-faint: #6E7B75;
+    --pine:         #53D2B6;
+    --rule:         #2C3735;
+  }
+}
+
+:root[data-theme="dark"] {
+  --ground:       #141A18;
+  --panel:        #1C2422;
+  --panel-edge:   #2C3735;
+  --chrome-ink:   #DDE4E0;
+  --chrome-muted: #97A39D;
+  --chrome-faint: #6E7B75;
+  --pine:         #53D2B6;
+  --rule:         #2C3735;
+}
+
+/* ----------------------------------------------------------------------------
+   The app's own palette. Deliberately independent of the page theme: which
+   appearance the phone is showing is content here, not a viewer preference.
+   -------------------------------------------------------------------------- */
+.device {
+  --app-paper:     #FAF9F6;
+  --app-surface:   #FFFFFF;
+  --app-ink:       #17171A;
+  --app-muted:     #66666D;
+  --app-faint:     #8E8E95;
+  --app-rule:      #E3E1DA;
+  --app-accent:    #0F5C4E;
+  --app-confirmed: #1F6F3C;
+  --app-disputed:  #9A3412;
+  --app-reported:  #8A6A12;
+  --app-official:  #1F4E79;
+  --app-chrome:    rgba(250, 249, 246, 0.82);
+}
+
+.device[data-appearance="dark"] {
+  --app-paper:     #0C0C0E;
+  --app-surface:   #16161A;
+  --app-ink:       #F5F4F0;
+  --app-muted:     #9C9CA4;
+  --app-faint:     #6E6E76;
+  --app-rule:      #2A2A31;
+  --app-accent:    #53D2B6;
+  --app-confirmed: #6BD08A;
+  --app-disputed:  #F0925E;
+  --app-reported:  #E0BA5A;
+  --app-official:  #76B4E8;
+  --app-chrome:    rgba(12, 12, 14, 0.82);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: var(--ground);
+  color: var(--chrome-ink);
+  font-family: var(--font-ui);
+  font-size: 16px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+.wrap {
+  max-width: 1240px;
+  margin: 0 auto;
+  padding: clamp(28px, 6vw, 72px) var(--gutter) 96px;
+}
+
+/* --- shared type -------------------------------------------------------- */
+.eyebrow {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--chrome-faint);
+  margin: 0;
+}
+
+h1, h2, h3 { text-wrap: balance; margin: 0; }
+
+h2 {
+  font-family: var(--font-display);
+  font-size: clamp(24px, 3vw, 32px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.15;
+}
+
+p { margin: 0; max-width: var(--measure); }
+
+a { color: var(--pine); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+a:focus-visible, button:focus-visible {
+  outline: 2px solid var(--pine);
+  outline-offset: 3px;
+  border-radius: 3px;
+}
+
+/* --- masthead ----------------------------------------------------------- */
+.masthead {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+  padding-bottom: 30px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.wordmark {
+  font-family: var(--font-display);
+  font-size: clamp(46px, 8vw, 78px);
+  font-weight: 600;
+  letter-spacing: -0.035em;
+  line-height: 0.95;
+  margin: 0;
+}
+.wordmark .stop { color: var(--pine); }
+
+.masthead-row {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px 40px;
+  align-items: baseline;
+  justify-content: space-between;
+}
+
+.lede {
+  font-family: var(--font-display);
+  font-size: clamp(18px, 2.1vw, 21px);
+  line-height: 1.45;
+  color: var(--chrome-muted);
+  max-width: 46ch;
+}
+
+/* A proof sheet is marked up in the margin — so the spec facts are set as a
+   monospace key/value block, not as decorative stat cards. */
+.spec {
+  display: grid;
+  grid-template-columns: auto auto;
+  gap: 3px 18px;
+  font-family: var(--font-mono);
+  font-size: 11.5px;
+  letter-spacing: 0.02em;
+  align-content: start;
+}
+.spec dt { color: var(--chrome-faint); text-transform: uppercase; letter-spacing: 0.1em; }
+.spec dd { margin: 0; color: var(--chrome-ink); font-variant-numeric: tabular-nums; }
+
+.disclaimer {
+  display: flex;
+  gap: 12px;
+  align-items: flex-start;
+  padding: 14px 16px;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-left: 3px solid var(--pine);
+  border-radius: 3px;
+  font-size: 14px;
+  line-height: 1.55;
+  color: var(--chrome-muted);
+  max-width: 78ch;
+}
+.disclaimer strong { color: var(--chrome-ink); font-weight: 600; }
+
+/* --- sections ----------------------------------------------------------- */
+section { margin-top: clamp(52px, 8vw, 86px); }
+
+.section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 8px 20px;
+  margin-bottom: 26px;
+}
+.section-head p { color: var(--chrome-muted); font-size: 15px; }
+
+/* --- the interactive stage ---------------------------------------------- */
+.stage {
+  display: grid;
+  grid-template-columns: minmax(0, 320px) minmax(0, 1fr);
+  gap: clamp(28px, 5vw, 60px);
+  align-items: start;
+}
+@media (max-width: 860px) {
+  .stage { grid-template-columns: minmax(0, 1fr); }
+}
+
+.stage-controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 18px;
+}
+
+.ctl {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  padding: 7px 12px;
+  border-radius: 3px;
+  border: 1px solid var(--panel-edge);
+  background: var(--panel);
+  color: var(--chrome-muted);
+  cursor: pointer;
+  transition: color .15s, border-color .15s;
+}
+.ctl:hover { color: var(--chrome-ink); border-color: var(--chrome-faint); }
+.ctl[aria-pressed="true"] {
+  color: var(--ground);
+  background: var(--pine);
+  border-color: var(--pine);
+}
+
+/* --- the device --------------------------------------------------------- */
+.device {
+  width: 100%;
+  max-width: 320px;
+  aspect-ratio: 320 / 660;
+  border-radius: 42px;
+  padding: 11px;
+  background: linear-gradient(155deg, #3A423F, #171C1A 55%, #2B322F);
+  box-shadow: 0 26px 60px -28px rgba(0, 0, 0, .62), 0 2px 6px rgba(0, 0, 0, .28);
+  position: relative;
+  flex: none;
+}
+
+.device-screen {
+  position: relative;
+  height: 100%;
+  border-radius: 32px;
+  overflow: hidden;
+  background: var(--app-paper);
+  color: var(--app-ink);
+  display: flex;
+  flex-direction: column;
+  isolation: isolate;
+}
+
+/* status + nav bar */
+.app-status {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 9px 20px 2px;
+  font-family: var(--font-ui);
+  font-size: 11px;
+  font-weight: 600;
+  color: var(--app-ink);
+  font-variant-numeric: tabular-nums;
+}
+.app-status .signal { display: flex; gap: 3px; align-items: center; opacity: .8; }
+.app-status .bar { width: 3px; background: currentColor; border-radius: 1px; }
+
+.app-nav {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 6px 16px 9px;
+  border-bottom: 1px solid var(--app-rule);
+  background: var(--app-chrome);
+  backdrop-filter: blur(8px);
+}
+.app-nav .mark {
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 600;
+  letter-spacing: -0.02em;
+}
+.app-nav .mark .stop { color: var(--app-accent); }
+
+/* the card stack */
+.stack {
+  flex: 1;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+}
+.stack::-webkit-scrollbar { display: none; }
+
+.card {
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  padding: 15px 20px 16px;
+}
+
+.card-slug {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 10px;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+}
+.card-slug .cat { color: var(--app-accent); }
+.card-slug .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--app-faint); }
+.card-slug .when { color: var(--app-muted); }
+
+.chip {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 3px 7px;
+  border-radius: 6px;
+  font-size: 9.5px;
+  letter-spacing: 0.06em;
+  white-space: nowrap;
+}
+.chip.confirmed { color: var(--app-confirmed); background: color-mix(in srgb, var(--app-confirmed) 13%, transparent); }
+.chip.reported  { color: var(--app-reported);  background: color-mix(in srgb, var(--app-reported) 13%, transparent); }
+.chip.disputed  { color: var(--app-disputed);  background: color-mix(in srgb, var(--app-disputed) 13%, transparent); }
+
+.card hr {
+  border: 0;
+  border-top: 1px solid var(--app-rule);
+  margin: 11px 0 14px;
+  width: 100%;
+}
+
+.card-headline {
+  font-family: var(--font-display);
+  font-size: 26px;
+  line-height: 1.13;
+  font-weight: 600;
+  letter-spacing: -0.015em;
+  margin: 0 0 13px;
+}
+.card.long .card-headline { font-size: 23px; }
+
+.card-summary {
+  font-size: 14.5px;
+  line-height: 1.5;
+  color: color-mix(in srgb, var(--app-ink) 88%, transparent);
+  margin: 0;
+}
+
+.card-dispute {
+  display: flex;
+  gap: 6px;
+  align-items: flex-start;
+  margin-top: 10px;
+  font-size: 12px;
+  color: var(--app-disputed);
+}
+
+.card-foot { margin-top: auto; padding-top: 14px; }
+.card-foot hr { margin: 0 0 12px; }
+
+.sources-btn {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: none;
+  border: 0;
+  padding: 0;
+  text-align: left;
+  color: inherit;
+  font: inherit;
+  cursor: pointer;
+}
+.sources-btn .count {
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+.sources-btn .names {
+  font-size: 11.5px;
+  color: var(--app-muted);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 205px;
+}
+.pips { display: flex; gap: 2px; margin-left: auto; }
+.pips i { width: 10px; height: 3px; border-radius: 2px; background: var(--app-rule); }
+.pips i.on { background: var(--app-accent); }
+.chev { color: var(--app-faint); font-size: 11px; }
+
+.card-actions {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-top: 13px;
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--app-muted);
+}
+.card-actions .swipe { margin-left: auto; color: var(--app-faint); }
+
+/* tab bar */
+.app-tabs {
+  display: flex;
+  border-top: 1px solid var(--app-rule);
+  background: var(--app-chrome);
+  backdrop-filter: blur(8px);
+  padding: 7px 4px 11px;
+}
+.app-tabs div {
+  flex: 1;
+  text-align: center;
+  font-size: 8.5px;
+  letter-spacing: 0.02em;
+  color: var(--app-faint);
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  align-items: center;
+}
+.app-tabs div.on { color: var(--app-accent); }
+.app-tabs .glyph { font-size: 15px; line-height: 1; }
+
+/* the sources sheet */
+.sheet {
+  position: absolute;
+  inset: 34px 0 0;
+  z-index: 3;
+  background: var(--app-paper);
+  border-radius: 22px 22px 0 0;
+  border-top: 1px solid var(--app-rule);
+  box-shadow: 0 -12px 40px -18px rgba(0, 0, 0, .5);
+  display: flex;
+  flex-direction: column;
+  transform: translateY(101%);
+  transition: transform .34s cubic-bezier(.32, .72, 0, 1);
+}
+.device.sheet-open .sheet { transform: translateY(0); }
+@media (prefers-reduced-motion: reduce) { .sheet { transition: none; } }
+
+.sheet-grip {
+  width: 34px; height: 4px; border-radius: 2px;
+  background: var(--app-rule);
+  margin: 8px auto 0;
+  flex: none;
+}
+.sheet-head {
+  display: flex; align-items: center; justify-content: space-between;
+  padding: 9px 20px 10px;
+  border-bottom: 1px solid var(--app-rule);
+  flex: none;
+}
+.sheet-head strong { font-size: 13px; font-weight: 600; }
+.sheet-close {
+  background: none; border: 0; padding: 0; cursor: pointer;
+  color: var(--app-accent); font: inherit; font-size: 12.5px; font-weight: 500;
+}
+.sheet-body { overflow-y: auto; padding: 15px 20px 22px; scrollbar-width: thin; }
+
+.sheet-title {
+  font-family: var(--font-display);
+  font-size: 17px; font-weight: 600; line-height: 1.2; margin: 0 0 9px;
+}
+.sheet-note { font-size: 11.5px; color: var(--app-muted); line-height: 1.45; }
+
+.diversity {
+  margin: 15px 0;
+  padding: 13px;
+  border: 1px solid var(--app-rule);
+  border-radius: 12px;
+  background: var(--app-surface);
+}
+.diversity-top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--app-muted);
+}
+.diversity-top b { color: var(--app-accent); }
+.diversity-bars { display: flex; gap: 3px; margin: 8px 0 9px; }
+.diversity-bars i { flex: 1; height: 4px; border-radius: 2px; background: var(--app-rule); }
+.diversity-bars i.on { background: var(--app-accent); }
+.diversity ul { margin: 0; padding: 0; list-style: none; font-size: 11.5px; color: var(--app-muted); }
+.diversity .caveat {
+  margin-top: 8px; font-size: 10px; line-height: 1.4;
+  color: var(--app-faint);
+}
+
+.slabel {
+  font-size: 9.5px; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--app-muted); margin: 18px 0 8px;
+}
+.src { padding: 11px 0; border-bottom: 1px solid var(--app-rule); }
+.src:last-child { border-bottom: 0; }
+.src-top { display: flex; align-items: center; gap: 7px; }
+.src-name { font-size: 12.5px; font-weight: 600; }
+.src-tag {
+  font-size: 8.5px; letter-spacing: 0.06em; text-transform: uppercase;
+  padding: 2px 5px; border-radius: 4px;
+  color: var(--app-official);
+  background: color-mix(in srgb, var(--app-official) 13%, transparent);
+}
+.src-arrow { margin-left: auto; color: var(--app-accent); font-size: 11px; }
+.src-head { font-size: 11.5px; color: var(--app-muted); line-height: 1.4; margin: 3px 0 0; }
+.src-meta { font-size: 10px; color: var(--app-faint); margin-top: 3px; }
+
+.disputed-block {
+  margin-top: 16px; padding: 12px; border-radius: 12px;
+  background: color-mix(in srgb, var(--app-disputed) 11%, transparent);
+}
+.disputed-block .who {
+  font-size: 10px; font-weight: 600; letter-spacing: 0.05em;
+  color: var(--app-disputed); text-transform: uppercase;
+}
+.disputed-block p { font-size: 12px; margin: 4px 0 0; line-height: 1.45; }
+
+/* --- margin annotations ------------------------------------------------- */
+.notes { display: flex; flex-direction: column; gap: 2px; }
+
+.note {
+  display: grid;
+  grid-template-columns: 132px minmax(0, 1fr);
+  gap: 6px 18px;
+  padding: 15px 0;
+  border-bottom: 1px solid var(--rule);
+  align-items: baseline;
+}
+.note:first-child { border-top: 1px solid var(--rule); }
+@media (max-width: 560px) { .note { grid-template-columns: minmax(0, 1fr); } }
+
+.note-ref {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--pine);
+}
+.note-body { font-size: 14.5px; line-height: 1.55; color: var(--chrome-muted); }
+.note-body b { color: var(--chrome-ink); font-weight: 600; }
+
+/* --- contact sheet ------------------------------------------------------ */
+.sheet-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: clamp(20px, 3vw, 34px);
+  align-items: start;
+}
+
+.plate { display: flex; flex-direction: column; gap: 12px; align-items: center; }
+.plate .device { max-width: 262px; }
+.plate .card-headline { font-size: 21px; }
+.plate .card-summary { font-size: 13px; }
+.plate figcaption {
+  font-family: var(--font-mono);
+  font-size: 10.5px;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--chrome-faint);
+  text-align: center;
+}
+.plate figcaption b { display: block; color: var(--chrome-ink); font-weight: 500; margin-bottom: 3px; }
+
+/* the podcast plate */
+.player { padding: 16px 20px; display: flex; flex-direction: column; height: 100%; }
+.player-kicker {
+  font-size: 9.5px; letter-spacing: 0.12em; text-transform: uppercase; color: var(--app-muted);
+}
+.player h4 {
+  font-family: var(--font-display); font-size: 19px; font-weight: 600;
+  line-height: 1.15; margin: 8px 0 5px;
+}
+.player .sub { font-size: 11.5px; color: var(--app-muted); }
+.scrub { margin-top: 20px; }
+.scrub .track { height: 3px; border-radius: 2px; background: var(--app-rule); position: relative; }
+.scrub .track i { position: absolute; inset: 0 62% 0 0; background: var(--app-accent); border-radius: 2px; }
+.scrub .track b {
+  position: absolute; left: 38%; top: 50%; width: 11px; height: 11px;
+  border-radius: 50%; background: var(--app-accent); transform: translate(-50%, -50%);
+}
+.scrub .times {
+  display: flex; justify-content: space-between; margin-top: 7px;
+  font-family: var(--font-mono); font-size: 10px; color: var(--app-muted);
+  font-variant-numeric: tabular-nums;
+}
+.transport { display: flex; align-items: center; justify-content: center; gap: 26px; margin: 20px 0 6px; }
+.transport .side { font-size: 17px; color: var(--app-ink); }
+.transport .play {
+  width: 52px; height: 52px; border-radius: 50%;
+  background: var(--app-accent); color: var(--app-paper);
+  display: grid; place-items: center; font-size: 17px;
+}
+.chapters { margin-top: 14px; border-top: 1px solid var(--app-rule); }
+.chapter {
+  display: flex; gap: 12px; padding: 9px 0;
+  border-bottom: 1px solid var(--app-rule); font-size: 11.5px;
+}
+.chapter:last-child { border-bottom: 0; }
+.chapter time {
+  font-family: var(--font-mono); color: var(--app-faint); flex: none; width: 34px;
+  font-variant-numeric: tabular-nums;
+}
+.chapter.on span { color: var(--app-accent); }
+
+/* --- closing ------------------------------------------------------------ */
+.two-col {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: clamp(22px, 3vw, 40px);
+}
+.block {
+  padding: 22px;
+  background: var(--panel);
+  border: 1px solid var(--panel-edge);
+  border-radius: 4px;
+}
+.block h3 {
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--chrome-faint);
+  margin-bottom: 12px;
+}
+.block ul { margin: 0; padding-left: 18px; color: var(--chrome-muted); font-size: 14.5px; line-height: 1.6; }
+.block li { margin-bottom: 7px; }
+.block li:last-child { margin-bottom: 0; }
+.block li b { color: var(--chrome-ink); font-weight: 600; }
+
+footer {
+  margin-top: 60px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule);
+  font-family: var(--font-mono);
+  font-size: 11px;
+  letter-spacing: 0.05em;
+  color: var(--chrome-faint);
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px 24px;
+  justify-content: space-between;
+}
+</style>
+
+<div class="wrap">
+
+  <header class="masthead">
+    <p class="eyebrow">Interface proof · iPhone · SwiftUI</p>
+    <h1 class="wordmark">Briefly<span class="stop">.</span></h1>
+    <div class="masthead-row">
+      <p class="lede">
+        One story at a time. A neutral headline, thirty words at most, and every
+        publisher that reported it — one tap away.
+      </p>
+      <dl class="spec">
+        <dt>Platform</dt><dd>iOS 17+, SwiftUI</dd>
+        <dt>Summary cap</dt><dd>30 words, enforced in code and in Postgres</dd>
+        <dt>Themes</dt><dd>Light and dark</dd>
+        <dt>Typeface</dt><dd>Serif headline, system sans body</dd>
+      </dl>
+    </div>
+    <p class="disclaimer">
+      <span aria-hidden="true">◆</span>
+      <span><strong>This is a rendering of the layout, not the compiled app.</strong>
+      The text, source lists and figures below are read from the same JSON the app
+      bundles. Every outlet, person, place and number in it is invented for testing —
+      no real event is described and no real publisher reported any of it.</span>
+    </p>
+  </header>
+
+  <!-- ===================================================================== -->
+  <section>
+    <div class="section-head">
+      <h2>The stack</h2>
+      <p>Swipe up for the next story, down for the previous. Tap the source count.</p>
+    </div>
+
+    <div class="stage">
+      <div>
+        <div class="stage-controls">
+          <button class="ctl" id="appearance-toggle" aria-pressed="false">Dark appearance</button>
+          <button class="ctl" id="next-story">Next story ↓</button>
+        </div>
+
+        <div class="device" id="device" data-appearance="light">
+          <div class="device-screen">
+
+            <div class="app-status">
+              <span>9:41</span>
+              <span class="signal" aria-hidden="true">
+                <span class="bar" style="height:5px"></span>
+                <span class="bar" style="height:7px"></span>
+                <span class="bar" style="height:9px"></span>
+                <span class="bar" style="height:11px"></span>
+              </span>
+            </div>
+
+            <div class="app-nav">
+              <span class="mark">Briefly<span class="stop">.</span></span>
+            </div>
+
+            <div class="stack" id="stack" tabindex="0" role="region"
+                 aria-label="Story cards. Scroll or use the arrow keys.">
+              <!-- cards injected -->
+            </div>
+
+            <div class="app-tabs" aria-hidden="true">
+              <div class="on"><span class="glyph">✦</span>For You</div>
+              <div><span class="glyph">▦</span>Sections</div>
+              <div><span class="glyph">≋</span>Podcast</div>
+              <div><span class="glyph">⌘</span>Saved</div>
+              <div><span class="glyph">⚙</span>Settings</div>
+            </div>
+
+            <div class="sheet" id="sheet" role="dialog" aria-modal="false" aria-label="Sources">
+              <div class="sheet-grip" aria-hidden="true"></div>
+              <div class="sheet-head">
+                <strong>Sources</strong>
+                <button class="sheet-close" id="sheet-close">Done</button>
+              </div>
+              <div class="sheet-body" id="sheet-body"></div>
+            </div>
+
+          </div>
+        </div>
+      </div>
+
+      <div class="notes">
+        <div class="note">
+          <span class="note-ref">≤ 30 words</span>
+          <span class="note-body">The summary is assembled from ranked clauses by a
+          word budget, then refused by a database constraint if it is still over.
+          The counter runs live on the card you are looking at:
+          <b id="live-count">—</b>.</span>
+        </div>
+        <div class="note">
+          <span class="note-ref">Confidence</span>
+          <span class="note-body"><b>Confirmed</b> means several independent outlets, or
+          an official source, state it directly. <b>Reported</b> means one account, not
+          yet corroborated. <b>Disputed</b> means sources contradict each other — and
+          the card says so on its face rather than averaging them.</span>
+        </div>
+        <div class="note">
+          <span class="note-ref">Source count</span>
+          <span class="note-body">Ten reports of one event become one story with ten
+          sources, not ten near-identical cards. The clustering behind this is the
+          single hardest part of the backend.</span>
+        </div>
+        <div class="note">
+          <span class="note-ref">Diversity</span>
+          <span class="note-body">Three bars counting <em>where reporting came from</em> —
+          how many independent newsrooms, how many kinds of outlet, how many countries.
+          Not a bias score, and the caveat travels with the data so the number cannot be
+          shown without it.</span>
+        </div>
+        <div class="note">
+          <span class="note-ref">No imagery</span>
+          <span class="note-body">Briefly has no licence to a publisher's photography, so
+          the card is type only. It loads instantly and holds up at every Dynamic Type
+          size — a constraint that turned into the identity.</span>
+        </div>
+        <div class="note">
+          <span class="note-ref">Serif / sans</span>
+          <span class="note-body">A serif headline against a sans body is what makes a
+          card read as an edited page rather than a feed item.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <section>
+    <div class="section-head">
+      <h2>Other states</h2>
+      <p>The same components under the conditions that actually occur.</p>
+    </div>
+
+    <div class="sheet-grid">
+
+      <figure class="plate" style="margin:0">
+        <div class="device" data-appearance="dark">
+          <div class="device-screen">
+            <div class="app-status"><span>9:41</span>
+              <span class="signal" aria-hidden="true">
+                <span class="bar" style="height:5px"></span>
+                <span class="bar" style="height:7px"></span>
+                <span class="bar" style="height:9px"></span>
+                <span class="bar" style="height:11px"></span>
+              </span>
+            </div>
+            <div class="app-nav"><span class="mark">Briefly<span class="stop">.</span></span></div>
+            <div class="stack" style="overflow:hidden">
+              <article class="card">
+                <div class="card-slug">
+                  <span class="cat">Business</span>
+                  <span class="dot"></span>
+                  <span class="when">3 hours ago</span>
+                  <span class="chip disputed">Disputed</span>
+                </div>
+                <hr>
+                <h3 class="card-headline">Trade pact talks with Verland resume after eight months</h3>
+                <p class="card-summary">Tariff lines covering 4,200 products are under
+                  discussion, the commerce ministry said in Geneva.</p>
+                <div class="card-dispute">
+                  <span aria-hidden="true">◈</span>
+                  <span>Sources disagree on part of this story.</span>
+                </div>
+                <div class="card-foot">
+                  <hr>
+                  <div class="sources-btn" role="presentation">
+                    <div>
+                      <div class="count">3 sources</div>
+                      <div class="names">Continental Review, The Verland Times…</div>
+                    </div>
+                    <span class="pips"><i class="on"></i><i class="on"></i><i></i></span>
+                    <span class="chev">›</span>
+                  </div>
+                  <div class="card-actions">
+                    <span>⌘ Save</span><span>↥ Share</span>
+                    <span class="swipe">^ Swipe</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="app-tabs" aria-hidden="true">
+              <div class="on"><span class="glyph">✦</span>For You</div>
+              <div><span class="glyph">▦</span>Sections</div>
+              <div><span class="glyph">≋</span>Podcast</div>
+              <div><span class="glyph">⌘</span>Saved</div>
+              <div><span class="glyph">⚙</span>Settings</div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Dark appearance · contested story</b>
+          Disagreement is stated on the card, not hidden in the sheet</figcaption>
+      </figure>
+
+      <figure class="plate" style="margin:0">
+        <div class="device" data-appearance="light">
+          <div class="device-screen">
+            <div class="app-status"><span>9:41</span>
+              <span class="signal" aria-hidden="true">
+                <span class="bar" style="height:5px"></span>
+                <span class="bar" style="height:7px"></span>
+                <span class="bar" style="height:9px"></span>
+                <span class="bar" style="height:11px"></span>
+              </span>
+            </div>
+            <div class="app-nav"><span class="mark">Briefly<span class="stop">.</span></span></div>
+            <div class="stack" style="overflow:hidden">
+              <article class="card">
+                <div class="card-slug">
+                  <span class="cat">India</span>
+                  <span class="dot"></span>
+                  <span class="when">18 minutes ago</span>
+                  <span class="chip reported">Reported</span>
+                </div>
+                <hr>
+                <h3 class="card-headline">City council approves new bus corridor along the eastern ring road</h3>
+                <p class="card-summary">Work is expected to begin in November, an
+                  official said, 14 km bus corridor.</p>
+                <div class="card-foot">
+                  <hr>
+                  <div class="sources-btn" role="presentation">
+                    <div>
+                      <div class="count">1 source</div>
+                      <div class="names">The Kalpore Herald</div>
+                    </div>
+                    <span class="pips"><i class="on"></i><i></i><i></i></span>
+                    <span class="chev">›</span>
+                  </div>
+                  <div class="card-actions">
+                    <span>⌘ Save</span><span>↥ Share</span>
+                    <span class="swipe">^ Swipe</span>
+                  </div>
+                </div>
+              </article>
+            </div>
+            <div class="app-tabs" aria-hidden="true">
+              <div class="on"><span class="glyph">✦</span>For You</div>
+              <div><span class="glyph">▦</span>Sections</div>
+              <div><span class="glyph">≋</span>Podcast</div>
+              <div><span class="glyph">⌘</span>Saved</div>
+              <div><span class="glyph">⚙</span>Settings</div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Single source · low diversity</b>
+          One account, marked as one account, and ranked accordingly</figcaption>
+      </figure>
+
+      <figure class="plate" style="margin:0">
+        <div class="device" data-appearance="light">
+          <div class="device-screen">
+            <div class="app-status"><span>9:41</span>
+              <span class="signal" aria-hidden="true">
+                <span class="bar" style="height:5px"></span>
+                <span class="bar" style="height:7px"></span>
+                <span class="bar" style="height:9px"></span>
+                <span class="bar" style="height:11px"></span>
+              </span>
+            </div>
+            <div class="app-nav"><span class="mark">Briefly<span class="stop">.</span></span></div>
+            <div class="player">
+              <span class="player-kicker">Briefly Daily</span>
+              <h4>Briefly Daily — 6 September</h4>
+              <span class="sub">6 stories, with their sources named.</span>
+              <div class="scrub">
+                <div class="track"><i></i><b></b></div>
+                <div class="times"><span>1:24</span><span>−2:16</span></div>
+              </div>
+              <div class="transport">
+                <span class="side" aria-hidden="true">↺15</span>
+                <span class="play" aria-hidden="true">❙❙</span>
+                <span class="side" aria-hidden="true">30↻</span>
+              </div>
+              <div class="chapters">
+                <div class="chapter"><time>0:18</time><span>1. Cyclone Verath makes landfall</span></div>
+                <div class="chapter on"><time>0:52</time><span>2. Benchmark rate unchanged</span></div>
+                <div class="chapter"><time>1:26</time><span>3. Uncrewed test flight set</span></div>
+                <div class="chapter"><time>2:04</time><span>4. Trade pact talks resume</span></div>
+              </div>
+            </div>
+            <div class="app-tabs" aria-hidden="true">
+              <div><span class="glyph">✦</span>For You</div>
+              <div><span class="glyph">▦</span>Sections</div>
+              <div class="on"><span class="glyph">≋</span>Podcast</div>
+              <div><span class="glyph">⌘</span>Saved</div>
+              <div><span class="glyph">⚙</span>Settings</div>
+            </div>
+          </div>
+        </div>
+        <figcaption><b>Briefly Daily</b>
+          Narrated from the same facts as the cards — chapters map back to stories</figcaption>
+      </figure>
+
+    </div>
+  </section>
+
+  <!-- ===================================================================== -->
+  <section>
+    <div class="section-head">
+      <h2>What this proof does and does not show</h2>
+    </div>
+    <div class="two-col">
+      <div class="block">
+        <h3>Real</h3>
+        <ul>
+          <li>The <b>layout, palette, type scale and copy</b> are the ones in the SwiftUI source.</li>
+          <li>The <b>story content</b> is read from the JSON the app bundles, produced by the real backend pipeline — clustered, fact-extracted and word-budgeted.</li>
+          <li>The <b>word counts</b> are computed here, live, by the same rule the backend applies.</li>
+          <li>Every <b>source list, diversity breakdown and confidence level</b> is what the pipeline actually assigned.</li>
+        </ul>
+      </div>
+      <div class="block">
+        <h3>Not real</h3>
+        <ul>
+          <li>This is <b>HTML, not the compiled app</b>. Gesture physics, momentum, Dynamic Type and VoiceOver behave differently on device.</li>
+          <li>The <b>events, outlets, people, places and figures are invented</b> for testing. Ordelia and Verland are not countries; Cyclone Verath did not happen.</li>
+          <li>Audio is <b>not</b> playing here. The real app ships two generated episodes and plays them offline.</li>
+        </ul>
+      </div>
+    </div>
+  </section>
+
+  <footer>
+    <span>Briefly — interface proof</span>
+    <span>Maximum transparency. Minimum editorial distortion.</span>
+  </footer>
+</div>
+
+<script>
+"use strict";
+
+/* Story data, lifted from the app's bundled snapshot. Outlet names have been
+   replaced with invented ones: the fixtures use real mastheads as routing
+   labels, and attributing invented headlines to real publishers on a public
+   page would be exactly the thing this app exists not to do. */
+const STORIES = [
+  {
+    category: "Business", when: "2 hours ago", confidence: "confirmed",
+    headline: "Benchmark rate unchanged at 6.25 per cent, committee splits five to one",
+    summary: "Benchmark rate remains at 6.25 per cent, the monetary committee said, on Friday.",
+    diversity: { level: "high", rank: 3, lines: ["4 Ordelian sources", "1 international source", "1 official source"] },
+    sources: [
+      { name: "Ordelia State Press Office", kind: "Official source", primary: true,
+        headline: "Monetary committee announces rate decision", time: "08:05" },
+      { name: "Continental Review", kind: "International", primary: false,
+        headline: "Ordelia keeps rates on hold as inflation slows", time: "07:50" },
+      { name: "The Ledger", kind: "National", primary: false,
+        headline: "Benchmark rate unchanged at 6.25 per cent, committee splits five to one", time: "08:20" },
+      { name: "Meridian Post", kind: "National", primary: false,
+        headline: "Rate held at 6.25 per cent as inflation eases", time: "08:35" },
+      { name: "Ordelia Daily", kind: "National", primary: false,
+        headline: "Central bank holds benchmark rate at 6.25 per cent", time: "09:00" }
+    ],
+    disputed: null
+  },
+  {
+    category: "India", when: "4 hours ago", confidence: "confirmed",
+    headline: "Cyclone Verath makes landfall near Kalpore, 40,000 evacuated",
+    summary: "Wind speeds reached 110 kmph, the state disaster authority said, 40,000 evacuated as Cyclone Verath, on Friday; power supply was disrupted in coastal areas.",
+    diversity: { level: "medium", rank: 2, lines: ["3 Ordelian sources", "1 regional source"] },
+    sources: [
+      { name: "The Kalpore Herald", kind: "Regional", primary: false,
+        headline: "40,000 evacuated as Cyclone Verath makes landfall", time: "08:10" },
+      { name: "Ordelia Daily", kind: "National", primary: false,
+        headline: "Cyclone Verath crosses coast, relief camps opened in three districts", time: "08:25" },
+      { name: "Coastal Wire", kind: "Wire service", primary: false,
+        headline: "Verath hits Kalpore coast; 40,000 moved to camps", time: "08:40" },
+      { name: "Meridian Post", kind: "National", primary: false,
+        headline: "Cyclone Verath makes landfall near Kalpore, 40,000 evacuated", time: "08:55" }
+    ],
+    disputed: null
+  },
+  {
+    category: "Science", when: "5 hours ago", confidence: "confirmed",
+    headline: "Uncrewed crew-capsule test flight set for 12 December",
+    summary: "Uncrewed test flight of its crew capsule will lift off, the national space agency said, on 12 December.",
+    diversity: { level: "medium", rank: 2, lines: ["2 Ordelian sources", "1 international source"] },
+    sources: [
+      { name: "Continental Review", kind: "International", primary: false,
+        headline: "Test flight for new crew capsule scheduled for December", time: "07:25" },
+      { name: "Meridian Post", kind: "National", primary: false,
+        headline: "Uncrewed crew-capsule test flight set for 12 December", time: "07:40" },
+      { name: "Ordelia Daily", kind: "National", primary: false,
+        headline: "Space agency sets December window for uncrewed test flight", time: "08:00" }
+    ],
+    disputed: null
+  },
+  {
+    category: "Business", when: "6 hours ago", confidence: "disputed",
+    headline: "Trade pact talks with Verland resume after eight months",
+    summary: "Tariff lines covering 4,200 products are under discussion, the commerce ministry said in Geneva.",
+    diversity: { level: "medium", rank: 2, lines: ["1 Ordelian source", "2 international sources"] },
+    sources: [
+      { name: "Continental Review", kind: "International", primary: false,
+        headline: "Trade negotiations resume in Geneva after long pause", time: "06:50" },
+      { name: "The Verland Times", kind: "International", primary: false,
+        headline: "Geneva talks restart on stalled trade agreement", time: "07:10" },
+      { name: "The Ledger", kind: "National", primary: false,
+        headline: "Trade pact talks with Verland resume after eight months", time: "07:30" }
+    ],
+    disputed: {
+      who: "The Verland Times disputes this",
+      text: "A Verland spokesperson disputed the characterisation that agriculture had been excluded from the agenda."
+    }
+  },
+  {
+    category: "Sports", when: "7 hours ago", confidence: "confirmed",
+    headline: "Kestrels through to final after 3-1 win over Harriers",
+    summary: "Kestrels through to final after 3-1 win over Harriers, 42,000 spectators, on Sunday.",
+    diversity: { level: "low", rank: 1, lines: ["2 Ordelian sources"] },
+    sources: [
+      { name: "Meridian Post", kind: "National", primary: false,
+        headline: "Kestrels through to final after 3-1 win over Harriers", time: "08:15" },
+      { name: "Ordelia Daily", kind: "National", primary: false,
+        headline: "Kestrels beat Harriers 3-1 to reach the cup final", time: "08:45" }
+    ],
+    disputed: null
+  },
+  {
+    category: "India", when: "18 minutes ago", confidence: "reported",
+    headline: "City council approves new bus corridor along the eastern ring road",
+    summary: "Work is expected to begin in November, an official said, 14 km bus corridor.",
+    diversity: { level: "low", rank: 1, lines: ["1 regional source"] },
+    sources: [
+      { name: "The Kalpore Herald", kind: "Regional", primary: false,
+        headline: "City council approves new bus corridor along the eastern ring road", time: "07:20" }
+    ],
+    disputed: null
+  }
+];
+
+const CONFIDENCE_NOTE = {
+  confirmed: "Several independent outlets, or an official source, state this directly.",
+  disputed: "Sources contradict each other on part of this story. Both accounts are listed below.",
+  reported: "Reported, but not yet independently corroborated. Treat it as one account."
+};
+
+/* The same word-counting rule the backend applies: a run of letters or digits,
+   apostrophes and internal periods allowed, hyphens splitting. */
+function countWords(text) {
+  const matches = text.match(/[0-9A-Za-z]+(?:['’.][0-9A-Za-z]+)*/g);
+  return matches ? matches.length : 0;
+}
+
+const escapeHTML = (value) =>
+  String(value).replace(/[&<>"']/g, (ch) => (
+    { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[ch]
+  ));
+
+function sourceNames(story) {
+  const names = story.sources.slice(0, 3).map((s) => s.name);
+  const rest = story.sources.length - names.length;
+  return rest > 0 ? `${names.join(", ")} and ${rest} more` : names.join(", ");
+}
+
+function cardMarkup(story, index) {
+  const label = story.sources.length === 1 ? "1 source" : `${story.sources.length} sources`;
+  const pips = [1, 2, 3]
+    .map((step) => `<i class="${step <= story.diversity.rank ? "on" : ""}"></i>`)
+    .join("");
+  const dispute = story.disputed
+    ? `<div class="card-dispute"><span aria-hidden="true">◈</span>
+         <span>Sources disagree on part of this story.</span></div>`
+    : "";
+  const long = story.headline.length > 62 ? " long" : "";
+
+  return `
+  <article class="card${long}" data-index="${index}">
+    <div class="card-slug">
+      <span class="cat">${escapeHTML(story.category)}</span>
+      <span class="dot"></span>
+      <span class="when">${escapeHTML(story.when)}</span>
+      <span class="chip ${story.confidence}">${story.confidence[0].toUpperCase() + story.confidence.slice(1)}</span>
+    </div>
+    <hr>
+    <h3 class="card-headline">${escapeHTML(story.headline)}</h3>
+    <p class="card-summary">${escapeHTML(story.summary)}</p>
+    ${dispute}
+    <div class="card-foot">
+      <hr>
+      <button class="sources-btn" data-open="${index}">
+        <div>
+          <div class="count">${label}</div>
+          <div class="names">${escapeHTML(sourceNames(story))}</div>
+        </div>
+        <span class="pips" aria-hidden="true">${pips}</span>
+        <span class="chev" aria-hidden="true">›</span>
+      </button>
+      <div class="card-actions" aria-hidden="true">
+        <span>⌘ Save</span><span>↥ Share</span>
+        <span class="swipe">^ Swipe</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function sheetMarkup(story) {
+  const label = story.sources.length === 1 ? "1 source" : `${story.sources.length} sources`;
+  const bars = [1, 2, 3]
+    .map((step) => `<i class="${step <= story.diversity.rank ? "on" : ""}"></i>`)
+    .join("");
+
+  const sources = story.sources.map((source) => `
+    <div class="src">
+      <div class="src-top">
+        <span class="src-name">${escapeHTML(source.name)}</span>
+        ${source.primary ? '<span class="src-tag">Primary</span>' : ""}
+        <span class="src-arrow" aria-hidden="true">↗</span>
+      </div>
+      <p class="src-head">${escapeHTML(source.headline)}</p>
+      <div class="src-meta">${escapeHTML(source.kind)} · ${escapeHTML(source.time)}</div>
+    </div>`).join("");
+
+  const disputed = story.disputed ? `
+    <div class="disputed-block">
+      <div class="who">${escapeHTML(story.disputed.who)}</div>
+      <p>${escapeHTML(story.disputed.text)}</p>
+    </div>` : "";
+
+  return `
+    <div class="slabel" style="margin-top:0">${label}</div>
+    <h4 class="sheet-title">${escapeHTML(story.headline)}</h4>
+    <p class="sheet-note">${escapeHTML(CONFIDENCE_NOTE[story.confidence])}</p>
+
+    <div class="diversity">
+      <div class="diversity-top">
+        <span>Source diversity</span><b>${story.diversity.level.toUpperCase()}</b>
+      </div>
+      <div class="diversity-bars" aria-hidden="true">${bars}</div>
+      <ul>${story.diversity.lines.map((line) => `<li>${escapeHTML(line)}</li>`).join("")}</ul>
+      <p class="caveat">Source diversity counts where reporting came from. It is not a
+        measurement of bias.</p>
+    </div>
+
+    <div class="slabel">Who reported it</div>
+    ${sources}
+    ${disputed}
+
+    <p class="sheet-note" style="margin-top:18px">Briefly does not claim to be unbiased.
+      It shows you who reported what, when, and where accounts differ, and links you to
+      the originals so you can check any of it yourself.</p>`;
+}
+
+const device = document.getElementById("device");
+const stack = document.getElementById("stack");
+const sheet = document.getElementById("sheet");
+const sheetBody = document.getElementById("sheet-body");
+const liveCount = document.getElementById("live-count");
+
+stack.innerHTML = STORIES.map(cardMarkup).join("");
+
+function showWordCount(index) {
+  const story = STORIES[index];
+  if (!story) return;
+  const count = countWords(story.summary);
+  liveCount.textContent = `${count} of 30 words`;
+}
+showWordCount(0);
+
+/* Track which card is showing, so the annotation stays truthful. */
+const cards = Array.from(stack.querySelectorAll(".card"));
+if ("IntersectionObserver" in window) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting && entry.intersectionRatio > 0.6) {
+        showWordCount(Number(entry.target.dataset.index));
+      }
+    });
+  }, { root: stack, threshold: [0.6] });
+  cards.forEach((card) => observer.observe(card));
+}
+
+function openSheet(index) {
+  sheetBody.innerHTML = sheetMarkup(STORIES[index]);
+  sheetBody.scrollTop = 0;
+  device.classList.add("sheet-open");
+}
+
+stack.addEventListener("click", (event) => {
+  const button = event.target.closest("[data-open]");
+  if (button) openSheet(Number(button.dataset.open));
+});
+
+document.getElementById("sheet-close").addEventListener("click", () => {
+  device.classList.remove("sheet-open");
+});
+
+document.getElementById("appearance-toggle").addEventListener("click", (event) => {
+  const dark = device.dataset.appearance !== "dark";
+  device.dataset.appearance = dark ? "dark" : "light";
+  event.currentTarget.setAttribute("aria-pressed", String(dark));
+  event.currentTarget.textContent = dark ? "Light appearance" : "Dark appearance";
+});
+
+document.getElementById("next-story").addEventListener("click", () => {
+  const height = stack.clientHeight;
+  const current = Math.round(stack.scrollTop / height);
+  const next = (current + 1) % cards.length;
+  stack.scrollTo({ top: next * height, behavior: "smooth" });
+});
+
+/* Keyboard paging, so the stack is operable without a touchscreen. */
+stack.addEventListener("keydown", (event) => {
+  const height = stack.clientHeight;
+  const current = Math.round(stack.scrollTop / height);
+  if (event.key === "ArrowDown" || event.key === "PageDown") {
+    event.preventDefault();
+    stack.scrollTo({ top: Math.min(current + 1, cards.length - 1) * height, behavior: "smooth" });
+  } else if (event.key === "ArrowUp" || event.key === "PageUp") {
+    event.preventDefault();
+    stack.scrollTo({ top: Math.max(current - 1, 0) * height, behavior: "smooth" });
+  } else if (event.key === "Escape") {
+    device.classList.remove("sheet-open");
+  }
+});
+</script>

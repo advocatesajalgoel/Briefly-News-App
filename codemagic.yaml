@@ -1,0 +1,123 @@
+# Codemagic — an alternative free macOS build machine.
+#
+# Use this instead of GitHub Actions if you would rather keep the repository
+# private: Codemagic's free plan gives 500 macOS minutes a month regardless of
+# repository visibility, where GitHub's free macOS minutes are unlimited only on
+# PUBLIC repositories.
+#
+# Setup: sign in at codemagic.io with your GitHub/GitLab/Bitbucket account, add
+# this repository, and it picks up this file automatically. No Apple account is
+# needed for the unsigned workflow below.
+
+workflows:
+  briefly-unsigned:
+    name: Briefly — build and test (no signing)
+    max_build_duration: 45
+    instance_type: mac_mini_m2
+
+    environment:
+      xcode: latest
+      vars:
+        XCODE_PROJECT: "ios/Briefly.xcodeproj"
+        XCODE_SCHEME: "Briefly"
+
+    triggering:
+      events:
+        - push
+        - pull_request
+
+    scripts:
+      - name: Show the toolchain
+        script: |
+          xcodebuild -version
+          swift --version
+
+      - name: Compile the Foundation-only core
+        # Fast feedback: this is the layer where a Codable mistake breaks the
+        # whole feed, and it compiles in seconds.
+        script: |
+          cd ios && swift build --build-tests && swift test
+
+      - name: Static checks
+        script: python3 tools/check_ios_project.py
+
+      - name: Build for the simulator
+        script: |
+          set -o pipefail
+          cd ios
+          xcodebuild build \
+            -project Briefly.xcodeproj \
+            -scheme "$XCODE_SCHEME" \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination 'generic/platform=iOS Simulator' \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Test
+        script: |
+          set -o pipefail
+          cd ios
+          simulator=$(xcrun simctl list devices available | grep -o 'iPhone [0-9A-Za-z ]*' | tail -1 | xargs)
+          echo "Testing on ${simulator:-iPhone 16}"
+          xcodebuild test \
+            -project Briefly.xcodeproj \
+            -scheme "$XCODE_SCHEME" \
+            -destination "platform=iOS Simulator,name=${simulator:-iPhone 16}" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO
+
+      - name: Package
+        script: |
+          cd ios
+          mkdir -p artifacts
+          app=$(find build/Build/Products -name "Briefly.app" -maxdepth 3 | head -1)
+          ditto -c -k --sequesterRsrc --keepParent "$app" artifacts/Briefly-Simulator.app.zip
+
+    artifacts:
+      - ios/artifacts/*
+      - ios/build/Build/Products/**/*.app
+      - /tmp/xcodebuild_logs/*.log
+
+    publishing:
+      email:
+        recipients:
+          # Replace with your own address, or delete this block.
+          - your-email@example.com
+        notify:
+          success: false
+          failure: true
+
+  # ---------------------------------------------------------------------------
+  # Signed builds need an Apple Developer Program membership ($99/year). Once you
+  # have one, uncomment this and add the credentials in the Codemagic UI under
+  # Teams → Integrations → Apple Developer Portal. Nothing secret goes in this
+  # file.
+  # ---------------------------------------------------------------------------
+  #
+  # briefly-testflight:
+  #   name: Briefly — TestFlight
+  #   instance_type: mac_mini_m2
+  #   integrations:
+  #     app_store_connect: <your Codemagic integration name>
+  #   environment:
+  #     xcode: latest
+  #     ios_signing:
+  #       distribution_type: app_store
+  #       bundle_identifier: com.yourcompany.briefly
+  #   scripts:
+  #     - name: Set the build number
+  #       script: |
+  #         cd ios
+  #         agvtool new-version -all $(($(app-store-connect get-latest-testflight-build-number \
+  #           "$APP_APPLE_ID") + 1))
+  #     - name: Build the ipa
+  #       script: |
+  #         cd ios
+  #         xcode-project build-ipa --project Briefly.xcodeproj --scheme Briefly
+  #   artifacts:
+  #     - ios/build/ios/ipa/*.ipa
+  #   publishing:
+  #     app_store_connect:
+  #       auth: integration
+  #       submit_to_testflight: true

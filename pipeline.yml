@@ -1,0 +1,121 @@
+# Keep a deployed Briefly backend fed, for free, from GitHub Actions.
+#
+# Render's free plan has no background worker, so instead of running the
+# scheduler inside the server this calls the admin API on a cron. Linux minutes
+# on the free plan are ample for it — each run is a couple of HTTP requests.
+#
+# Setup (Settings → Secrets and variables → Actions):
+#   BRIEFLY_API_URL     e.g. https://briefly-api-xxxx.onrender.com
+#   BRIEFLY_ADMIN_TOKEN the value from your deployment's environment
+#
+# If either secret is missing the workflow skips rather than failing, so a fork
+# without a backend stays green.
+
+name: Pipeline
+
+on:
+  schedule:
+    # Every two hours, and a daily briefing at 00:30 UTC (06:00 IST).
+    - cron: "15 */2 * * *"
+    - cron: "30 0 * * *"
+  workflow_dispatch:
+    inputs:
+      make_podcast:
+        description: "Also build and voice Briefly Daily"
+        type: boolean
+        default: false
+
+jobs:
+  refresh:
+    name: Ingest, cluster, summarise
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check the secrets are present
+        id: guard
+        env:
+          API: ${{ secrets.BRIEFLY_API_URL }}
+          TOKEN: ${{ secrets.BRIEFLY_ADMIN_TOKEN }}
+        run: |
+          if [ -z "$API" ] || [ -z "$TOKEN" ]; then
+            echo "No backend configured; skipping." >> "$GITHUB_STEP_SUMMARY"
+            echo "ready=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "ready=true" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Wake the server
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          API: ${{ secrets.BRIEFLY_API_URL }}
+        run: |
+          # A free instance sleeps when idle and can take ~30s to come back.
+          for attempt in 1 2 3 4 5 6; do
+            if curl -fsS --max-time 30 "$API/health" > /tmp/health.json; then
+              cat /tmp/health.json
+              exit 0
+            fi
+            echo "attempt $attempt: still waking…"
+            sleep 15
+          done
+          echo "::error::the backend did not respond"
+          exit 1
+
+      - name: Run the pipeline
+        if: steps.guard.outputs.ready == 'true'
+        env:
+          API: ${{ secrets.BRIEFLY_API_URL }}
+          TOKEN: ${{ secrets.BRIEFLY_ADMIN_TOKEN }}
+        run: |
+          curl -fsS --max-time 600 -X POST \
+            -H "X-Admin-Token: $TOKEN" \
+            "$API/v1/admin/pipeline/run" | tee /tmp/run.json
+
+      - name: Build the daily briefing
+        # On the 00:30 schedule, or when asked for by hand.
+        if: >-
+          steps.guard.outputs.ready == 'true' &&
+          (github.event.schedule == '30 0 * * *' || inputs.make_podcast)
+        env:
+          API: ${{ secrets.BRIEFLY_API_URL }}
+          TOKEN: ${{ secrets.BRIEFLY_ADMIN_TOKEN }}
+        run: |
+          curl -fsS --max-time 900 -X POST \
+            -H "X-Admin-Token: $TOKEN" \
+            "$API/v1/admin/podcast/daily?voice=true" | tee /tmp/podcast.json
+
+      - name: Summarise
+        if: always() && steps.guard.outputs.ready == 'true'
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+
+          def load(name):
+              path = pathlib.Path(f"/tmp/{name}.json")
+              if not path.exists():
+                  return None
+              try:
+                  return json.loads(path.read_text())
+              except json.JSONDecodeError:
+                  return None
+
+          run = load("run")
+          if run:
+              print("### Pipeline\n")
+              print("| stage | result |")
+              print("|---|---|")
+              for stage, stats in run.items():
+                  if isinstance(stats, dict):
+                      interesting = {k: v for k, v in stats.items()
+                                     if isinstance(v, int) and v}
+                      print(f"| {stage} | {interesting or 'nothing new'} |")
+
+          podcast = load("podcast")
+          if podcast and "episode" in podcast:
+              episode = podcast["episode"]
+              print("\n### Briefly Daily\n")
+              print(f"- **{episode['title']}**")
+              print(f"- {episode.get('audio_duration_seconds', 0)}s, "
+                    f"{len(episode.get('story_ids', []))} stories")
+              print(f"- QC passed: {podcast.get('qc', {}).get('passed')}")
+          PY

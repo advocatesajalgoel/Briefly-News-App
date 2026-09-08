@@ -1,0 +1,703 @@
+{
+  "items": [
+    {
+      "id": "ed4ad3cd-f319-4ded-9c11-c566961e4424",
+      "slug": "20260908-rate-held-at-6-25-per-cent-as-inflation-eases-61a8ce",
+      "headline": "Benchmark rate unchanged at 6.25 per cent, committee splits five to one",
+      "summary": "Benchmark rate remains at 6.25 per cent, the monetary committee said, on Friday.",
+      "summary_word_count": 13,
+      "dek": "Benchmark rate unchanged at 6.25 per cent, committee splits five to one. The Economic Times disputed part of this account.",
+      "category_slug": "business",
+      "category_name": "Business",
+      "published_at": "2026-09-08T06:27:06.069685Z",
+      "first_reported_at": "2026-09-08T04:57:05.852020Z",
+      "last_reported_at": "2026-09-08T06:07:05.878623Z",
+      "source_count": 5,
+      "independent_source_count": 5,
+      "has_official_source": true,
+      "has_disputed_claims": true,
+      "confidence": "confirmed",
+      "diversity": {
+        "level": "high",
+        "total": 5,
+        "independent": 5,
+        "countries": 2,
+        "has_official": true,
+        "lines": [
+          "4 Indian sources",
+          "1 international source",
+          "including 1 official source"
+        ],
+        "by_kind": {
+          "national": 3,
+          "official": 1,
+          "international": 1
+        },
+        "by_country": {
+          "GB": 1,
+          "IN": 4
+        },
+        "disclaimer": "Source diversity counts where reporting came from. It is not a measurement of bias."
+      },
+      "sources": [
+        {
+          "source_name": "Press Information Bureau (Government of India)",
+          "source_kind": "official",
+          "original_headline": "Monetary committee announces rate decision",
+          "original_url": "https://example-pib-india.test/news/7343245",
+          "published_at": "2026-09-08T05:12:05.918440Z",
+          "is_primary_source": true
+        },
+        {
+          "source_name": "BBC News",
+          "source_kind": "international",
+          "original_headline": "Ordelia keeps rates on hold as inflation slows",
+          "original_url": "https://example-bbc-news.test/news/41646654",
+          "published_at": "2026-09-08T04:57:05.852020Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Economic Times",
+          "source_kind": "national",
+          "original_headline": "Benchmark rate unchanged at 6.25 per cent, committee splits five to one",
+          "original_url": "https://example-economic-times.test/news/73819500",
+          "published_at": "2026-09-08T05:27:05.912832Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Indian Express",
+          "source_kind": "national",
+          "original_headline": "Rate held at 6.25 per cent as inflation eases",
+          "original_url": "https://example-indian-express.test/news/68420397",
+          "published_at": "2026-09-08T05:42:05.887408Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Hindu",
+          "source_kind": "national",
+          "original_headline": "Central bank holds benchmark rate at 6.25 per cent",
+          "original_url": "https://example-the-hindu.test/news/34751196",
+          "published_at": "2026-09-08T06:07:05.878623Z",
+          "is_primary_source": false
+        }
+      ],
+      "facts": [
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "Benchmark rate unchanged at 6.25 per cent, committee splits five to one",
+          "attributed_to": null,
+          "support_count": 5
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "6.25 per cent",
+          "attributed_to": null,
+          "support_count": 5
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Ordelia",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Monetary",
+          "attributed_to": null,
+          "support_count": 1
+        },
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "The monetary committee confirmed that the benchmark rate remains at 6.25 per cent.",
+          "attributed_to": "The monetary committee",
+          "support_count": 4
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "4.1 per cent",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "what",
+          "kind": "disputed",
+          "text": "Economists at two brokerages disputed the growth projection of 6.8 per cent cited by the committee.",
+          "attributed_to": "The Economic Times",
+          "support_count": 1
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "6.8 per cent",
+          "attributed_to": null,
+          "support_count": 1
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "The Reserve Bank of Ordelia kept its benchmark rate unchanged at 6.25 per cent on Friday, Governor Anaya Rao said, after consumer inflation eased to 4.1 per cent in August.",
+          "attributed_to": "Governor Anaya Rao",
+          "support_count": 1
+        },
+        {
+          "slot": "when",
+          "kind": "date",
+          "text": "Friday",
+          "attributed_to": null,
+          "support_count": 1
+        }
+      ],
+      "rank_score": 0.923121
+    },
+    {
+      "id": "e9be533f-6bd2-4fb8-8c93-b2d1400a16b1",
+      "slug": "20260908-cyclone-verath-makes-landfall-near-kalpore-40-000-evacuated-02ffb4",
+      "headline": "Cyclone Verath makes landfall near Kalpore, 40,000 evacuated",
+      "summary": "Wind speeds reached 110 kmph, the state disaster authority said, 40,000 evacuated as Cyclone Verath, on Friday; power supply was disrupted in coastal areas.",
+      "summary_word_count": 25,
+      "dek": "Cyclone Verath makes landfall near Kalpore, 40,000 evacuated.",
+      "category_slug": "world",
+      "category_name": "World",
+      "published_at": "2026-09-08T06:27:06.086951Z",
+      "first_reported_at": "2026-09-08T05:17:05.900762Z",
+      "last_reported_at": "2026-09-08T06:02:05.906800Z",
+      "source_count": 4,
+      "independent_source_count": 4,
+      "has_official_source": false,
+      "has_disputed_claims": false,
+      "confidence": "confirmed",
+      "diversity": {
+        "level": "medium",
+        "total": 4,
+        "independent": 4,
+        "countries": 1,
+        "has_official": false,
+        "lines": [
+          "4 Indian sources"
+        ],
+        "by_kind": {
+          "national": 4
+        },
+        "by_country": {
+          "IN": 4
+        },
+        "disclaimer": "Source diversity counts where reporting came from. It is not a measurement of bias."
+      },
+      "sources": [
+        {
+          "source_name": "Hindustan Times",
+          "source_kind": "national",
+          "original_headline": "40,000 evacuated as Cyclone Verath makes landfall",
+          "original_url": "https://example-hindustan-times.test/news/59238781",
+          "published_at": "2026-09-08T05:17:05.900762Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Hindu",
+          "source_kind": "national",
+          "original_headline": "Cyclone Verath crosses coast, relief camps opened in three districts",
+          "original_url": "https://example-the-hindu.test/news/35739338",
+          "published_at": "2026-09-08T05:32:05.878623Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Times of India",
+          "source_kind": "national",
+          "original_headline": "Verath hits Kalpore coast; 40,000 moved to camps",
+          "original_url": "https://example-times-of-india.test/news/33330921",
+          "published_at": "2026-09-08T05:47:05.893908Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "NDTV",
+          "source_kind": "national",
+          "original_headline": "Cyclone Verath makes landfall near Kalpore, 40,000 evacuated",
+          "original_url": "https://example-ndtv.test/news/83334148",
+          "published_at": "2026-09-08T06:02:05.906800Z",
+          "is_primary_source": false
+        }
+      ],
+      "facts": [
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "Cyclone Verath makes landfall near Kalpore, 40,000 evacuated",
+          "attributed_to": null,
+          "support_count": 4
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Cyclone Verath",
+          "attributed_to": null,
+          "support_count": 3
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "40,000",
+          "attributed_to": null,
+          "support_count": 3
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "40,000 people",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Kalpore",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "A district official said power supply was disrupted in coastal areas.",
+          "attributed_to": "A district official",
+          "support_count": 1
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "The state disaster authority said wind speeds reached 110 kmph.",
+          "attributed_to": "The state disaster authority",
+          "support_count": 1
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "The storm made landfall with wind speeds of 110 kmph, officials said.",
+          "attributed_to": "officials",
+          "support_count": 1
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "State authorities said 40,000 people had been moved to relief camps.",
+          "attributed_to": "State authorities",
+          "support_count": 1
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "No deaths have been confirmed.",
+          "attributed_to": "No deaths have been",
+          "support_count": 1
+        },
+        {
+          "slot": "when",
+          "kind": "date",
+          "text": "Friday",
+          "attributed_to": null,
+          "support_count": 1
+        }
+      ],
+      "rank_score": 0.699585
+    },
+    {
+      "id": "acfb0448-6207-4793-babf-0ac2b0f8d272",
+      "slug": "20260908-test-flight-for-new-crew-capsule-scheduled-for-december-4707d8",
+      "headline": "Uncrewed crew-capsule test flight set for 12 December",
+      "summary": "Uncrewed test flight of its crew capsule will lift off, the national space agency said, on 12 December.",
+      "summary_word_count": 18,
+      "dek": "Uncrewed crew-capsule test flight set for 12 December.",
+      "category_slug": "world",
+      "category_name": "World",
+      "published_at": "2026-09-08T06:27:06.108722Z",
+      "first_reported_at": "2026-09-08T04:32:05.852020Z",
+      "last_reported_at": "2026-09-08T05:07:05.878623Z",
+      "source_count": 3,
+      "independent_source_count": 3,
+      "has_official_source": false,
+      "has_disputed_claims": false,
+      "confidence": "confirmed",
+      "diversity": {
+        "level": "medium",
+        "total": 3,
+        "independent": 3,
+        "countries": 2,
+        "has_official": false,
+        "lines": [
+          "2 Indian sources",
+          "1 international source"
+        ],
+        "by_kind": {
+          "national": 2,
+          "international": 1
+        },
+        "by_country": {
+          "GB": 1,
+          "IN": 2
+        },
+        "disclaimer": "Source diversity counts where reporting came from. It is not a measurement of bias."
+      },
+      "sources": [
+        {
+          "source_name": "BBC News",
+          "source_kind": "international",
+          "original_headline": "Test flight for new crew capsule scheduled for December",
+          "original_url": "https://example-bbc-news.test/news/89802377",
+          "published_at": "2026-09-08T04:32:05.852020Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Indian Express",
+          "source_kind": "national",
+          "original_headline": "Uncrewed crew-capsule test flight set for 12 December",
+          "original_url": "https://example-indian-express.test/news/45580409",
+          "published_at": "2026-09-08T04:47:05.887408Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Hindu",
+          "source_kind": "national",
+          "original_headline": "Space agency sets December window for uncrewed test flight",
+          "original_url": "https://example-the-hindu.test/news/22402523",
+          "published_at": "2026-09-08T05:07:05.878623Z",
+          "is_primary_source": false
+        }
+      ],
+      "facts": [
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "Uncrewed crew-capsule test flight set for 12 December",
+          "attributed_to": null,
+          "support_count": 3
+        },
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "The national space agency said the uncrewed test flight of its crew capsule will lift off in a window opening on 12 December from the Meritha range.",
+          "attributed_to": "The national space agency",
+          "support_count": 3
+        },
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "The uncrewed flight is scheduled to open a window on 12 December, the agency said.",
+          "attributed_to": "the agency",
+          "support_count": 3
+        },
+        {
+          "slot": "when",
+          "kind": "date",
+          "text": "12 December",
+          "attributed_to": null,
+          "support_count": 3
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "Officials said the flight will carry no crew and will test the escape system.",
+          "attributed_to": "Officials",
+          "support_count": 1
+        }
+      ],
+      "rank_score": 0.626715
+    },
+    {
+      "id": "c829e98b-5232-425c-9776-2d65b1d79334",
+      "slug": "20260908-trade-negotiations-resume-in-geneva-after-long-pause-18070a",
+      "headline": "Trade pact talks with Verland resume after eight months",
+      "summary": "Tariff lines covering 4,200 products are under discussion, the commerce ministry said in Geneva.",
+      "summary_word_count": 15,
+      "dek": "Trade pact talks with Verland resume after eight months. The Guardian disputed part of this account.",
+      "category_slug": "business",
+      "category_name": "Business",
+      "published_at": "2026-09-08T06:27:06.098375Z",
+      "first_reported_at": "2026-09-08T03:57:05.873060Z",
+      "last_reported_at": "2026-09-08T04:37:05.912832Z",
+      "source_count": 3,
+      "independent_source_count": 3,
+      "has_official_source": false,
+      "has_disputed_claims": true,
+      "confidence": "confirmed",
+      "diversity": {
+        "level": "medium",
+        "total": 3,
+        "independent": 3,
+        "countries": 3,
+        "has_official": false,
+        "lines": [
+          "1 Indian source",
+          "2 international sources"
+        ],
+        "by_kind": {
+          "national": 1,
+          "international": 2
+        },
+        "by_country": {
+          "GB": 1,
+          "IN": 1,
+          "QA": 1
+        },
+        "disclaimer": "Source diversity counts where reporting came from. It is not a measurement of bias."
+      },
+      "sources": [
+        {
+          "source_name": "Al Jazeera English",
+          "source_kind": "international",
+          "original_headline": "Trade negotiations resume in Geneva after long pause",
+          "original_url": "https://example-al-jazeera.test/news/30753476",
+          "published_at": "2026-09-08T03:57:05.873060Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Guardian",
+          "source_kind": "international",
+          "original_headline": "Geneva talks restart on stalled trade agreement",
+          "original_url": "https://example-the-guardian.test/news/24920897",
+          "published_at": "2026-09-08T04:17:05.866635Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Economic Times",
+          "source_kind": "national",
+          "original_headline": "Trade pact talks with Verland resume after eight months",
+          "original_url": "https://example-economic-times.test/news/28837619",
+          "published_at": "2026-09-08T04:37:05.912832Z",
+          "is_primary_source": false
+        }
+      ],
+      "facts": [
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "Trade pact talks with Verland resume after eight months",
+          "attributed_to": null,
+          "support_count": 3
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Trade",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "4,200",
+          "attributed_to": null,
+          "support_count": 1
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Verland",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "what",
+          "kind": "disputed",
+          "text": "A Verland spokesperson disputed the characterisation that agriculture had been excluded from the agenda.",
+          "attributed_to": "The Guardian",
+          "support_count": 1
+        },
+        {
+          "slot": "where",
+          "kind": "confirmed",
+          "text": "Geneva",
+          "attributed_to": null,
+          "support_count": 3
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "The commerce ministry said tariff lines covering 4,200 products are under discussion.",
+          "attributed_to": "The commerce ministry",
+          "support_count": 1
+        }
+      ],
+      "rank_score": 0.607518
+    },
+    {
+      "id": "d4e7c8e5-a837-4d85-9335-03331ed0c2d6",
+      "slug": "20260908-kestrels-beat-harriers-3-1-to-reach-the-cup-final-93e1d2",
+      "headline": "Kestrels through to final after 3-1 win over Harriers",
+      "summary": "Kestrels through to final after 3-1 win over Harriers, 42,000 spectators, on Sunday.",
+      "summary_word_count": 15,
+      "dek": "Kestrels through to final after 3-1 win over Harriers.",
+      "category_slug": "world",
+      "category_name": "World",
+      "published_at": "2026-09-08T06:27:06.117773Z",
+      "first_reported_at": "2026-09-08T05:22:05.906800Z",
+      "last_reported_at": "2026-09-08T05:52:05.893908Z",
+      "source_count": 2,
+      "independent_source_count": 2,
+      "has_official_source": false,
+      "has_disputed_claims": false,
+      "confidence": "confirmed",
+      "diversity": {
+        "level": "low",
+        "total": 2,
+        "independent": 2,
+        "countries": 1,
+        "has_official": false,
+        "lines": [
+          "2 Indian sources"
+        ],
+        "by_kind": {
+          "national": 2
+        },
+        "by_country": {
+          "IN": 2
+        },
+        "disclaimer": "Source diversity counts where reporting came from. It is not a measurement of bias."
+      },
+      "sources": [
+        {
+          "source_name": "NDTV",
+          "source_kind": "national",
+          "original_headline": "Kestrels through to final after 3-1 win over Harriers",
+          "original_url": "https://example-ndtv.test/news/28597477",
+          "published_at": "2026-09-08T05:22:05.906800Z",
+          "is_primary_source": false
+        },
+        {
+          "source_name": "The Times of India",
+          "source_kind": "national",
+          "original_headline": "Kestrels beat Harriers 3-1 to reach the cup final",
+          "original_url": "https://example-times-of-india.test/news/49312181",
+          "published_at": "2026-09-08T05:52:05.893908Z",
+          "is_primary_source": false
+        }
+      ],
+      "facts": [
+        {
+          "slot": "what",
+          "kind": "confirmed",
+          "text": "Kestrels through to final after 3-1 win over Harriers",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Kestrels",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "3",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "1",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "who",
+          "kind": "confirmed",
+          "text": "Harriers",
+          "attributed_to": null,
+          "support_count": 2
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "42,000",
+          "attributed_to": null,
+          "support_count": 1
+        },
+        {
+          "slot": "when",
+          "kind": "date",
+          "text": "Sunday",
+          "attributed_to": null,
+          "support_count": 1
+        }
+      ],
+      "rank_score": 0.582577
+    },
+    {
+      "id": "12d30d66-e083-495a-a5b8-0325c5395629",
+      "slug": "20260908-city-council-approves-new-bus-corridor-along-the-eastern-ring-road-95aaf0",
+      "headline": "City council approves new bus corridor along the eastern ring road",
+      "summary": "Work is expected to begin in November, an official said, 14 km bus corridor.",
+      "summary_word_count": 14,
+      "dek": "Hindustan Times said city council approves new bus corridor along the eastern ring road.",
+      "category_slug": "world",
+      "category_name": "World",
+      "published_at": "2026-09-08T06:27:06.125369Z",
+      "first_reported_at": "2026-09-08T04:27:05.900762Z",
+      "last_reported_at": "2026-09-08T04:27:05.900762Z",
+      "source_count": 1,
+      "independent_source_count": 1,
+      "has_official_source": false,
+      "has_disputed_claims": false,
+      "confidence": "reported",
+      "diversity": {
+        "level": "low",
+        "total": 1,
+        "independent": 1,
+        "countries": 1,
+        "has_official": false,
+        "lines": [
+          "1 Indian source"
+        ],
+        "by_kind": {
+          "national": 1
+        },
+        "by_country": {
+          "IN": 1
+        },
+        "disclaimer": "Source diversity counts where reporting came from. It is not a measurement of bias."
+      },
+      "sources": [
+        {
+          "source_name": "Hindustan Times",
+          "source_kind": "national",
+          "original_headline": "City council approves new bus corridor along the eastern ring road",
+          "original_url": "https://example-hindustan-times.test/news/38294704",
+          "published_at": "2026-09-08T04:27:05.900762Z",
+          "is_primary_source": false
+        }
+      ],
+      "facts": [
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "City council approves new bus corridor along the eastern ring road",
+          "attributed_to": "Hindustan Times",
+          "support_count": 1
+        },
+        {
+          "slot": "number",
+          "kind": "number",
+          "text": "14 km",
+          "attributed_to": null,
+          "support_count": 1
+        },
+        {
+          "slot": "what",
+          "kind": "attributed",
+          "text": "Work is expected to begin in November, an official said.",
+          "attributed_to": "an official",
+          "support_count": 1
+        }
+      ],
+      "rank_score": 0.494594
+    }
+  ],
+  "next_cursor": null,
+  "total_estimate": 6
+}

@@ -1,0 +1,128 @@
+# Everything that can be verified WITHOUT a Mac.
+#
+# Runs on free Linux runners. On a public repository this costs nothing at all;
+# on a private one it draws on the 2,000 free minutes a month, and Linux minutes
+# are the cheap ones.
+#
+# This job compiles real Swift — the model layer and its Codable contract — via
+# `ios/Package.swift`. It cannot compile SwiftUI, which needs Xcode; that is what
+# ios-build.yml is for.
+
+name: CI
+
+on:
+  push:
+    branches: ["**"]
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  backend:
+    name: Backend — lint, tests, pipeline
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: briefly
+          POSTGRES_PASSWORD: briefly
+          POSTGRES_DB: briefly_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 15
+        ports:
+          - 5432:5432
+
+    env:
+      BRIEFLY_DATABASE_URL: postgresql+psycopg://briefly:briefly@localhost:5432/briefly_test
+      BRIEFLY_TEST_DATABASE_URL: postgresql+psycopg://briefly:briefly@localhost:5432/briefly_test
+      BRIEFLY_ADMIN_TOKEN: ci-token-not-a-secret
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install espeak-ng and ffmpeg
+        # The default text-to-speech provider is local, so the podcast tests
+        # produce real audio rather than being skipped.
+        run: sudo apt-get update && sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
+
+      - name: Install the backend
+        run: pip install -e "./backend[dev]"
+
+      - name: Lint
+        run: ruff check app scripts tests
+        working-directory: backend
+
+      - name: Tests
+        run: pytest -q
+        working-directory: backend
+
+      - name: End-to-end pipeline on the sample feeds
+        run: |
+          alembic upgrade head
+          python -m scripts.load_sample_feeds --reset --podcast | tee /tmp/pipeline.json
+        working-directory: backend
+
+      - name: Summarise the run
+        if: always()
+        run: |
+          python - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+          path = pathlib.Path("/tmp/pipeline.json")
+          if not path.exists():
+              print("### Pipeline did not run"); raise SystemExit
+          data = json.loads(path.read_text())
+          print("### Pipeline\n")
+          print("| stage | result |")
+          print("|---|---|")
+          print(f"| articles ingested | {data['ingest']['articles_created']} |")
+          print(f"| stories clustered | {data['clustering']['created']} |")
+          print(f"| published | {data['processing']['published']} |")
+          print(f"| flagged for review | {data['processing']['flagged']} |")
+          for kind in ("daily", "deep_dive"):
+              episode = data.get(kind)
+              if episode:
+                  print(f"| {kind} episode | {episode['status']}, QC "
+                        f"{'passed' if episode['qc_passed'] else 'failed'} |")
+          PY
+
+  swift-core:
+    name: Swift model layer (no Mac needed)
+    runs-on: ubuntu-latest
+    container: swift:6.0-jammy
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Compile the Foundation-only core
+        run: swift build --build-tests
+        working-directory: ios
+
+      - name: Run the Codable contract tests
+        run: swift test
+        working-directory: ios
+
+  static-checks:
+    name: iOS static checks
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check the Xcode project and Swift sources
+        run: python3 tools/check_ios_project.py

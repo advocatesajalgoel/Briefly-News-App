@@ -1,0 +1,238 @@
+# Build the news and publish the web app — no server, no cost.
+#
+# This is the whole of Briefly running on free infrastructure:
+#
+#   free Linux runner  →  ingest real feeds, cluster, extract facts, summarise,
+#                         quality-check, narrate and voice the daily briefing
+#          ↓
+#   static JSON + mp3  →  uploaded straight to GitHub Pages
+#          ↓
+#   your iPhone        →  Safari → Share → Add to Home Screen
+#
+# Nothing is deployed, nothing is rented, no API key is needed. The database
+# lives only for the length of the run, and the audio never enters the
+# repository's history — it goes to Pages as a build artifact, so the clone
+# stays small however long this runs.
+#
+# Pages is switched on by the workflow itself the first time it succeeds. If
+# your account blocks that, do it by hand once:
+#   Settings → Pages → Source: "GitHub Actions"
+#
+# Note: GitHub pauses scheduled workflows on a repository with no activity for
+# 60 days. If the news stops updating, open the Actions tab and press "Run
+# workflow" once — that counts as activity and the schedule resumes.
+
+name: Publish site
+
+on:
+  schedule:
+    # 06:00 and 18:00 India time.
+    - cron: "30 0 * * *"
+    - cron: "30 12 * * *"
+  workflow_dispatch:
+    inputs:
+      use_sample_feeds:
+        description: "Use the built-in sample stories instead of live news"
+        type: boolean
+        default: false
+      make_podcast:
+        description: "Also narrate and voice Briefly Daily"
+        type: boolean
+        default: true
+  push:
+    branches: [main, master]
+    paths:
+      - "site/index.html"
+      - "site/sw.js"
+      - "site/manifest.webmanifest"
+      - ".github/workflows/publish-site.yml"
+
+permissions:
+  contents: write   # to remember which feeds were reachable
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publish-site
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+
+    services:
+      postgres:
+        image: postgres:16
+        env:
+          POSTGRES_USER: briefly
+          POSTGRES_PASSWORD: briefly
+          POSTGRES_DB: briefly
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 15
+        ports:
+          - 5432:5432
+
+    env:
+      BRIEFLY_DATABASE_URL: postgresql+psycopg://briefly:briefly@localhost:5432/briefly
+      BRIEFLY_ENV: production
+      BRIEFLY_LLM_PROVIDER: rule_based
+      BRIEFLY_TTS_PROVIDER: local
+      BRIEFLY_STORAGE_BACKEND: local
+      # Identify the bot honestly, with a link back to the repository running it.
+      BRIEFLY_USER_AGENT: >-
+        BrieflyNewsBot/1.0 (+https://github.com/${{ github.repository }})
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+          cache: pip
+
+      - name: Install espeak-ng and ffmpeg
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y --no-install-recommends espeak-ng ffmpeg
+
+      - name: Install the backend
+        run: pip install -e "./backend[dev]"
+
+      - name: Create the database schema
+        run: alembic upgrade head
+        working-directory: backend
+
+      - name: Load the source registry
+        run: python -m scripts.seed_reference_data
+        working-directory: backend
+
+      - name: Check which feeds work from here
+        # Feed URLs move. This disables the ones that fail rather than retrying
+        # them every run, and prints a table you can read in the run log.
+        if: ${{ !inputs.use_sample_feeds }}
+        continue-on-error: true
+        run: python -m scripts.verify_feeds --write
+        working-directory: backend
+
+      - name: Ingest, cluster, extract, summarise, quality-check
+        id: pipeline
+        continue-on-error: true
+        run: |
+          set -o pipefail
+          if [ "${{ inputs.use_sample_feeds }}" = "true" ]; then
+            echo "Using the built-in sample stories."
+            python -m scripts.load_sample_feeds --reset | tee /tmp/pipeline.json
+          else
+            python -m scripts.run_pipeline all | tee /tmp/pipeline.json
+          fi
+        working-directory: backend
+
+      - name: Fall back to the sample stories if nothing published
+        # A brand-new repository, or a day when every feed is unreachable, should
+        # still produce a working app rather than an empty one — the app labels
+        # it as sample data itself.
+        run: |
+          published=$(python - <<'PY'
+          import json
+          try:
+              with open("/tmp/pipeline.json") as handle:
+                  data = json.load(handle)
+          except Exception:
+              # A crashed or noisy run counts as nothing published.
+              data = {}
+          print(data.get("processing", {}).get("published", 0))
+          PY
+          )
+          echo "published=$published"
+          if [ "$published" = "0" ]; then
+            echo "::warning::No live stories published — falling back to the sample feeds."
+            python -m scripts.load_sample_feeds --reset > /dev/null
+          fi
+        working-directory: backend
+
+      - name: Narrate and voice Briefly Daily
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.make_podcast }}
+        continue-on-error: true
+        run: |
+          python -m scripts.run_pipeline daily-podcast
+          python -m scripts.run_pipeline deep-dive
+        working-directory: backend
+
+      - name: Export the static site
+        run: python -m scripts.export_static_site
+        working-directory: backend
+
+      - name: Remember which feeds were reachable
+        # Small JSON, worth keeping between runs so dead feeds stay disabled.
+        continue-on-error: true
+        run: |
+          git config user.name "briefly-bot"
+          git config user.email "briefly-bot@users.noreply.github.com"
+          git add backend/data/sources.json
+          if git diff --cached --quiet; then
+            echo "No change to the source registry."
+            exit 0
+          fi
+          git commit -m "Update feed reachability [skip ci]"
+          git pull --rebase --autostash origin "${GITHUB_REF_NAME}" || true
+          git push origin "HEAD:${GITHUB_REF_NAME}"
+
+      - name: Configure Pages
+        id: pages
+        continue-on-error: true
+        uses: actions/configure-pages@v5
+        with:
+          enablement: true
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+
+      - name: Summarise
+        if: always()
+        run: |
+          python3 - <<'PY' >> "$GITHUB_STEP_SUMMARY"
+          import json, pathlib
+
+          status = pathlib.Path("site/api/status.json")
+          if not status.exists():
+              print("### The site was not exported"); raise SystemExit
+
+          data = json.loads(status.read_text())
+          print("## Briefly — published\n")
+          print(f"- **{data['stories']} stories** from **{data['publisher_count']} publishers**")
+          print(f"- **{data['episodes']} audio episodes**")
+          print(f"- built at `{data['built_at']}`\n")
+
+          if data.get("by_section"):
+              print("| section | stories |")
+              print("|---|---|")
+              for slug, count in sorted(data["by_section"].items(),
+                                        key=lambda kv: -kv[1]):
+                  print(f"| {slug} | {count} |")
+          PY
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4
+
+      - name: Where to open it
+        run: |
+          {
+            echo "## Open Briefly on your iPhone"
+            echo
+            echo "**${{ steps.deployment.outputs.page_url }}**"
+            echo
+            echo "Open that address in Safari, tap the Share button, and choose"
+            echo "**Add to Home Screen**."
+          } >> "$GITHUB_STEP_SUMMARY"

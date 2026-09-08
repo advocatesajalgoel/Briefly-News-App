@@ -1,0 +1,203 @@
+# Build the iPhone app on GitHub's macOS runners.
+#
+# This is the "no Mac" path. GitHub gives every PUBLIC repository unlimited free
+# minutes on standard runners, macOS included — so pushing this repo to a public
+# GitHub repo gets the app compiled, tested and packaged on a real Mac with real
+# Xcode, at no cost and with no Apple account.
+#
+# On a PRIVATE repo the free plan gives 2,000 minutes a month, but macOS minutes
+# are billed at roughly ten times the Linux rate, so budget about 200 minutes.
+# A build here takes a few minutes, which is fine for occasional use.
+#
+# What you get out of it:
+#   * "Briefly-Simulator.app"  — runs in any iOS Simulator, or in a browser via
+#                                Appetize.io. No signing, no Apple account.
+#   * "Briefly-unsigned.ipa"   — a device build with signing switched off. This
+#                                cannot be installed as-is; see docs/BUILDING_WITHOUT_A_MAC.md
+#                                for what signing actually requires.
+#   * Test results and full build logs.
+
+name: iOS build
+
+on:
+  push:
+    branches: ["main", "master"]
+  pull_request:
+  workflow_dispatch:
+    inputs:
+      run_tests:
+        description: "Run the XCTest suite as well as building"
+        type: boolean
+        default: true
+
+concurrency:
+  group: ios-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  build:
+    name: Build and test
+    runs-on: macos-latest
+    timeout-minutes: 45
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Show the toolchain
+        run: |
+          echo "Available Xcode versions:"
+          ls /Applications | grep -i '^Xcode' || true
+          xcodebuild -version
+          swift --version
+
+      - name: Select the newest Xcode
+        # The project uses file-system synchronised groups (objectVersion 77),
+        # which need Xcode 16 or later. Picking the newest installed version
+        # keeps this working as the runner images move on.
+        run: |
+          newest=$(ls -d /Applications/Xcode*.app 2>/dev/null | sort -V | tail -1)
+          if [ -n "$newest" ]; then
+            echo "Using $newest"
+            sudo xcode-select -s "$newest"
+          fi
+          xcodebuild -version
+
+      - name: Regenerate the project if it will not open
+        # The committed .xcodeproj should just work. If a merge has damaged it,
+        # XcodeGen rebuilds it from project.yml rather than failing the run.
+        working-directory: ios
+        run: |
+          if ! xcodebuild -project Briefly.xcodeproj -list > /dev/null 2>&1; then
+            echo "::warning::Briefly.xcodeproj could not be read — regenerating with XcodeGen"
+            brew install xcodegen
+            xcodegen generate
+          fi
+          xcodebuild -project Briefly.xcodeproj -list
+
+      - name: Pick a simulator
+        id: sim
+        run: |
+          # Device names change between runner images, so ask the runner what it
+          # actually has rather than hard-coding "iPhone 15".
+          name=$(xcrun simctl list devices available --json \
+            | python3 -c "
+          import json,sys
+          data = json.load(sys.stdin)['devices']
+          best = None
+          for runtime, devices in data.items():
+              if 'iOS' not in runtime:
+                  continue
+              for device in devices:
+                  if device.get('isAvailable') and device['name'].startswith('iPhone'):
+                      best = device['name']
+          print(best or 'iPhone 16')
+          ")
+          echo "Using simulator: $name"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+
+      - name: Build for the simulator
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild build \
+            -project Briefly.xcodeproj \
+            -scheme Briefly \
+            -configuration Debug \
+            -sdk iphonesimulator \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.name }}" \
+            -derivedDataPath build \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee /tmp/build-simulator.log
+
+      - name: Test
+        if: ${{ github.event_name != 'workflow_dispatch' || inputs.run_tests }}
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild test \
+            -project Briefly.xcodeproj \
+            -scheme Briefly \
+            -destination "platform=iOS Simulator,name=${{ steps.sim.outputs.name }}" \
+            -derivedDataPath build \
+            -resultBundlePath TestResults.xcresult \
+            CODE_SIGNING_ALLOWED=NO \
+            | tee /tmp/test.log
+
+      - name: Package the simulator app
+        if: success()
+        working-directory: ios
+        run: |
+          mkdir -p artifacts
+          app=$(find build/Build/Products -name "Briefly.app" -maxdepth 3 | head -1)
+          echo "Packaging $app"
+          ditto -c -k --sequesterRsrc --keepParent "$app" artifacts/Briefly-Simulator.app.zip
+          ls -lh artifacts
+
+      - name: Build an unsigned device archive
+        if: success()
+        working-directory: ios
+        run: |
+          set -o pipefail
+          xcodebuild archive \
+            -project Briefly.xcodeproj \
+            -scheme Briefly \
+            -configuration Release \
+            -destination 'generic/platform=iOS' \
+            -archivePath build/Briefly.xcarchive \
+            CODE_SIGNING_ALLOWED=NO \
+            CODE_SIGNING_REQUIRED=NO \
+            CODE_SIGN_IDENTITY="" \
+            | tee /tmp/build-archive.log
+
+          # An .ipa is just a zip with the app inside a Payload directory.
+          # Without a signature it cannot be installed, but it is exactly what a
+          # signing service or a sideloader expects as input.
+          mkdir -p build/Payload
+          cp -R build/Briefly.xcarchive/Products/Applications/Briefly.app build/Payload/
+          (cd build && zip -qry ../artifacts/Briefly-unsigned.ipa Payload)
+          ls -lh artifacts
+
+      - name: Upload the builds
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: briefly-builds
+          path: |
+            ios/artifacts/*
+          if-no-files-found: warn
+          retention-days: 30
+
+      - name: Upload logs and test results
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: briefly-logs
+          path: |
+            /tmp/*.log
+            ios/TestResults.xcresult
+          if-no-files-found: ignore
+          retention-days: 14
+
+      - name: Summarise
+        if: always()
+        run: |
+          {
+            echo "### iOS build"
+            echo
+            echo "| item | value |"
+            echo "|---|---|"
+            echo "| Xcode | $(xcodebuild -version | head -1) |"
+            echo "| Simulator | ${{ steps.sim.outputs.name }} |"
+            echo "| Result | ${{ job.status }} |"
+            echo
+            if [ -f /tmp/build-simulator.log ]; then
+              errors=$(grep -c "error:" /tmp/build-simulator.log || true)
+              echo "Compiler errors in the simulator build: **${errors}**"
+              echo
+              if [ "${errors}" != "0" ]; then
+                echo '```'
+                grep "error:" /tmp/build-simulator.log | head -40
+                echo '```'
+              fi
+            fi
+          } >> "$GITHUB_STEP_SUMMARY"

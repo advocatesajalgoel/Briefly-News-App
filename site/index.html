@@ -1,0 +1,1037 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, maximum-scale=1">
+<title>Briefly</title>
+<meta name="description" content="One story at a time, in thirty words, with every source named.">
+
+<!-- Added to the iPhone home screen, these make it open like an app:
+     no Safari chrome, its own icon, its own splash colour. -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="Briefly">
+<meta name="theme-color" content="#FAF9F6" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#0C0C0E" media="(prefers-color-scheme: dark)">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="apple-touch-icon" href="icons/icon-180.png">
+<link rel="icon" href="icons/icon-192.png">
+
+
+<style>
+/* ==========================================================================
+   Briefly — the same identity as the iPhone app: warm paper, ink, one pine
+   accent, a serif headline against a sans body.
+   ========================================================================== */
+:root {
+  --paper:     #FAF9F6;
+  --surface:   #FFFFFF;
+  --ink:       #17171A;
+  --muted:     #66666D;
+  --faint:     #8E8E95;
+  --rule:      #E3E1DA;
+  --accent:    #0F5C4E;
+  --confirmed: #1F6F3C;
+  --disputed:  #9A3412;
+  --reported:  #8A6A12;
+  --official:  #1F4E79;
+  --chrome:    rgba(250, 249, 246, .86);
+
+  /* No webfont. An app about not hiding anything shouldn't tell Google every
+     time you open it, and a news reader has to work on a train with no signal.
+     iOS supplies New York and SF Pro under these generic names — both are
+     better than what a font CDN would send, and they render on the first
+     frame instead of after a round trip. */
+  --serif: ui-serif, "New York", Georgia, "Times New Roman", serif;
+  --sans: -apple-system, BlinkMacSystemFont, ui-sans-serif, "Segoe UI",
+          Roboto, system-ui, sans-serif;
+
+  --safe-top: env(safe-area-inset-top, 0px);
+  --safe-bottom: env(safe-area-inset-bottom, 0px);
+  --tabbar: 58px;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --paper:     #0C0C0E;
+    --surface:   #16161A;
+    --ink:       #F5F4F0;
+    --muted:     #9C9CA4;
+    --faint:     #6E6E76;
+    --rule:      #2A2A31;
+    --accent:    #53D2B6;
+    --confirmed: #6BD08A;
+    --disputed:  #F0925E;
+    --reported:  #E0BA5A;
+    --official:  #76B4E8;
+    --chrome:    rgba(12, 12, 14, .86);
+  }
+}
+:root[data-theme="dark"] {
+  --paper: #0C0C0E; --surface: #16161A; --ink: #F5F4F0; --muted: #9C9CA4;
+  --faint: #6E6E76; --rule: #2A2A31; --accent: #53D2B6; --confirmed: #6BD08A;
+  --disputed: #F0925E; --reported: #E0BA5A; --official: #76B4E8;
+  --chrome: rgba(12, 12, 14, .86);
+}
+
+* { box-sizing: border-box; -webkit-tap-highlight-color: transparent; }
+
+html, body {
+  height: 100%;
+  margin: 0;
+  overflow: hidden;
+  background: var(--paper);
+  color: var(--ink);
+  font-family: var(--sans);
+  -webkit-font-smoothing: antialiased;
+  overscroll-behavior: none;
+}
+
+button { font: inherit; color: inherit; background: none; border: 0; padding: 0; cursor: pointer; }
+a { color: var(--accent); }
+:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; border-radius: 4px; }
+
+.app { display: flex; flex-direction: column; height: 100%; }
+
+/* --- top bar ------------------------------------------------------------ */
+.topbar {
+  flex: none;
+  padding: calc(var(--safe-top) + 8px) 16px 8px;
+  background: var(--chrome);
+  backdrop-filter: saturate(180%) blur(12px);
+  border-bottom: 1px solid var(--rule);
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  z-index: 5;
+}
+.mark { font-family: var(--serif); font-size: 19px; font-weight: 600; letter-spacing: -.02em; }
+.mark .stop { color: var(--accent); }
+.topbar .right { margin-left: auto; display: flex; align-items: center; gap: 14px; }
+.icon-btn { font-size: 17px; color: var(--muted); line-height: 1; padding: 4px; }
+.icon-btn[aria-pressed="true"] { color: var(--accent); }
+
+/* --- section rail ------------------------------------------------------- */
+.rail {
+  flex: none;
+  display: flex;
+  gap: 6px;
+  padding: 9px 16px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.rail::-webkit-scrollbar { display: none; }
+.rail button {
+  flex: none;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: .04em;
+  text-transform: uppercase;
+  padding: 6px 11px;
+  border-radius: 7px;
+  border: 1px solid var(--rule);
+  color: var(--muted);
+  white-space: nowrap;
+}
+.rail button[aria-selected="true"] {
+  background: var(--accent); border-color: var(--accent);
+  color: var(--paper);
+}
+
+/* --- the card stack ----------------------------------------------------- */
+.stack {
+  flex: 1;
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scrollbar-width: none;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+.stack::-webkit-scrollbar { display: none; }
+
+.card {
+  height: 100%;
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+  display: flex;
+  flex-direction: column;
+  padding: 18px 22px 20px;
+}
+
+.slug { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; }
+.slug .cat {
+  font-size: 11px; font-weight: 600; letter-spacing: .1em; text-transform: uppercase;
+  color: var(--accent);
+}
+.slug .dot { width: 3px; height: 3px; border-radius: 50%; background: var(--faint); }
+.slug .when { font-size: 11px; letter-spacing: .04em; color: var(--muted); }
+
+.chip {
+  margin-left: auto; display: inline-flex; align-items: center; gap: 4px;
+  padding: 4px 8px; border-radius: 7px;
+  font-size: 10px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  white-space: nowrap;
+}
+.chip.confirmed { color: var(--confirmed); background: color-mix(in srgb, var(--confirmed) 13%, transparent); }
+.chip.reported  { color: var(--reported);  background: color-mix(in srgb, var(--reported) 13%, transparent); }
+.chip.disputed  { color: var(--disputed);  background: color-mix(in srgb, var(--disputed) 13%, transparent); }
+
+.rule { border: 0; border-top: 1px solid var(--rule); margin: 13px 0 16px; }
+
+/* The body of the card sits optically centred between the slug line and the
+   footer. Without this a 13-word summary leaves a third of the screen empty —
+   an app with no images has to earn that space with composition. */
+.body {
+  flex: 1; display: flex; flex-direction: column; justify-content: center;
+  padding-bottom: 6vh;
+}
+
+.headline {
+  font-family: var(--serif);
+  font-size: clamp(27px, 7.6vw, 34px);
+  line-height: 1.14;
+  font-weight: 600;
+  letter-spacing: -.018em;
+  margin: 0 0 15px;
+  text-wrap: balance;
+}
+.card.long .headline { font-size: clamp(23px, 6.4vw, 29px); }
+
+.summary {
+  font-size: clamp(16px, 4.3vw, 18px);
+  line-height: 1.52;
+  color: color-mix(in srgb, var(--ink) 88%, transparent);
+  margin: 0;
+}
+
+.dispute {
+  display: flex; gap: 7px; align-items: flex-start;
+  margin-top: 13px; font-size: 13px; color: var(--disputed);
+}
+
+.foot { margin-top: auto; padding-top: 16px; }
+.sources-open {
+  width: 100%; display: flex; align-items: center; gap: 12px; text-align: left;
+  padding: 4px 0;
+}
+.sources-open .count {
+  font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase;
+}
+.sources-open .names {
+  font-size: 12.5px; color: var(--muted); margin-top: 2px;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; max-width: 62vw;
+}
+.pips { display: flex; gap: 3px; margin-left: auto; }
+.pips i { width: 12px; height: 3px; border-radius: 2px; background: var(--rule); }
+.pips i.on { background: var(--accent); }
+.chev { color: var(--faint); font-size: 13px; }
+
+.actions {
+  display: flex; align-items: center; gap: 22px; margin-top: 16px;
+  font-size: 12px; font-weight: 500; color: var(--muted);
+}
+.actions button.on { color: var(--accent); }
+.actions .hint { margin-left: auto; color: var(--faint); font-size: 11px; }
+
+/* --- tab bar ------------------------------------------------------------ */
+.tabbar {
+  flex: none; display: flex;
+  padding: 7px 4px calc(var(--safe-bottom) + 8px);
+  border-top: 1px solid var(--rule);
+  background: var(--chrome);
+  backdrop-filter: saturate(180%) blur(12px);
+  z-index: 5;
+}
+.tabbar button {
+  flex: 1; display: flex; flex-direction: column; align-items: center; gap: 3px;
+  font-size: 9.5px; letter-spacing: .02em; color: var(--faint); padding: 3px 0;
+}
+.tabbar button[aria-selected="true"] { color: var(--accent); }
+.tabbar .glyph { font-size: 17px; line-height: 1; }
+
+/* --- panels (podcast, saved, about) ------------------------------------- */
+.panel { flex: 1; overflow-y: auto; padding: 20px 22px calc(var(--safe-bottom) + 20px); }
+.panel h2 {
+  font-family: var(--serif); font-size: 25px; font-weight: 600;
+  letter-spacing: -.015em; margin: 0 0 4px;
+}
+.panel .sub { font-size: 13.5px; color: var(--muted); margin: 0 0 20px; }
+.label {
+  font-size: 10.5px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase;
+  color: var(--muted); margin: 24px 0 10px;
+}
+.label:first-of-type { margin-top: 0; }
+
+.row {
+  display: flex; gap: 13px; align-items: center; width: 100%;
+  padding: 14px 0; border-bottom: 1px solid var(--rule); text-align: left;
+}
+.row:last-child { border-bottom: 0; }
+.row .grow { min-width: 0; flex: 1; }
+.row .t { font-size: 14.5px; font-weight: 500; line-height: 1.3; }
+.row .s { font-size: 12px; color: var(--muted); margin-top: 3px; }
+.row .glyph { font-size: 18px; color: var(--accent); width: 24px; text-align: center; flex: none; }
+
+.saved-item .t {
+  font-family: var(--serif); font-size: 17px; font-weight: 600; line-height: 1.22;
+}
+
+.empty { text-align: center; padding: 56px 18px; color: var(--muted); }
+.empty .glyph { font-size: 30px; color: var(--faint); display: block; margin-bottom: 12px; }
+.empty p { font-size: 14px; line-height: 1.55; margin: 0 auto; max-width: 30ch; }
+
+/* --- audio player ------------------------------------------------------- */
+.player-card {
+  border: 1px solid var(--rule); border-radius: 16px; padding: 17px;
+  background: var(--surface);
+}
+.player-card h3 {
+  font-family: var(--serif); font-size: 19px; font-weight: 600; line-height: 1.2;
+  margin: 0 0 5px;
+}
+.player-card .meta { font-size: 12.5px; color: var(--muted); }
+.scrub { width: 100%; margin: 18px 0 4px; accent-color: var(--accent); }
+.times {
+  display: flex; justify-content: space-between; font-size: 11px; color: var(--muted);
+  font-variant-numeric: tabular-nums;
+}
+.transport { display: flex; align-items: center; justify-content: center; gap: 30px; margin: 16px 0 4px; }
+.transport .side { font-size: 19px; color: var(--ink); }
+.transport .play {
+  width: 58px; height: 58px; border-radius: 50%;
+  background: var(--accent); color: var(--paper);
+  display: grid; place-items: center; font-size: 19px;
+}
+
+/* --- sources sheet ------------------------------------------------------ */
+.sheet-backdrop {
+  position: fixed; inset: 0; background: rgba(0, 0, 0, .38);
+  opacity: 0; pointer-events: none; transition: opacity .28s; z-index: 20;
+}
+.sheet {
+  position: fixed; left: 0; right: 0; bottom: 0; top: 46px;
+  background: var(--paper); border-radius: 20px 20px 0 0;
+  border-top: 1px solid var(--rule);
+  transform: translateY(101%); transition: transform .34s cubic-bezier(.32,.72,0,1);
+  z-index: 21; display: flex; flex-direction: column;
+}
+body.sheet-open .sheet { transform: translateY(0); }
+body.sheet-open .sheet-backdrop { opacity: 1; pointer-events: auto; }
+@media (prefers-reduced-motion: reduce) {
+  .sheet, .sheet-backdrop { transition: none; }
+}
+.sheet-head {
+  flex: none; display: flex; align-items: center; justify-content: space-between;
+  padding: 14px 20px 12px; border-bottom: 1px solid var(--rule);
+}
+.sheet-head strong { font-size: 15px; }
+.sheet-body { overflow-y: auto; padding: 18px 20px calc(var(--safe-bottom) + 30px); }
+
+.sheet-title {
+  font-family: var(--serif); font-size: 20px; font-weight: 600; line-height: 1.2;
+  margin: 0 0 8px;
+}
+.sheet-note { font-size: 13px; color: var(--muted); line-height: 1.5; margin: 0; }
+
+.diversity {
+  margin: 18px 0; padding: 15px; border: 1px solid var(--rule);
+  border-radius: 14px; background: var(--surface);
+}
+.diversity-top {
+  display: flex; justify-content: space-between; align-items: baseline;
+  font-size: 10.5px; font-weight: 600; letter-spacing: .11em; text-transform: uppercase;
+  color: var(--muted);
+}
+.diversity-top b { color: var(--accent); }
+.bars { display: flex; gap: 4px; margin: 10px 0; }
+.bars i { flex: 1; height: 4px; border-radius: 2px; background: var(--rule); }
+.bars i.on { background: var(--accent); }
+.diversity ul { margin: 0; padding: 0; list-style: none; font-size: 12.5px; color: var(--muted); }
+.caveat { margin-top: 10px; font-size: 11px; line-height: 1.45; color: var(--faint); }
+
+.src { display: block; width: 100%; padding: 14px 0; border-bottom: 1px solid var(--rule); text-align: left; }
+.src:last-child { border-bottom: 0; }
+.src-top { display: flex; align-items: center; gap: 8px; }
+.src-name { font-size: 14px; font-weight: 600; }
+.src-tag {
+  font-size: 9px; font-weight: 600; letter-spacing: .07em; text-transform: uppercase;
+  padding: 2px 6px; border-radius: 5px;
+  color: var(--official); background: color-mix(in srgb, var(--official) 14%, transparent);
+}
+.src-arrow { margin-left: auto; color: var(--accent); font-size: 13px; }
+.src-head { font-size: 13px; color: var(--muted); line-height: 1.42; margin: 4px 0 0; }
+.src-meta { font-size: 11px; color: var(--faint); margin-top: 4px; }
+
+.disputed-block {
+  margin-top: 18px; padding: 14px; border-radius: 14px;
+  background: color-mix(in srgb, var(--disputed) 11%, transparent);
+}
+.disputed-block .who {
+  font-size: 11px; font-weight: 700; letter-spacing: .06em; text-transform: uppercase;
+  color: var(--disputed);
+}
+.disputed-block p { font-size: 13px; margin: 5px 0 0; line-height: 1.45; }
+
+/* --- states ------------------------------------------------------------- */
+.state { flex: 1; display: grid; place-items: center; padding: 30px; text-align: center; }
+.state .inner { max-width: 30ch; }
+.state .glyph { font-size: 30px; color: var(--faint); }
+.state h3 { font-family: var(--serif); font-size: 21px; font-weight: 600; margin: 14px 0 8px; }
+.state p { font-size: 14px; color: var(--muted); line-height: 1.55; margin: 0 0 18px; }
+.state button {
+  padding: 11px 22px; border-radius: 10px; background: var(--accent); color: var(--paper);
+  font-size: 14px; font-weight: 600;
+}
+
+.skeleton { padding: 22px; }
+.skeleton div {
+  height: 15px; border-radius: 5px; background: var(--rule);
+  margin-bottom: 11px; animation: pulse 1.5s ease-in-out infinite;
+}
+.skeleton div:nth-child(1) { width: 34%; }
+.skeleton div:nth-child(2) { height: 30px; width: 92%; margin-top: 22px; }
+.skeleton div:nth-child(3) { height: 30px; width: 68%; }
+.skeleton div:nth-child(4) { width: 100%; margin-top: 22px; }
+.skeleton div:nth-child(5) { width: 100%; }
+.skeleton div:nth-child(6) { width: 55%; }
+@keyframes pulse { 0%, 100% { opacity: 1 } 50% { opacity: .45 } }
+@media (prefers-reduced-motion: reduce) { .skeleton div { animation: none } }
+
+.banner {
+  flex: none; display: flex; gap: 9px; align-items: center;
+  padding: 9px 18px; font-size: 12px; line-height: 1.4;
+  background: color-mix(in srgb, var(--reported) 14%, transparent);
+  color: var(--ink);
+}
+.banner b { font-weight: 600; }
+
+.hidden { display: none !important; }
+</style>
+</head>
+<body>
+
+<div class="app">
+  <header class="topbar">
+    <span class="mark">Briefly<span class="stop">.</span></span>
+    <div class="right">
+      <button class="icon-btn" id="theme-btn" aria-label="Switch appearance">◐</button>
+      <button class="icon-btn" id="refresh-btn" aria-label="Refresh">↻</button>
+    </div>
+  </header>
+
+  <div class="banner hidden" id="banner"></div>
+
+  <nav class="rail hidden" id="rail" role="tablist" aria-label="Sections"></nav>
+
+  <main id="main" class="stack" tabindex="-1">
+    <div class="skeleton"><div></div><div></div><div></div><div></div><div></div><div></div></div>
+  </main>
+
+  <nav class="tabbar" role="tablist" aria-label="Main">
+    <button data-tab="feed" aria-selected="true"><span class="glyph">✦</span>For You</button>
+    <button data-tab="podcast" aria-selected="false"><span class="glyph">≋</span>Podcast</button>
+    <button data-tab="saved" aria-selected="false"><span class="glyph">⌘</span>Saved</button>
+    <button data-tab="about" aria-selected="false"><span class="glyph">⚙</span>About</button>
+  </nav>
+</div>
+
+<div class="sheet-backdrop" id="sheet-backdrop"></div>
+<section class="sheet" id="sheet" role="dialog" aria-modal="true" aria-label="Sources">
+  <div class="sheet-head">
+    <strong>Sources</strong>
+    <button id="sheet-close" style="color:var(--accent);font-weight:500">Done</button>
+  </div>
+  <div class="sheet-body" id="sheet-body"></div>
+</section>
+
+<audio id="audio" preload="none"></audio>
+
+<script>
+"use strict";
+
+/* ===========================================================================
+   Briefly — mobile web app.
+
+   Reads plain JSON from its own origin, written by the pipeline on a schedule
+   and committed by CI. Same-origin means no CORS proxy, no API key, and no
+   server to keep running. If the network is gone, the service worker serves the
+   last copy and the app says so rather than pretending it is current.
+   ========================================================================= */
+
+const API = {
+  stories: "api/stories.json",
+  categories: "api/categories.json",
+  episodes: "api/episodes.json",
+  status: "api/status.json"
+};
+
+const state = {
+  tab: "feed",
+  section: "for-you",
+  stories: [],
+  categories: [],
+  episodes: [],
+  status: null,
+  saved: loadSaved(),
+  error: null,
+  stale: false
+};
+
+/* --- storage ------------------------------------------------------------- */
+function loadSaved() {
+  try {
+    return JSON.parse(localStorage.getItem("briefly.saved") || "[]");
+  } catch (_) {
+    return [];
+  }
+}
+function persistSaved() {
+  try {
+    localStorage.setItem("briefly.saved", JSON.stringify(state.saved));
+  } catch (_) { /* private browsing — the session still works */ }
+}
+
+/* --- helpers ------------------------------------------------------------- */
+const $ = (id) => document.getElementById(id);
+
+const esc = (v) => String(v ?? "").replace(/[&<>"']/g, (c) =>
+  ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+
+function relative(iso) {
+  if (!iso) return "";
+  const then = new Date(iso);
+  if (Number.isNaN(then.getTime())) return "";
+  const seconds = (Date.now() - then.getTime()) / 1000;
+  if (seconds < 60) return "Just now";
+  if (seconds < 3600) {
+    const m = Math.round(seconds / 60);
+    return m === 1 ? "1 minute ago" : `${m} minutes ago`;
+  }
+  if (seconds < 79200) {
+    const h = Math.round(seconds / 3600);
+    return h === 1 ? "1 hour ago" : `${h} hours ago`;
+  }
+  return then.toLocaleDateString(undefined, { day: "numeric", month: "short" });
+}
+
+function duration(total) {
+  const s = Math.max(0, Math.round(total || 0));
+  const h = Math.floor(s / 3600), m = Math.floor((s % 3600) / 60), r = s % 60;
+  return h > 0
+    ? `${h}:${String(m).padStart(2, "0")}:${String(r).padStart(2, "0")}`
+    : `${m}:${String(r).padStart(2, "0")}`;
+}
+
+const CONFIDENCE_NOTE = {
+  confirmed: "Several independent outlets, or an official source, state this directly.",
+  disputed: "Sources contradict each other on part of this story. Both accounts are below.",
+  reported: "Reported, but not yet independently corroborated. Treat it as one account."
+};
+
+const SOURCE_KIND = {
+  official: "Official source",
+  wire: "Wire service",
+  international: "International",
+  regional: "Regional",
+  national: "National"
+};
+const sourceKind = (kind) => SOURCE_KIND[kind] || "Publisher";
+
+function diversityRank(level) {
+  return level === "high" ? 3 : level === "medium" ? 2 : 1;
+}
+
+/* --- loading ------------------------------------------------------------- */
+async function getJSON(path) {
+  const response = await fetch(path, { cache: "no-cache" });
+  if (!response.ok) throw new Error(`${path}: HTTP ${response.status}`);
+  return response.json();
+}
+
+async function load() {
+  state.error = null;
+  try {
+    const [stories, categories, episodes, status] = await Promise.all([
+      getJSON(API.stories),
+      getJSON(API.categories).catch(() => []),
+      getJSON(API.episodes).catch(() => ({ items: [] })),
+      getJSON(API.status).catch(() => null)
+    ]);
+    state.stories = stories.items || [];
+    state.categories = categories || [];
+    state.episodes = episodes.items || [];
+    state.status = status;
+    state.stale = false;
+  } catch (error) {
+    state.error = error.message;
+    // A service-worker copy may still be there; show it and say it is old.
+    if (state.stories.length) state.stale = true;
+  }
+  render();
+}
+
+/* --- rendering ----------------------------------------------------------- */
+function visibleStories() {
+  if (state.section === "for-you") return state.stories;
+  return state.stories.filter((s) => s.category_slug === state.section);
+}
+
+function renderBanner() {
+  const banner = $("banner");
+  if (state.error && state.stories.length) {
+    banner.className = "banner";
+    banner.innerHTML = "<span>◍</span><span><b>Showing the last stories you loaded.</b> "
+      + "The app could not reach the server just now.</span>";
+  } else if (state.status && state.status.frozen) {
+    // A fixed build cannot be out of date in the sense this banner means —
+    // it says so itself, permanently, at the top of the page. Warning that
+    // the scheduled job may not have run would be telling the reader to look
+    // for a job that does not exist.
+    banner.className = "banner hidden";
+  } else if (state.status && state.status.built_at) {
+    const age = (Date.now() - new Date(state.status.built_at).getTime()) / 3600000;
+    if (age > 12) {
+      banner.className = "banner";
+      banner.innerHTML = `<span>◍</span><span>Last updated ${esc(relative(state.status.built_at))}. `
+        + "The scheduled job may not have run.</span>";
+    } else {
+      banner.className = "banner hidden";
+    }
+  } else {
+    banner.className = "banner hidden";
+  }
+}
+
+function renderRail() {
+  const rail = $("rail");
+  if (state.tab !== "feed" || !state.categories.length) {
+    rail.className = "rail hidden";
+    return;
+  }
+  rail.className = "rail";
+  const present = new Set(state.stories.map((s) => s.category_slug));
+  rail.innerHTML = state.categories
+    .filter((c) => c.slug === "for-you" || present.has(c.slug))
+    .map((c) => `<button role="tab" data-section="${esc(c.slug)}"
+       aria-selected="${c.slug === state.section}">${esc(c.name)}</button>`)
+    .join("");
+}
+
+function cardHTML(story, index) {
+  const level = story.confidence || "reported";
+  const sources = story.sources || [];
+  const names = sources.slice(0, 2).map((s) => s.source_name);
+  const more = sources.length - names.length;
+  const label = sources.length === 1 ? "1 source" : `${sources.length} sources`;
+  const rank = diversityRank((story.diversity || {}).level);
+  const isSaved = state.saved.some((s) => s.id === story.id);
+
+  return `
+  <article class="card${story.headline.length > 62 ? " long" : ""}" data-index="${index}">
+    <div class="slug">
+      <span class="cat">${esc(story.category_name || "News")}</span>
+      <span class="dot"></span>
+      <span class="when">${esc(relative(story.published_at))}</span>
+      <span class="chip ${esc(level)}">${esc(level)}</span>
+    </div>
+    <hr class="rule">
+    <div class="body">
+      <h1 class="headline">${esc(story.headline)}</h1>
+      <p class="summary">${esc(story.summary)}</p>
+      ${story.has_disputed_claims
+        ? '<div class="dispute"><span>◈</span><span>Sources disagree on part of this story.</span></div>'
+        : ""}
+    </div>
+    <div class="foot">
+      <hr class="rule" style="margin:0 0 14px">
+      <button class="sources-open" data-sources="${index}">
+        <span class="grow">
+          <span class="count">${esc(label)}</span>
+          <span class="names" style="display:block">${esc(names.join(", "))}${more > 0 ? ` and ${more} more` : ""}</span>
+        </span>
+        <span class="pips" aria-hidden="true">${[1, 2, 3]
+          .map((n) => `<i class="${n <= rank ? "on" : ""}"></i>`).join("")}</span>
+        <span class="chev" aria-hidden="true">›</span>
+      </button>
+      <div class="actions">
+        <button data-save="${index}" class="${isSaved ? "on" : ""}">
+          ${isSaved ? "★ Saved" : "☆ Save"}</button>
+        <button data-share="${index}">↥ Share</button>
+        <span class="hint">Swipe up ↑</span>
+      </div>
+    </div>
+  </article>`;
+}
+
+function renderFeed() {
+  const main = $("main");
+  main.className = "stack";
+  const stories = visibleStories();
+
+  if (state.error && !state.stories.length) {
+    main.className = "state";
+    main.innerHTML = `<div class="inner">
+      <span class="glyph">◍</span>
+      <h3>Couldn't load the stories</h3>
+      <p>The app reads a file published by your GitHub Action. If this is a fresh
+      install, the first run may not have finished yet.</p>
+      <button id="retry">Try again</button></div>`;
+    return;
+  }
+  if (!stories.length) {
+    main.className = "state";
+    main.innerHTML = `<div class="inner">
+      <span class="glyph">▤</span>
+      <h3>Nothing in this section</h3>
+      <p>No stories were published here in the latest run.</p>
+      <button id="retry">Refresh</button></div>`;
+    return;
+  }
+  main.innerHTML = stories.map(cardHTML).join("");
+  main.scrollTop = 0;
+}
+
+function renderPodcast() {
+  const main = $("main");
+  main.className = "panel";
+  if (!state.episodes.length) {
+    main.innerHTML = `<div class="empty"><span class="glyph">≋</span>
+      <p>No briefing yet. Briefly Daily is produced once the pipeline has
+      published enough stories to narrate.</p></div>`;
+    return;
+  }
+  const daily = state.episodes.filter((e) => e.kind === "daily");
+  const deep = state.episodes.filter((e) => e.kind === "deep_dive");
+  const featured = daily[0] || state.episodes[0];
+
+  main.innerHTML = `
+    <h2>Podcast</h2>
+    <p class="sub">Narrated from the same facts as the cards.</p>
+    <div class="player-card">
+      <h3>${esc(featured.title)}</h3>
+      <div class="meta">${esc(featured.subtitle || "")}
+        ${featured.audio_duration_seconds
+          ? ` · ${Math.round(featured.audio_duration_seconds / 60)} min` : ""}</div>
+      <input class="scrub" id="scrub" type="range" min="0" max="1000" value="0"
+             aria-label="Playback position">
+      <div class="times"><span id="t-now">0:00</span><span id="t-total">${
+        esc(duration(featured.audio_duration_seconds))}</span></div>
+      <div class="transport">
+        <button class="side" id="back15" aria-label="Back 15 seconds">↺</button>
+        <button class="play" id="play" aria-label="Play" data-src="${esc(featured.audio_url || "")}">▶</button>
+        <button class="side" id="fwd30" aria-label="Forward 30 seconds">↻</button>
+      </div>
+    </div>
+    ${featured.segments && featured.segments.length ? `
+      <div class="label">In this episode</div>
+      ${featured.segments.filter((s) => s.kind === "story").map((s) => `
+        <button class="row" data-seek="${s.start_offset_seconds}">
+          <span class="glyph" style="font-size:12px;font-family:ui-monospace,monospace">${
+            esc(duration(s.start_offset_seconds))}</span>
+          <span class="grow"><span class="t">${esc(s.title || "Story")}</span></span>
+        </button>`).join("")}` : ""}
+    ${deep.length ? `<div class="label">Deep Dive</div>
+      ${deep.map((e) => `<button class="row" data-episode="${esc(e.id)}">
+        <span class="glyph">≋</span>
+        <span class="grow"><span class="t">${esc(e.title)}</span>
+        <span class="s">${e.audio_duration_seconds
+          ? Math.round(e.audio_duration_seconds / 60) + " min" : "audio pending"}</span></span>
+      </button>`).join("")}` : ""}
+    ${featured.transcript ? `<div class="label">Transcript</div>
+      <p style="font-size:14px;line-height:1.6;color:var(--muted);white-space:pre-wrap">${
+        esc(featured.transcript)}</p>` : ""}`;
+}
+
+function renderSaved() {
+  const main = $("main");
+  main.className = "panel";
+  if (!state.saved.length) {
+    main.innerHTML = `<h2>Saved</h2><p class="sub">Kept on this device.</p>
+      <div class="empty"><span class="glyph">☆</span>
+      <p>Tap Save on any card and it stays here — with its sources — even offline.</p></div>`;
+    return;
+  }
+  main.innerHTML = `<h2>Saved</h2><p class="sub">${state.saved.length} ${
+    state.saved.length === 1 ? "story" : "stories"}, kept on this device.</p>
+    ${state.saved.map((s, i) => `
+      <div class="row saved-item">
+        <span class="grow">
+          <span class="t">${esc(s.headline)}</span>
+          <span class="s">${esc(s.summary)}</span>
+        </span>
+        <button data-unsave="${i}" style="color:var(--muted);font-size:18px"
+                aria-label="Remove">×</button>
+      </div>`).join("")}`;
+}
+
+function renderAbout() {
+  const main = $("main");
+  main.className = "panel";
+  const status = state.status || {};
+  main.innerHTML = `
+    <h2>How Briefly works</h2>
+    <p class="sub">Maximum transparency. Minimum editorial distortion.</p>
+
+    <p style="font-size:14.5px;line-height:1.6;color:var(--muted)">
+      Briefly does not claim to be unbiased. Choosing what to carry and how to word
+      it is editing, and editing has a point of view. What it does is show its work:
+      who reported a story, when, what is corroborated, and where accounts differ.
+    </p>
+
+    <div class="label">This build</div>
+    <div class="row"><span class="grow"><span class="t">Stories published</span></span>
+      <span class="s">${esc(status.stories ?? "—")}</span></div>
+    <div class="row"><span class="grow"><span class="t">Publishers cited</span></span>
+      <span class="s">${esc(status.publisher_count ?? "—")}</span></div>
+    <div class="row"><span class="grow"><span class="t">Last updated</span></span>
+      <span class="s">${esc(relative(status.built_at) || "unknown")}</span></div>
+
+    <div class="label">What every card tells you</div>
+    ${[
+      ["Who reported it", "Every publisher, with their own headline and a link to the original."],
+      ["When they reported it", "Publication times, in the order the sources filed."],
+      ["What is confirmed", "Corroborated by several independent outlets, or by a primary source."],
+      ["What is disputed", "Where accounts differ, both sides are named rather than averaged."],
+      ["How varied the sourcing is", "A count of where reporting came from. Not a bias score."]
+    ].map(([t, s]) => `<div class="row"><span class="grow">
+      <span class="t">${t}</span><span class="s">${s}</span></span></div>`).join("")}
+
+    <div class="label">Rules the pipeline enforces</div>
+    ${[
+      "Never invent a fact, figure, name, quote, source or link.",
+      "Never turn an allegation into a fact — the card names who alleges it.",
+      "Never exceed 30 words. The limit is arithmetic, not a request to a model.",
+      "Never republish an article. Cards carry Briefly's own wording and link out.",
+      "Never rank by how likely you are to tap something."
+    ].map((t) => `<div class="row"><span class="glyph" style="font-size:13px">—</span>
+      <span class="grow"><span class="t" style="font-weight:400">${t}</span></span></div>`).join("")}
+
+    <p style="font-size:12px;color:var(--faint);line-height:1.55;margin-top:26px">
+      Added to your home screen, this runs full screen and keeps the last stories it
+      loaded for reading offline. A native iPhone build of the same app is in the
+      project — it needs Xcode and an Apple account to install.
+    </p>`;
+}
+
+function render() {
+  renderBanner();
+  renderRail();
+  if (state.tab === "feed") renderFeed();
+  else if (state.tab === "podcast") renderPodcast();
+  else if (state.tab === "saved") renderSaved();
+  else renderAbout();
+
+  document.querySelectorAll(".tabbar button").forEach((button) => {
+    button.setAttribute("aria-selected", String(button.dataset.tab === state.tab));
+  });
+}
+
+/* --- sources sheet -------------------------------------------------------- */
+function openSheet(story) {
+  const sources = story.sources || [];
+  const div = story.diversity || {};
+  const rank = diversityRank(div.level);
+  const disputedFacts = (story.facts || []).filter((f) => f.kind === "disputed");
+
+  $("sheet-body").innerHTML = `
+    <div style="font-size:10.5px;font-weight:600;letter-spacing:.11em;
+                text-transform:uppercase;color:var(--muted);margin-bottom:8px">
+      ${sources.length === 1 ? "1 source" : `${sources.length} sources`}</div>
+    <h2 class="sheet-title">${esc(story.headline)}</h2>
+    <p class="sheet-note">${esc(CONFIDENCE_NOTE[story.confidence] || "")}</p>
+
+    <div class="diversity">
+      <div class="diversity-top"><span>Source diversity</span>
+        <b>${esc((div.level || "low").toUpperCase())}</b></div>
+      <div class="bars" aria-hidden="true">${[1, 2, 3]
+        .map((n) => `<i class="${n <= rank ? "on" : ""}"></i>`).join("")}</div>
+      <ul>${(div.lines || []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul>
+      <p class="caveat">${esc(div.disclaimer
+        || "Source diversity counts where reporting came from. It is not a measurement of bias.")}</p>
+    </div>
+
+    <div style="font-size:10.5px;font-weight:600;letter-spacing:.11em;
+                text-transform:uppercase;color:var(--muted);margin:22px 0 4px">
+      Who reported it</div>
+    ${sources.map((s) => `
+      <a class="src" href="${esc(s.original_url || "#")}" target="_blank" rel="noopener noreferrer"
+         style="text-decoration:none;color:inherit">
+        <span class="src-top">
+          <span class="src-name">${esc(s.source_name)}</span>
+          ${s.is_primary_source ? '<span class="src-tag">Primary</span>' : ""}
+          <span class="src-arrow">↗</span>
+        </span>
+        <p class="src-head">${esc(s.original_headline)}</p>
+        <div class="src-meta">${esc(sourceKind(s.source_kind))}${
+          s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
+      </a>`).join("")}
+
+    ${disputedFacts.length ? `<div class="disputed-block">
+      <div class="who">${esc(disputedFacts[0].attributed_to || "Another source")} disputes this</div>
+      <p>${esc(disputedFacts[0].text)}</p></div>` : ""}
+
+    <p class="sheet-note" style="margin-top:22px">Briefly does not claim to be unbiased.
+      It shows you who reported what, when, and where accounts differ, and links you to
+      the originals so you can check any of it yourself.</p>`;
+
+  document.body.classList.add("sheet-open");
+  $("sheet-body").scrollTop = 0;
+}
+
+function closeSheet() { document.body.classList.remove("sheet-open"); }
+
+/* --- events --------------------------------------------------------------- */
+document.querySelector(".tabbar").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-tab]");
+  if (!button) return;
+  state.tab = button.dataset.tab;
+  render();
+});
+
+$("rail").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-section]");
+  if (!button) return;
+  state.section = button.dataset.section;
+  render();
+});
+
+$("main").addEventListener("click", (event) => {
+  const stories = visibleStories();
+
+  const openBtn = event.target.closest("[data-sources]");
+  if (openBtn) { openSheet(stories[Number(openBtn.dataset.sources)]); return; }
+
+  const saveBtn = event.target.closest("[data-save]");
+  if (saveBtn) {
+    const story = stories[Number(saveBtn.dataset.save)];
+    const at = state.saved.findIndex((s) => s.id === story.id);
+    if (at >= 0) state.saved.splice(at, 1); else state.saved.unshift(story);
+    persistSaved();
+    render();
+    return;
+  }
+
+  const shareBtn = event.target.closest("[data-share]");
+  if (shareBtn) {
+    const story = stories[Number(shareBtn.dataset.share)];
+    const links = (story.sources || []).slice(0, 5)
+      .map((s) => `• ${s.source_name}${s.original_url ? " — " + s.original_url : ""}`).join("\n");
+    const text = `${story.headline}\n\n${story.summary}\n\nSources:\n${links}\n\nvia Briefly`;
+    if (navigator.share) navigator.share({ title: story.headline, text }).catch(() => {});
+    else if (navigator.clipboard) navigator.clipboard.writeText(text).catch(() => {});
+    return;
+  }
+
+  const unsave = event.target.closest("[data-unsave]");
+  if (unsave) {
+    state.saved.splice(Number(unsave.dataset.unsave), 1);
+    persistSaved();
+    render();
+    return;
+  }
+
+  if (event.target.closest("#retry")) { load(); return; }
+
+  const seek = event.target.closest("[data-seek]");
+  if (seek) { $("audio").currentTime = Number(seek.dataset.seek); $("audio").play(); return; }
+
+  const episodeBtn = event.target.closest("[data-episode]");
+  if (episodeBtn) {
+    const episode = state.episodes.find((e) => e.id === episodeBtn.dataset.episode);
+    if (episode && episode.audio_url) playAudio(episode.audio_url);
+    return;
+  }
+
+  if (event.target.closest("#play")) { togglePlay(); return; }
+  if (event.target.closest("#back15")) { $("audio").currentTime -= 15; return; }
+  if (event.target.closest("#fwd30")) { $("audio").currentTime += 30; return; }
+});
+
+$("main").addEventListener("input", (event) => {
+  if (event.target.id !== "scrub") return;
+  const audio = $("audio");
+  if (audio.duration) audio.currentTime = (event.target.value / 1000) * audio.duration;
+});
+
+$("sheet-close").addEventListener("click", closeSheet);
+$("sheet-backdrop").addEventListener("click", closeSheet);
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") closeSheet();
+});
+
+$("refresh-btn").addEventListener("click", () => {
+  $("refresh-btn").style.opacity = ".4";
+  load().finally(() => { $("refresh-btn").style.opacity = "1"; });
+});
+
+$("theme-btn").addEventListener("click", () => {
+  const current = document.documentElement.getAttribute("data-theme");
+  const next = current === "dark" ? "light" : current === "light" ? null : "dark";
+  if (next) document.documentElement.setAttribute("data-theme", next);
+  else document.documentElement.removeAttribute("data-theme");
+  try { localStorage.setItem("briefly.theme", next || ""); } catch (_) {}
+});
+
+try {
+  const stored = localStorage.getItem("briefly.theme");
+  if (stored) document.documentElement.setAttribute("data-theme", stored);
+} catch (_) {}
+
+/* --- audio ---------------------------------------------------------------- */
+function playAudio(src) {
+  const audio = $("audio");
+  if (audio.getAttribute("src") !== src) audio.setAttribute("src", src);
+  audio.play().catch(() => {});
+}
+
+function togglePlay() {
+  const audio = $("audio");
+  const button = $("play");
+  if (!button) return;
+  const src = button.dataset.src;
+  if (!src) return;
+  if (audio.paused) { playAudio(src); } else { audio.pause(); }
+}
+
+const audio = $("audio");
+audio.addEventListener("timeupdate", () => {
+  const scrub = $("scrub"), now = $("t-now"), total = $("t-total");
+  if (!scrub || !audio.duration) return;
+  scrub.value = String((audio.currentTime / audio.duration) * 1000);
+  if (now) now.textContent = duration(audio.currentTime);
+  if (total) total.textContent = duration(audio.duration);
+});
+["play", "pause", "ended"].forEach((name) => audio.addEventListener(name, () => {
+  const button = $("play");
+  if (button) button.textContent = audio.paused ? "▶" : "❙❙";
+}));
+
+/* Lock-screen controls, where the browser supports them. */
+if ("mediaSession" in navigator) {
+  audio.addEventListener("playing", () => {
+    const featured = state.episodes[0];
+    if (!featured) return;
+    navigator.mediaSession.metadata = new MediaMetadata({
+      title: featured.title, artist: "Briefly", album: "Briefly Daily"
+    });
+    navigator.mediaSession.setActionHandler("play", () => audio.play());
+    navigator.mediaSession.setActionHandler("pause", () => audio.pause());
+    navigator.mediaSession.setActionHandler("seekbackward", () => { audio.currentTime -= 15; });
+    navigator.mediaSession.setActionHandler("seekforward", () => { audio.currentTime += 30; });
+  });
+}
+
+/* --- service worker ------------------------------------------------------- */
+if ("serviceWorker" in navigator) {
+  window.addEventListener("load", () => {
+    navigator.serviceWorker.register("sw.js").catch(() => {});
+  });
+}
+
+load();
+</script>
+</body>
+</html>
