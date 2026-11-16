@@ -1,0 +1,57 @@
+# Briefly — fetch the news and publish the app, twice a day.
+#
+# Needs one other file in this repository:  briefly-app.zip
+# Needs one setting:  Settings → Pages → Source → "GitHub Actions"
+name: Publish Briefly
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "30 0 * * *"    # 06:00 India time
+    - cron: "30 12 * * *"   # 18:00 India time
+  push:
+    paths:
+      - "briefly-app.zip"
+      - "overrides/**"
+      - ".github/workflows/**"
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: publish-briefly
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/configure-pages@v5
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Build the app
+        run: |
+          unzip -q -o briefly-app.zip
+          # A file placed under overrides/ replaces the same path from the zip,
+          # so one file can be corrected without uploading the package again.
+          if [ -d overrides ]; then cp -a overrides/. briefly/; fi
+          bash briefly/build_site.sh
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: briefly/site
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-24.04
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v5
+      - run: echo "### Open this in Safari on your iPhone → ${{ steps.deployment.outputs.page_url }}" >> "$GITHUB_STEP_SUMMARY"
