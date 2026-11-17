@@ -971,7 +971,7 @@ function openSheet(story) {
           <span class="src-arrow">↗</span>
         </span>
         <p class="src-head">${esc(s.original_headline)}</p>
-        ${s.crux ? `<p class="src-crux"><span>Publisher's crux · ${Math.min(30, s.crux.trim().split(/\\s+/).length)} words</span>${esc(s.crux)}</p>` : ""}
+        ${s.crux ? `<p class="src-crux"><span>Publisher's crux · ${Math.min(30, s.crux.trim().split(/\s+/).length)} words</span>${esc(s.crux)}</p>` : ""}
         <div class="src-meta">${esc(sourceKind(s.source_kind))}${
           s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
       </a>`).join("")}
