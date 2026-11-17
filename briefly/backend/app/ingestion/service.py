@@ -277,7 +277,7 @@ class IngestionService:
         )
         feed_source.last_fetched_at = datetime.now(UTC)
 
-        report = {"source": feed_source.slug, "url": feed_url, "status": "ok", "items": 0}
+        report = {"source": feed_source.slug, "url": feed_url, "channel": discovery_channel, "query": discovery_query, "status": "ok", "items": 0}
         self.stats.feeds.append(report)
 
         if not result.ok:
