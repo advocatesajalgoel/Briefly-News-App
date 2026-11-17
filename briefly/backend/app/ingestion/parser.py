@@ -3,6 +3,8 @@
 from __future__ import annotations
 
 import hashlib
+import re
+from urllib.parse import urlparse
 from datetime import UTC, datetime
 
 import feedparser
@@ -43,6 +45,35 @@ def _entry_summary(entry) -> str:
         except (AttributeError, IndexError, KeyError):
             pass
     return ""
+
+
+def _entry_image(entry) -> str | None:
+    """Publisher-supplied feed image only; never manufacture or hotlink search results."""
+    candidates: list[str] = []
+    for item in entry.get("media_content", []) or []:
+        if item.get("url") and (item.get("medium") == "image" or
+                                str(item.get("type", "")).startswith("image/")):
+            candidates.append(item["url"])
+    for item in entry.get("media_thumbnail", []) or []:
+        if item.get("url"):
+            candidates.append(item["url"])
+    for item in entry.get("links", []) or []:
+        if item.get("rel") == "enclosure" and str(item.get("type", "")).startswith("image/"):
+            if item.get("href"):
+                candidates.append(item["href"])
+    # RSS descriptions commonly include the publisher's own lead image.
+    for field in ("summary", "description"):
+        html = entry.get(field) or ""
+        match = re.search(r'<img[^>]+src=["\\']([^"\\']+)["\\']', html, re.I)
+        if match:
+            candidates.append(match.group(1))
+    for value in candidates:
+        if not isinstance(value, str):
+            continue
+        parsed = urlparse(value)
+        if parsed.scheme in {"http", "https"} and parsed.netloc:
+            return value
+    return None
 
 
 def _entry_link(entry) -> str:
@@ -97,6 +128,7 @@ def parse_entry(
         raw={
             "tags": [t.get("term") for t in (entry.get("tags") or []) if t.get("term")],
             "feed_id": entry.get("id"),
+            "image_url": _entry_image(entry),
         },
     )
 
