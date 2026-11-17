@@ -269,6 +269,8 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
         for tag in (article.raw or {}).get("tags", []) or []:
             tag_l = clean_text(str(tag)).lower()
             for category in real:
+                if category.slug in {"arbitration", "india-independent"}:
+                    continue  # specialist sections are assigned only by their explicit gates
                 if tag_l == category.slug or tag_l == category.name.lower():
                     tag_votes[category.slug] += 2
     if tag_votes:
@@ -277,7 +279,9 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
     # 3. Subject: business, technology, science, sports, entertainment.
     text = clean_text(" ".join(text_bits))
     subject_scores = {
-        c.slug: _score_category(text, c) for c in real if c.slug not in _GEOGRAPHIC
+        c.slug: _score_category(text, c)
+        for c in real
+        if c.slug not in _GEOGRAPHIC and c.slug not in {"arbitration", "india-independent"}
     }
     if subject_scores:
         best_slug, best_score = max(subject_scores.items(), key=lambda kv: kv[1])
