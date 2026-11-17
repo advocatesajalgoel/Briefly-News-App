@@ -32,6 +32,7 @@ class SourceOut(BaseModel):
     source_kind: str
     original_headline: str
     original_url: str
+    crux: str | None = None
     published_at: datetime | None = None
     is_primary_source: bool = False
 
