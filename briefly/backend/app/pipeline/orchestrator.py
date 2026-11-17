@@ -392,6 +392,12 @@ def process_story(db: Session, story: Story, *, published_headlines: list[str] |
         summary_kind=story.summary_kind,
         wording_document=wording_document,
     )
+    if not any(f.kind == "confirmed" and f.slot == "what" for f in extraction.facts):
+        report.add(
+            "no_corroborated_core_fact",
+            "No core event fact is corroborated by multiple independent sources or an official source",
+            "blocker",
+        )
     story.qc_report = {
         **report.as_dict(),
         "grounding": grounding.as_dict(),
