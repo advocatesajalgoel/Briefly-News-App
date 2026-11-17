@@ -653,7 +653,7 @@ function cardHTML(story, index) {
     <div class="slug">
       <span class="cat">${esc(story.category_name || "News")}</span>
       <span class="dot"></span>
-      <span class="when">${esc(relative(story.published_at))}</span>
+      <span class="when">First reported ${esc(relative(story.first_reported_at || story.published_at))}${story.first_reported_source ? " · " + esc(story.first_reported_source) : ""}</span>
       <span class="chip ${esc(level)}">${esc(level)}</span>
     </div>
     <hr class="rule">
