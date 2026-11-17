@@ -89,11 +89,9 @@ echo "pipeline exit ${pipeline_exit}, stories published: ${published}"
 endgroup
 
 if [ "$published" = "0" ]; then
-  # A day when no feed answers should still leave a working app on the phone,
-  # not an empty one. The app says on screen that these are sample stories,
-  # and every outlet in them is invented.
-  echo "::warning::No live stories were published. Falling back to the built-in sample stories."
-  python -m scripts.load_sample_feeds --reset > /dev/null
+  # Never substitute invented examples for live reporting. An empty feed is
+  # preferable to fabricated news when nothing clears the corroboration gate.
+  echo "::warning::No live stories cleared verification. Publishing an empty feed; no sample stories will be shown."
 fi
 
 group "Narrate and voice the briefing"
