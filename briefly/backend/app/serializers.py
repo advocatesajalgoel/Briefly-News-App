@@ -42,6 +42,16 @@ def serialise_story(story: Story, *, include_facts: bool = True) -> StoryOut:
             key=lambda s: (not s.is_primary_source, s.published_at or s.created_at),
         )
     ]
+    image_article = next(
+        (
+            article for article in sorted(
+                story.articles,
+                key=lambda a: (a.discovery_channel != "publisher_feed", a.published_at or story.created_at),
+            )
+            if (article.raw or {}).get("image_url")
+        ),
+        None,
+    )
     facts: list[FactOut] = []
     if include_facts:
         facts = [
@@ -65,6 +75,8 @@ def serialise_story(story: Story, *, include_facts: bool = True) -> StoryOut:
         summary_kind=story.summary_kind or "composed",
         summary_source=story.wording_source_name,
         dek=story.dek,
+        image_url=(image_article.raw or {}).get("image_url") if image_article else None,
+        image_source=image_article.source.name if image_article and image_article.source else None,
         category_slug=story.category.slug if story.category else None,
         category_name=story.category.name if story.category else None,
         published_at=story.published_at,
