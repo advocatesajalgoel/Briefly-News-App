@@ -404,6 +404,16 @@ body.sheet-open .sheet-backdrop { opacity: 1; pointer-events: auto; }
 .src-arrow { margin-left: auto; color: var(--accent); font-size: 13px; }
 .src-head { font-size: 13px; color: var(--muted); line-height: 1.42; margin: 4px 0 0; }
 .src-meta { font-size: 11px; color: var(--faint); margin-top: 4px; }
+.src-crux {
+  margin: 9px 0 2px; padding: 9px 10px; border-radius: 10px;
+  background: var(--surface-2, color-mix(in srgb, var(--muted) 8%, transparent));
+  color: var(--text); font-size: 12px; line-height: 1.45;
+}
+.src-crux strong {
+  display: inline-block; margin-bottom: 3px; color: var(--muted);
+  font-size: 10px; letter-spacing: .045em; text-transform: uppercase;
+}
+.src-crux-missing { color: var(--faint); font-style: italic; }
 
 .disputed-block {
   margin-top: 18px; padding: 14px; border-radius: 14px;
@@ -957,6 +967,9 @@ function openSheet(story) {
           <span class="src-arrow">↗</span>
         </span>
         <p class="src-head">${esc(s.original_headline)}</p>
+        ${s.crux
+          ? `<p class="src-crux"><strong>Source crux · ${s.crux.trim().split(/\\s+/).filter(Boolean).length} words</strong><br>${esc(s.crux)}</p>`
+          : '<p class="src-crux src-crux-missing">Publisher summary not available; no substitute text has been generated.</p>'}
         <div class="src-meta">${esc(sourceKind(s.source_kind))}${
           s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
       </a>`).join("")}
