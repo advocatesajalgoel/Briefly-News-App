@@ -91,7 +91,7 @@ _INDEPENDENT_INDIA_SOURCES = {
 }
 
 _ARBITRATION_TERMS = re.compile(
-    r"\b(arbitration|arbitral|arbitrator|arbitrators)\\b", re.I
+    r"\b(arbitration|arbitral|arbitrator|arbitrators)\b", re.I
 )
 _INDIAN_ARBITRATION_CONTEXT = re.compile(
     r"(arbitration and conciliation act|domestic arbitration|indian arbitration law|"
