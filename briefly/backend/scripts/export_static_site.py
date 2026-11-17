@@ -256,9 +256,43 @@ def main() -> int:
             "discovery": discovery[-1] if discovery else None,
             "articles_published": articles_count,
         })
+    arbitration_slugs = {
+        "livelaw", "bar-and-bench", "verdictum", "scc-online",
+        "indiacorplaw", "mondaq-india", "indian-kanoon",
+    }
+    arbitration_sources = []
+    for source in load_sources_file().get("sources", []):
+        if source.get("slug") not in arbitration_slugs:
+            continue
+        slug = source["slug"]
+        direct = [f for f in feed_rows if f.get("source") == slug]
+        attempts = direct
+        if any(f.get("status") == "ok" for f in direct):
+            health_status = "direct_feed_working"
+        elif direct and all(f.get("status") == "failed" for f in direct):
+            health_status = "failed"
+        elif direct:
+            health_status = "restricted_or_skipped"
+        else:
+            health_status = "not_checked"
+        articles_count = sum(
+            1 for story in stories["items"]
+            for item in story.get("sources", [])
+            if item.get("source_name") == source.get("name")
+        )
+        arbitration_sources.append({
+            "slug": slug,
+            "name": source.get("name"),
+            "status": health_status,
+            "enabled": bool(source.get("enabled")),
+            "feed_url": source.get("feed_url"),
+            "direct_feed": direct[-1] if direct else None,
+            "articles_published": articles_count,
+        })
     _write(api / "source-health.json", {
         "built_at": datetime.now(UTC).isoformat(),
         "sources": health_sources,
+        "arbitration_sources": arbitration_sources,
         "summary": {
             "publishers_configured": len(health_sources),
             "direct_feed_working": sum(x["status"] == "direct_feed_working" for x in health_sources),
