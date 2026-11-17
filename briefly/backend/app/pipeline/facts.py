@@ -156,18 +156,11 @@ def extract_facts(
             f"{len(report.rejected)} proposed fact(s) dropped for lack of support"
         )
 
-    # Summary clauses are prose too, so they get the same treatment.
-    kept_clauses = []
-    corpus_norm = _normalised(_corpus(documents))
-    corpus_tokens = set(tokenize(_corpus(documents)))
-    corpus_numbers = _numbers_in(_corpus(documents))
-    publisher_names = {_normalised(d.source_name) for d in documents}
-    for clause in result.summary_clauses:
-        probe = FactCandidate(slot=clause.get("slot", "other"), kind="context",
-                              text=clause["text"])
-        if verify_fact(probe, corpus_norm, corpus_tokens, corpus_numbers, publisher_names) is None:
-            kept_clauses.append(clause)
-        else:
-            result.warnings.append(f"clause dropped as unsupported: {clause['text'][:60]}")
-    result.summary_clauses = kept_clauses
+    # Rebuild the card clauses from corroborated facts only, regardless of
+    # which extraction provider ran. Attributed, disputed and uncertain claims
+    # stay in the source transparency panel and are never blended into the card.
+    from app.llm.rule_based import build_summary_clauses
+
+    confirmed = [fact for fact in result.facts if fact.kind == "confirmed"]
+    result.summary_clauses = build_summary_clauses(confirmed, documents, result.headline)
     return result, report
