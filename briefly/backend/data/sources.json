@@ -920,8 +920,8 @@
     },
     {
       "category": "india-independent",
-      "query": "site:scroll.in OR site:thewire.in OR site:theprint.in OR site:article-14.com OR site:reporters-collective.in India investigation report",
-      "when": "1d"
+      "query": "site:scroll.in OR site:thewire.in OR site:theprint.in OR site:article-14.com OR site:reporters-collective.in OR site:newslaundry.com OR site:thequint.com OR site:thenewsminute.com OR site:caravanmagazine.in OR site:ruralindiaonline.org OR site:thefederal.com OR site:eastmojo.com OR site:boomlive.in OR site:altnews.in OR site:factly.in India (investigation OR report OR \"fact check\")",
+      "when": "2d"
     },
     {
       "category": "arbitration",
