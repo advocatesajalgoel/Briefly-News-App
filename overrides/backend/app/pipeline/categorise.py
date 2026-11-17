@@ -240,7 +240,19 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
             votes[section] += 1
             filed_by_url[section] += 1
         elif topic in by_slug:
-            votes[topic] += 1
+            # A Google News query can be broader than its search terms. The
+            # Independent India rail is a strict publisher whitelist, never
+            # a generic topic label supplied by the aggregator.
+            if topic == "india-independent":
+                source = article.source
+                if (
+                    source is not None
+                    and source.slug in _INDEPENDENT_INDIA_SOURCES
+                    and (source.country or "").upper() == "IN"
+                ):
+                    votes[topic] += 1
+            else:
+                votes[topic] += 1
     if votes:
         most = max(votes.values())
         leaders = [slug for slug, count in votes.items() if count == most]
