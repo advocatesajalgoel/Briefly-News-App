@@ -42,6 +42,11 @@ def serialise_story(story: Story, *, include_facts: bool = True) -> StoryOut:
             key=lambda s: (not s.is_primary_source, s.published_at or s.created_at),
         )
     ]
+    first_reported_source = min(
+        (row for row in story.story_sources if row.published_at is not None),
+        key=lambda row: row.published_at,
+        default=None,
+    )
     image_article = next(
         (
             article for article in sorted(
@@ -81,6 +86,7 @@ def serialise_story(story: Story, *, include_facts: bool = True) -> StoryOut:
         category_name=story.category.name if story.category else None,
         published_at=story.published_at,
         first_reported_at=story.first_reported_at,
+        first_reported_source=first_reported_source.source_name if first_reported_source else None,
         last_reported_at=story.last_reported_at,
         source_count=story.source_count,
         independent_source_count=story.independent_source_count,
