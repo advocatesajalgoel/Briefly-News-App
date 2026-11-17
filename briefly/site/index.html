@@ -891,7 +891,7 @@ function renderAbout() {
   const status = state.status || {};
   const sourceHealth = state.sourceHealth || {};
   const healthRows = sourceHealth.sources || [];
-  const healthLabel = (value) => ({working:"Working",failed:"Failed",restricted_or_skipped:"Blocked / skipped",not_checked:"Not checked"}[value] || "Unknown");
+  const healthLabel = (value) => ({direct_feed_working:"Direct feed working",discovery_working:"Discovery working",failed:"Failed",restricted_or_skipped:"Blocked / skipped",not_checked:"Not checked"}[value] || "Unknown");
   const healthColor = (value) => value === "working" ? "var(--accent)" : value === "failed" ? "var(--danger, #d66)" : "var(--muted)";
   main.innerHTML = `
     <h2>How Briefly works</h2>
