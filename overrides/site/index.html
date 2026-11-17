@@ -238,9 +238,14 @@ a { color: var(--accent); }
 }
 .summary {
   font-size: clamp(16px, 4.3vw, 18px);
-  line-height: 1.52;
+  line-height: 1.42;
   color: color-mix(in srgb, var(--ink) 88%, transparent);
   margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .dispute {
@@ -975,8 +980,9 @@ function openSheet(story) {
       </a>`).join("")}
 
     ${disputedFacts.length ? `<div class="disputed-block">
-      <div class="who">${esc(disputedFacts[0].attributed_to || "Another source")} disputes this</div>
-      <p>${esc(disputedFacts[0].text)}</p></div>` : ""}
+      <div class="who">Disputed or conflicting facts</div>
+      ${disputedFacts.map((f) => `<p><b>${esc(f.attributed_to || "Source account")}:</b> ${esc(f.text)}</p>`).join("")}
+    </div>` : ""}
 
     <p class="sheet-note" style="margin-top:22px">Briefly does not claim to be unbiased.
       It shows you who reported what, when, and where accounts differ, and links you to
