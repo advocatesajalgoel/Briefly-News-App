@@ -8,7 +8,7 @@
  *
  * Data is network-first: a news app must never quietly prefer a stale story.
  */
-const VERSION = "briefly-v9";;;;;
+const VERSION = "briefly-v10";;;;;;
 // Audio lives in its own cache so it can be trimmed without dropping the shell.
 const AUDIO = "briefly-audio-v1";
 const AUDIO_KEEP = 2;
