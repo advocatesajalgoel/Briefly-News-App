@@ -95,13 +95,12 @@ _ARBITRATION_TERMS = re.compile(
 )
 _INDIAN_ARBITRATION_CONTEXT = re.compile(
     r"(arbitration and conciliation act|domestic arbitration|indian arbitration law|"
-    r"supreme court of india|supreme court|high court|delhi high court|"
-    r"bombay high court|calcutta high court|madras high court|"
-    r"karnataka high court|kerala high court|allahabad high court|"
-    r"punjab and haryana high court|arbitration act.{0,35}india|"
-    r"india.{0,35}arbitration act|section\s+(9|11|12|14|15|16|17|29a|31|34|36|37)"
-    r".{0,45}(arbitration|arbitral)|"
-    r"(arbitration|arbitral).{0,45}section\s+(9|11|12|14|15|16|17|29a|31|34|36|37))",
+    r"supreme court of india|delhi high court|bombay high court|calcutta high court|"
+    r"madras high court|karnataka high court|kerala high court|allahabad high court|"
+    r"punjab and haryana high court|gujarat high court|rajasthan high court|"
+    r"patna high court|indian court.{0,45}arbitration|arbitration.{0,45}indian court|"
+    r"india.{0,45}arbitration|arbitration.{0,45}india|"
+    r"section\s+(9|11|12|14|15|16|17|29a|31|34|36|37).{0,45}arbitration act)",
     re.I,
 )
 _INTERNATIONAL_COMMERCIAL = re.compile(
