@@ -927,7 +927,7 @@ function renderAbout() {
         </span>
         <span class="s" style="color:${healthColor(source.status)}">${esc(healthLabel(source.status))}</span>
       </div>`).join("") : '<p class="sub">Publisher health data will appear after the next successful pipeline run.</p>'}
-    ${sourceHealth.summary ? `<p class="sub">${esc(sourceHealth.summary.working)} working · ${esc(sourceHealth.summary.failed)} failed · ${esc(sourceHealth.summary.not_checked)} not checked</p>` : ""}
+    ${sourceHealth.summary ? `<p class="sub">${esc(sourceHealth.summary.direct_feed_working)} direct feeds working · ${esc(sourceHealth.summary.discovery_working)} discovery checks working · ${esc(sourceHealth.summary.failed)} failed · ${esc(sourceHealth.summary.not_checked)} not checked</p>` : ""}
     <div class="label">What every card tells you</div>
     ${[
       ["Who reported it", "Every publisher, with their own headline and a link to the original."],
