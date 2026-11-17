@@ -43,7 +43,10 @@ jobs:
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
         run: |
           unzip -q -o briefly-app.zip
-          # Keep the extracted application source reviewable in the repository.
+          # A file placed under overrides/ replaces the same path from the zip,
+          # so one file can be corrected without uploading the package again.
+          if [ -d overrides ]; then cp -a overrides/. briefly/; fi
+          # Keep the extracted, override-applied application source reviewable.
           # The original ZIP remains untouched; this is an additive extraction.
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
@@ -52,9 +55,6 @@ jobs:
             git commit -m "Extract Briefly application source from packaged release"
             git push origin HEAD:main
           fi
-          # A file placed under overrides/ replaces the same path from the zip,
-          # so one file can be corrected without uploading the package again.
-          if [ -d overrides ]; then cp -a overrides/. briefly/; fi
           bash briefly/build_site.sh
       - uses: actions/upload-pages-artifact@v3
         with:
