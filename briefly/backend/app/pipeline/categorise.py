@@ -91,7 +91,7 @@ _INDEPENDENT_INDIA_SOURCES = {
 }
 
 _ARBITRATION_TERMS = re.compile(
-    r"\\b(arbitration|arbitral|arbitrator|arbitrators)\\b", re.I
+    r"\b(arbitration|arbitral|arbitrator|arbitrators)\\b", re.I
 )
 _INDIAN_ARBITRATION_CONTEXT = re.compile(
     r"(arbitration and conciliation act|domestic arbitration|indian arbitration law|"
@@ -99,9 +99,9 @@ _INDIAN_ARBITRATION_CONTEXT = re.compile(
     r"bombay high court|calcutta high court|madras high court|"
     r"karnataka high court|kerala high court|allahabad high court|"
     r"punjab and haryana high court|arbitration act.{0,35}india|"
-    r"india.{0,35}arbitration act|section\\s+(9|11|12|14|15|16|17|29a|31|34|36|37)"
+    r"india.{0,35}arbitration act|section\s+(9|11|12|14|15|16|17|29a|31|34|36|37)"
     r".{0,45}(arbitration|arbitral)|"
-    r"(arbitration|arbitral).{0,45}section\\s+(9|11|12|14|15|16|17|29a|31|34|36|37))",
+    r"(arbitration|arbitral).{0,45}section\s+(9|11|12|14|15|16|17|29a|31|34|36|37))",
     re.I,
 )
 _INTERNATIONAL_COMMERCIAL = re.compile(
@@ -119,7 +119,7 @@ def _is_domestic_indian_arbitration(text: str) -> bool:
     # Do not sweep international/treaty arbitration into this domestic section
     # unless the report also squarely concerns a domestic Indian court proceeding.
     if _INTERNATIONAL_COMMERCIAL.search(text) and not re.search(
-        r"domestic arbitration|section\\s+(9|11|34|37)", text, re.I
+        r"domestic arbitration|section\s+(9|11|34|37)", text, re.I
     ):
         return False
     return True
