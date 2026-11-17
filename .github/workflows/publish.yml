@@ -38,7 +38,7 @@ jobs:
         env:
           # Prefer neural narration when the repository secrets are configured.
           # The application retains its local fallback when no key is present.
-          BRIEFLY_TTS_PROVIDER: ${{ secrets.ELEVENLABS_API_KEY != '' && 'elevenlabs' || 'local' }}
+          BRIEFLY_TTS_PROVIDER: ${{ secrets.ELEVENLABS_API_KEY != '' && secrets.ELEVENLABS_VOICE_ID != '' && 'elevenlabs' || 'local' }}
           ELEVENLABS_API_KEY: ${{ secrets.ELEVENLABS_API_KEY }}
           ELEVENLABS_VOICE_ID: ${{ secrets.ELEVENLABS_VOICE_ID }}
         run: |
@@ -46,15 +46,6 @@ jobs:
           # A file placed under overrides/ replaces the same path from the zip,
           # so one file can be corrected without uploading the package again.
           if [ -d overrides ]; then cp -a overrides/. briefly/; fi
-          # Keep the extracted, override-applied application source reviewable.
-          # The original ZIP remains untouched; this is an additive extraction.
-          git config user.name "github-actions[bot]"
-          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add briefly/
-          if ! git diff --cached --quiet; then
-            git commit -m "Extract Briefly application source from packaged release"
-            git push origin HEAD:main
-          fi
           bash briefly/build_site.sh
       - uses: actions/upload-pages-artifact@v3
         with:
