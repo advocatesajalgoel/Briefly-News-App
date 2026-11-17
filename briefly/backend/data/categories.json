@@ -205,7 +205,7 @@
     {
       "slug": "arbitration",
       "name": "Arbitration",
-      "sort_order": 26,
+      "sort_order": 15,
       "is_synthetic": false,
       "description": "Domestic arbitration in India and Indian court proceedings arising from arbitration.",
       "keywords": [
