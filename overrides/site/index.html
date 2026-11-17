@@ -968,7 +968,7 @@ function openSheet(story) {
         </span>
         <p class="src-head">${esc(s.original_headline)}</p>
         ${s.crux
-          ? `<p class="src-crux"><strong>Source crux · ${s.crux.trim().split(/\\s+/).filter(Boolean).length} words</strong><br>${esc(s.crux)}</p>`
+          ? `<p class="src-crux"><strong>Source crux · ${s.crux.trim().split(/\s+/).filter(Boolean).length} words</strong><br>${esc(s.crux)}</p>`
           : '<p class="src-crux src-crux-missing">Publisher summary not available; no substitute text has been generated.</p>'}
         <div class="src-meta">${esc(sourceKind(s.source_kind))}${
           s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
