@@ -460,10 +460,23 @@ def run_processing(db: Session, *, limit: int | None = None) -> dict:
         ).all()
     )
 
+    story_diagnostics = []
     for story in stories:
         stats.processed += 1
         try:
             status = process_story(db, story, published_headlines=published_headlines)
+            story_diagnostics.append({
+                "story_id": str(story.id),
+                "headline": story.headline,
+                "category": story.category.slug if story.category else None,
+                "status": str(status),
+                "source_count": story.source_count,
+                "sources": sorted({a.source.name for a in story.articles if a.source}),
+                "article_urls": [a.canonical_url or a.url for a in story.articles],
+                "qc_passed": (story.qc_report or {}).get("passed"),
+                "qc_issues": (story.qc_report or {}).get("issues", []),
+                "confidence": story.confidence,
+            })
         except Exception as exc:  # pragma: no cover - defensive
             story.status = ProcessingStatus.FAILED
             stats.errors.append(f"{story.id}: {type(exc).__name__}: {exc}")
@@ -474,7 +487,9 @@ def run_processing(db: Session, *, limit: int | None = None) -> dict:
         elif status == ProcessingStatus.FLAGGED:
             stats.flagged += 1
     db.flush()
-    return stats.as_dict()
+    result = stats.as_dict()
+    result["story_diagnostics"] = story_diagnostics[-300:]
+    return result
 
 
 # ---------------------------------------------------------------------------
