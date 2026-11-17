@@ -60,6 +60,7 @@ class IngestStats:
     # One line per feed polled: who, which URL, what happened. This is the
     # first thing to read when a section looks thin.
     feeds: list[dict] = field(default_factory=list)
+    article_events: list[dict] = field(default_factory=list)
 
     def as_dict(self) -> dict:
         return {
@@ -76,6 +77,7 @@ class IngestStats:
             "sources_created": self.sources_created,
             "errors": self.errors[:20],
             "feeds": self.feeds,
+            "article_events": self.article_events[-500:],
         }
 
 
@@ -158,14 +160,24 @@ class IngestionService:
     # -- persistence ------------------------------------------------------
     def _persist(self, raw: RawArticle, publisher: Source, feed_source: Source) -> Article | None:
         cutoff = datetime.now(UTC) - timedelta(hours=self.settings.ingest_lookback_hours)
+        event = {
+            "source": publisher.slug,
+            "headline": raw.headline,
+            "url": raw.canonical_url or raw.url,
+            "published_at": raw.published_at.isoformat() if raw.published_at else None,
+            "discovery_channel": raw.discovery_channel,
+            "discovery_query": raw.discovery_query,
+        }
         if raw.published_at and raw.published_at < cutoff:
             self.stats.articles_stale += 1
+            self.stats.article_events.append({**event, "decision": "rejected", "stage": "freshness", "reason": "older_than_lookback", "cutoff": cutoff.isoformat()})
             return None
 
         form = article_form(raw.headline, raw.canonical_url or raw.url)
         if form != REPORT:
             self.stats.articles_not_reports += 1
             self.stats.not_report_forms[form] = self.stats.not_report_forms.get(form, 0) + 1
+            self.stats.article_events.append({**event, "decision": "rejected", "stage": "article_form", "reason": str(form)})
             return None
 
         existing = self.db.scalar(
@@ -181,6 +193,7 @@ class IngestionService:
             existing = self._same_report_from_publisher(raw, publisher)
         if existing is not None:
             self.stats.articles_duplicate += 1
+            self.stats.article_events.append({**event, "decision": "duplicate", "stage": "deduplication", "reason": "existing_publisher_report", "existing_article_id": str(existing.id), "existing_headline": existing.headline})
             # An aggregator hit confirms a story we already have; keep the
             # earliest publication time we have seen for it.
             if raw.published_at and (
@@ -228,6 +241,7 @@ class IngestionService:
         self.db.add(article)
         self._filed[(publisher.id, raw.url_hash)] = article
         self.stats.articles_created += 1
+        self.stats.article_events.append({**event, "decision": "created", "stage": "persistence", "article_id": str(article.id)})
         return article
 
     def _same_report_from_publisher(self, raw: RawArticle, publisher: Source) -> Article | None:
@@ -295,6 +309,11 @@ class IngestionService:
 
         self.stats.feeds_ok += 1
         report["items"] = len(result.articles)
+        report["parsed_articles"] = [
+            {"headline": a.headline, "url": a.canonical_url or a.url,
+             "published_at": a.published_at.isoformat() if a.published_at else None}
+            for a in result.articles
+        ][:100]
         feed_source.consecutive_failures = 0
         feed_source.last_error = None
         if result.etag or result.last_modified:
