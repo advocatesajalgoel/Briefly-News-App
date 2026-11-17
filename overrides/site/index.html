@@ -140,6 +140,20 @@ a { color: var(--accent); }
   background: var(--accent); border-color: var(--accent);
   color: var(--paper);
 }
+.arbitration-rail {
+  flex: none; display: flex; gap: 6px; padding: 7px 16px 9px;
+  overflow-x: auto; scrollbar-width: none; border-bottom: 1px solid var(--rule);
+  background: var(--paper);
+}
+.arbitration-rail::-webkit-scrollbar { display: none; }
+.arbitration-rail button {
+  flex: none; font-size: 11px; font-weight: 500; padding: 5px 10px;
+  border-radius: 999px; border: 1px solid var(--rule); color: var(--muted);
+  white-space: nowrap;
+}
+.arbitration-rail button[aria-selected="true"] {
+  color: var(--accent); border-color: var(--accent); background: var(--wash);
+}
 
 /* --- the card stack ----------------------------------------------------- */
 .stack {
@@ -436,6 +450,7 @@ body.sheet-open .sheet-backdrop { opacity: 1; pointer-events: auto; }
   <div class="banner hidden" id="banner"></div>
 
   <nav class="rail hidden" id="rail" role="tablist" aria-label="Sections"></nav>
+  <nav class="arbitration-rail hidden" id="arbitration-rail" role="tablist" aria-label="Arbitration topics"></nav>
 
   <main id="main" class="stack" tabindex="-1">
     <div class="skeleton"><div></div><div></div><div></div><div></div><div></div><div></div></div>
@@ -482,6 +497,7 @@ const API = {
 const state = {
   tab: "feed",
   section: "for-you",
+  arbitrationTopic: "all",
   stories: [],
   categories: [],
   episodes: [],
@@ -585,9 +601,29 @@ async function load() {
 }
 
 /* --- rendering ----------------------------------------------------------- */
+const ARBITRATION_TOPICS = [
+  { id: "all", label: "All arbitration", terms: [] },
+  { id: "section-9", label: "Section 9 · Interim relief", terms: ["section 9", "section 9 of the arbitration", "interim measure", "interim relief"] },
+  { id: "section-11", label: "Section 11 · Appointment", terms: ["section 11", "appointment of arbitrator", "appointment of an arbitrator"] },
+  { id: "section-16", label: "Section 16 · Jurisdiction", terms: ["section 16", "kompetenz", "jurisdiction of the tribunal"] },
+  { id: "section-29a", label: "Section 29A · Mandate", terms: ["section 29a", "section 29-a", "extension of mandate", "mandate of the arbitral tribunal"] },
+  { id: "section-34", label: "Section 34 · Challenge", terms: ["section 34", "setting aside", "set aside an arbitral award"] },
+  { id: "section-36-37", label: "Sections 36–37 · Enforcement & appeal", terms: ["section 36", "section 37", "enforcement of arbitral award", "appeal under section 37"] },
+  { id: "awards", label: "Arbitral awards", terms: ["arbitral award", "arbitration award", "award debtor", "award holder"] },
+  { id: "tribunals", label: "Tribunals & arbitrators", terms: ["arbitral tribunal", "arbitrator", "arbitrators", "presiding arbitrator"] }
+];
+
 function visibleStories() {
   if (state.section === "for-you") return state.stories;
-  return state.stories.filter((s) => s.category_slug === state.section);
+  let stories = state.stories.filter((s) => s.category_slug === state.section);
+  if (state.section === "arbitration" && state.arbitrationTopic !== "all") {
+    const topic = ARBITRATION_TOPICS.find((t) => t.id === state.arbitrationTopic);
+    if (topic) stories = stories.filter((s) => {
+      const text = [s.headline, s.summary, s.dek, s.category_name].filter(Boolean).join(" ").toLowerCase();
+      return topic.terms.some((term) => text.includes(term));
+    });
+  }
+  return stories;
 }
 
 function renderBanner() {
@@ -637,6 +673,20 @@ function renderRail() {
     .map((c) => `<button role="tab" data-section="${esc(c.slug)}"
        aria-selected="${c.slug === state.section}">${esc(c.name)}</button>`)
     .join("");
+}
+
+function renderArbitrationRail() {
+  const rail = $("arbitration-rail");
+  if (state.tab !== "feed" || state.section !== "arbitration") {
+    rail.className = "arbitration-rail hidden";
+    rail.innerHTML = "";
+    return;
+  }
+  rail.className = "arbitration-rail";
+  rail.innerHTML = ARBITRATION_TOPICS.map((topic) =>
+    `<button role="tab" data-arbitration-topic="${esc(topic.id)}"
+      aria-selected="${topic.id === state.arbitrationTopic}">${esc(topic.label)}</button>`
+  ).join("");
 }
 
 function cardHTML(story, index) {
@@ -845,6 +895,7 @@ function renderAbout() {
 function render() {
   renderBanner();
   renderRail();
+  renderArbitrationRail();
   if (state.tab === "feed") renderFeed();
   else if (state.tab === "podcast") renderPodcast();
   else if (state.tab === "saved") renderSaved();
@@ -921,6 +972,15 @@ $("rail").addEventListener("click", (event) => {
   const button = event.target.closest("[data-section]");
   if (!button) return;
   state.section = button.dataset.section;
+  if (state.section === "arbitration") state.arbitrationTopic = "all";
+  render();
+});
+
+$("arbitration-rail").addEventListener("click", (event) => {
+  const button = event.target.closest("[data-arbitration-topic]");
+  if (!button) return;
+  state.section = "arbitration";
+  state.arbitrationTopic = button.dataset.arbitrationTopic;
   render();
 });
 
