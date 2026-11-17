@@ -289,6 +289,25 @@ def main() -> int:
             "direct_feed": direct[-1] if direct else None,
             "articles_published": articles_count,
         })
+    # Article-level trace from this build. This is diagnostic metadata only;
+    # it deliberately excludes full article text.
+    processing_data = run_data.get("processing", {})
+    _write(api / "pipeline-diagnostics.json", {
+        "built_at": datetime.now(UTC).isoformat(),
+        "ingestion": {
+            "article_events": ingest_data.get("article_events", [])[-500:],
+            "feed_candidates": [
+                {"source": row.get("source"), "url": row.get("url"),
+                 "status": row.get("status"), "items": row.get("items"),
+                 "detail": row.get("detail"),
+                 "parsed_articles": row.get("parsed_articles", [])}
+                for row in feed_rows
+            ],
+        },
+        "processing": processing_data,
+        "note": "Headlines, URLs, timestamps and pipeline decisions; no full article text.",
+    })
+
     _write(api / "source-health.json", {
         "built_at": datetime.now(UTC).isoformat(),
         "sources": health_sources,
