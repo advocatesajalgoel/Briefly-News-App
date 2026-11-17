@@ -238,9 +238,14 @@ a { color: var(--accent); }
 }
 .summary {
   font-size: clamp(16px, 4.3vw, 18px);
-  line-height: 1.52;
+  line-height: 1.42;
   color: color-mix(in srgb, var(--ink) 88%, transparent);
   margin: 0;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  overflow: hidden;
 }
 
 .dispute {
@@ -404,6 +409,15 @@ body.sheet-open .sheet-backdrop { opacity: 1; pointer-events: auto; }
 .src-arrow { margin-left: auto; color: var(--accent); font-size: 13px; }
 .src-head { font-size: 13px; color: var(--muted); line-height: 1.42; margin: 4px 0 0; }
 .src-meta { font-size: 11px; color: var(--faint); margin-top: 4px; }
+.src-crux {
+  margin: 9px 0 0; padding: 10px 11px; border-radius: 10px;
+  background: color-mix(in srgb, var(--ink) 5%, transparent);
+  color: var(--ink); font-size: 13px; line-height: 1.42;
+}
+.src-crux span {
+  display: block; margin-bottom: 4px; color: var(--muted);
+  font-size: 9px; font-weight: 700; letter-spacing: .08em; text-transform: uppercase;
+}
 
 .disputed-block {
   margin-top: 18px; padding: 14px; border-radius: 14px;
@@ -957,13 +971,15 @@ function openSheet(story) {
           <span class="src-arrow">↗</span>
         </span>
         <p class="src-head">${esc(s.original_headline)}</p>
+        ${s.crux ? `<p class="src-crux"><span>Publisher's crux · ${Math.min(30, s.crux.trim().split(/\\s+/).length)} words</span>${esc(s.crux)}</p>` : ""}
         <div class="src-meta">${esc(sourceKind(s.source_kind))}${
           s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
       </a>`).join("")}
 
     ${disputedFacts.length ? `<div class="disputed-block">
-      <div class="who">${esc(disputedFacts[0].attributed_to || "Another source")} disputes this</div>
-      <p>${esc(disputedFacts[0].text)}</p></div>` : ""}
+      <div class="who">Disputed or conflicting facts</div>
+      ${disputedFacts.map((f) => `<p><b>${esc(f.attributed_to || "Source account")}:</b> ${esc(f.text)}</p>`).join("")}
+    </div>` : ""}
 
     <p class="sheet-note" style="margin-top:22px">Briefly does not claim to be unbiased.
       It shows you who reported what, when, and where accounts differ, and links you to
