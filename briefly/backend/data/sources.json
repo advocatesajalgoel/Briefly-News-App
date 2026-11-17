@@ -535,7 +535,7 @@
       "slug": "newslaundry",
       "name": "Newslaundry",
       "homepage_url": "https://www.newslaundry.com",
-      "feed_url": null,
+      "feed_url": "https://www.newslaundry.com/stories.rss",
       "domains": [
         "newslaundry.com"
       ],
@@ -544,10 +544,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Public stories RSS candidate; verify through Briefly's own fetch diagnostics. Google News publisher-domain discovery is also enabled."
     },
     {
       "slug": "the-quint",
@@ -562,10 +562,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "the-news-minute",
@@ -580,10 +580,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "article-14",
@@ -598,10 +598,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "reporters-collective",
@@ -616,10 +616,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "the-caravan",
@@ -634,10 +634,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "pari",
@@ -652,10 +652,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "the-federal",
@@ -670,10 +670,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "eastmojo",
@@ -688,10 +688,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "boom-live",
@@ -706,16 +706,16 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "alt-news",
       "name": "Alt News",
       "homepage_url": "https://www.altnews.in",
-      "feed_url": null,
+      "feed_url": "https://www.altnews.in/feed/",
       "domains": [
         "altnews.in"
       ],
@@ -724,10 +724,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "RSS endpoint reported working by an external feed monitor; Briefly must still verify its own fetch. Google News publisher-domain discovery is also enabled."
     },
     {
       "slug": "factly",
@@ -742,10 +742,10 @@
       "country": "IN",
       "language": "en",
       "is_independent": true,
-      "enabled": false,
+      "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
     },
     {
       "slug": "livelaw",
@@ -919,11 +919,6 @@
       "when": "2d"
     },
     {
-      "category": "india-independent",
-      "query": "site:scroll.in OR site:thewire.in OR site:theprint.in OR site:article-14.com OR site:reporters-collective.in OR site:newslaundry.com OR site:thequint.com OR site:thenewsminute.com OR site:caravanmagazine.in OR site:ruralindiaonline.org OR site:thefederal.com OR site:eastmojo.com OR site:boomlive.in OR site:altnews.in OR site:factly.in India (investigation OR report OR \"fact check\")",
-      "when": "2d"
-    },
-    {
       "category": "arbitration",
       "query": "\"Arbitration and Conciliation Act, 1996\" India (Supreme Court OR High Court)",
       "when": "3d"
@@ -952,6 +947,81 @@
       "category": "arbitration",
       "query": "\"Section 9\" arbitration India interim relief",
       "when": "3d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:scroll.in (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:thewire.in (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:theprint.in (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:newslaundry.com (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:thequint.com (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:thenewsminute.com (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:article-14.com (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:reporters-collective.in (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:caravanmagazine.in (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:ruralindiaonline.org (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:thefederal.com (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:eastmojo.com (India OR Indian OR Delhi OR Mumbai OR Parliament OR government OR investigation OR report)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:boomlive.in (fact check OR fact-check OR verification OR viral claim OR misinformation OR investigation)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:altnews.in (fact check OR fact-check OR verification OR viral claim OR misinformation OR investigation)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:factly.in (fact check OR fact-check OR verification OR viral claim OR misinformation OR investigation)",
+      "when": "2d"
     }
   ]
 }
