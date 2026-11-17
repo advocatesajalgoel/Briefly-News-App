@@ -227,6 +227,49 @@
         "section 36",
         "section 37"
       ]
+    },
+    {
+      "slug": "automobile",
+      "name": "Automobile",
+      "sort_order": 55,
+      "is_synthetic": false,
+      "description": "Verified automotive news: vehicle launches, industry developments, safety, technology and road tests.",
+      "keywords": [
+        "automotive",
+        "automobile",
+        "electric vehicle",
+        "electric vehicles",
+        "SUV",
+        "sedan",
+        "hatchback",
+        "motorcycle",
+        "scooter",
+        "two-wheeler",
+        "three-wheeler",
+        "commercial vehicle",
+        "car launch",
+        "bike launch",
+        "vehicle launch",
+        "new car",
+        "new motorcycle",
+        "facelift",
+        "road test",
+        "crash test",
+        "NCAP",
+        "Bharat NCAP",
+        "BNCAP",
+        "powertrain",
+        "engine",
+        "transmission",
+        "vehicle recall",
+        "automotive industry",
+        "car sales",
+        "vehicle sales",
+        "charging infrastructure",
+        "battery electric",
+        "hybrid powertrain",
+        "automotive safety"
+      ]
     }
   ]
 }
