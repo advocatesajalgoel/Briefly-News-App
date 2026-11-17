@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>The Times of India — sample feed</title>
+    <link>https://example-times-of-india.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Verath hits Kalpore coast; 40,000 moved to camps</title>
+      <link>https://example-times-of-india.test/news/33330921?utm_source=rss</link>
+      <guid isPermaLink="false">times-of-india-33330921</guid>
+      <description><![CDATA[The storm made landfall with wind speeds of 110 kmph, officials said. Around 40,000 residents were evacuated from low-lying areas.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:40:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Kestrels beat Harriers 3-1 to reach the cup final</title>
+      <link>https://example-times-of-india.test/news/49312181?utm_source=rss</link>
+      <guid isPermaLink="false">times-of-india-49312181</guid>
+      <description><![CDATA[The Kestrels scored three goals in the second half to beat the Harriers 3-1 and reach the cup final on Sunday.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:45:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

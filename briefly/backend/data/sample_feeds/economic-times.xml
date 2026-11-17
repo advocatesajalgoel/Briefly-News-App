@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>The Economic Times — sample feed</title>
+    <link>https://example-economic-times.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Benchmark rate unchanged at 6.25 per cent, committee splits five to one</title>
+      <link>https://example-economic-times.test/news/73819500?utm_source=rss</link>
+      <guid isPermaLink="false">economic-times-73819500</guid>
+      <description><![CDATA[The rate decision keeps borrowing costs at 6.25 per cent. Economists at two brokerages disputed the growth projection of 6.8 per cent cited by the committee.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:20:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Trade pact talks with Verland resume after eight months</title>
+      <link>https://example-economic-times.test/news/28837619?utm_source=rss</link>
+      <guid isPermaLink="false">economic-times-28837619</guid>
+      <description><![CDATA[Negotiators resumed talks on a trade agreement with Verland in Geneva. The commerce ministry said tariff lines covering 4,200 products are under discussion.]]></description>
+      <pubDate>Sat, 05 Sep 2026 07:30:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

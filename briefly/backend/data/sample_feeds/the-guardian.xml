@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>The Guardian — sample feed</title>
+    <link>https://example-the-guardian.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Geneva talks restart on stalled trade agreement</title>
+      <link>https://example-the-guardian.test/news/24920897?utm_source=rss</link>
+      <guid isPermaLink="false">the-guardian-24920897</guid>
+      <description><![CDATA[Officials from both delegations met in Geneva. A Verland spokesperson disputed the characterisation that agriculture had been excluded from the agenda.]]></description>
+      <pubDate>Sat, 05 Sep 2026 07:10:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

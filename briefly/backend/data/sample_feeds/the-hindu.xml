@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>The Hindu — sample feed</title>
+    <link>https://example-the-hindu.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Central bank holds benchmark rate at 6.25 per cent</title>
+      <link>https://example-the-hindu.test/news/34751196?utm_source=rss</link>
+      <guid isPermaLink="false">the-hindu-34751196</guid>
+      <description><![CDATA[The Reserve Bank of Ordelia kept its benchmark rate unchanged at 6.25 per cent on Friday, Governor Anaya Rao said, after consumer inflation eased to 4.1 per cent in August.]]></description>
+      <pubDate>Sat, 05 Sep 2026 09:00:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Cyclone Verath crosses coast, relief camps opened in three districts</title>
+      <link>https://example-the-hindu.test/news/35739338?utm_source=rss</link>
+      <guid isPermaLink="false">the-hindu-35739338</guid>
+      <description><![CDATA[Relief camps opened across three districts as Cyclone Verath crossed the coast. The state disaster authority said wind speeds reached 110 kmph.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:25:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Space agency sets December window for uncrewed test flight</title>
+      <link>https://example-the-hindu.test/news/22402523?utm_source=rss</link>
+      <guid isPermaLink="false">the-hindu-22402523</guid>
+      <description><![CDATA[The national space agency said the uncrewed test flight of its crew capsule will lift off in a window opening on 12 December from the Meritha range.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:00:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

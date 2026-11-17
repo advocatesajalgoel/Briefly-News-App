@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>BBC News — sample feed</title>
+    <link>https://example-bbc-news.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Ordelia keeps rates on hold as inflation slows</title>
+      <link>https://example-bbc-news.test/news/41646654?utm_source=rss</link>
+      <guid isPermaLink="false">bbc-news-41646654</guid>
+      <description><![CDATA[Ordelia's central bank left its benchmark rate at 6.25 per cent, saying inflation had eased to 4.1 per cent.]]></description>
+      <pubDate>Sat, 05 Sep 2026 07:50:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Test flight for new crew capsule scheduled for December</title>
+      <link>https://example-bbc-news.test/news/89802377?utm_source=rss</link>
+      <guid isPermaLink="false">bbc-news-89802377</guid>
+      <description><![CDATA[The uncrewed flight is scheduled to open a window on 12 December, the agency said.]]></description>
+      <pubDate>Sat, 05 Sep 2026 07:25:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

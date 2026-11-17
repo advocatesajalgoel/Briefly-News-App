@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>The Indian Express — sample feed</title>
+    <link>https://example-indian-express.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Rate held at 6.25 per cent as inflation eases</title>
+      <link>https://example-indian-express.test/news/68420397?utm_source=rss</link>
+      <guid isPermaLink="false">indian-express-68420397</guid>
+      <description><![CDATA[Ordelia's central bank held its benchmark rate steady at 6.25 per cent. The monetary committee voted five to one, according to the statement.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:35:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Uncrewed crew-capsule test flight set for 12 December</title>
+      <link>https://example-indian-express.test/news/45580409?utm_source=rss</link>
+      <guid isPermaLink="false">indian-express-45580409</guid>
+      <description><![CDATA[The agency confirmed 12 December as the opening of the launch window. Officials said the flight will carry no crew and will test the escape system.]]></description>
+      <pubDate>Sat, 05 Sep 2026 07:40:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

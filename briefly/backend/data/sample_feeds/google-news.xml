@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- FICTIONAL sample of a Google News RSS response, used only in tests. -->
+<rss version="2.0">
+  <channel>
+    <title>Top stories - sample</title>
+    <link>https://news.google.com/</link>
+    <description>Fictional sample aggregator feed.</description>
+    <language>en</language>
+    <item>
+      <title>Central bank holds benchmark rate at 6.25 per cent - The Hindu</title>
+      <link>https://news.google.com/rss/articles/SAMPLE751196?oc=5</link>
+      <guid isPermaLink="false">gn-751196</guid>
+      <pubDate>Sat, 05 Sep 2026 09:00:00 +0000</pubDate>
+      <description><![CDATA[<a href="https://news.google.com/rss/articles/SAMPLE">Central bank holds benchmark rate at 6.25 per cent</a>&nbsp;&nbsp;The Hindu]]></description>
+      <source url="https://example-the-hindu.test">The Hindu</source>
+    </item>
+    <item>
+      <title>Cyclone Verath makes landfall near Kalpore, 40,000 evacuated - NDTV</title>
+      <link>https://news.google.com/rss/articles/SAMPLE334148?oc=5</link>
+      <guid isPermaLink="false">gn-334148</guid>
+      <pubDate>Sat, 05 Sep 2026 08:55:00 +0000</pubDate>
+      <description><![CDATA[<a href="https://news.google.com/rss/articles/SAMPLE">Cyclone Verath makes landfall near Kalpore, 40,000 evacuated</a>&nbsp;&nbsp;NDTV]]></description>
+      <source url="https://example-ndtv.test">NDTV</source>
+    </item>
+    <item>
+      <title>Space agency sets December window for uncrewed test flight - The Hindu</title>
+      <link>https://news.google.com/rss/articles/SAMPLE402523?oc=5</link>
+      <guid isPermaLink="false">gn-402523</guid>
+      <pubDate>Sat, 05 Sep 2026 08:00:00 +0000</pubDate>
+      <description><![CDATA[<a href="https://news.google.com/rss/articles/SAMPLE">Space agency sets December window for uncrewed test flight</a>&nbsp;&nbsp;The Hindu]]></description>
+      <source url="https://example-the-hindu.test">The Hindu</source>
+    </item>
+  </channel>
+</rss>

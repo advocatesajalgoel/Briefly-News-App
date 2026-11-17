@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>Al Jazeera English — sample feed</title>
+    <link>https://example-al-jazeera.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Trade negotiations resume in Geneva after long pause</title>
+      <link>https://example-al-jazeera.test/news/30753476?utm_source=rss</link>
+      <guid isPermaLink="false">al-jazeera-30753476</guid>
+      <description><![CDATA[The two delegations met for the first time in eight months, according to officials briefed on the talks.]]></description>
+      <pubDate>Sat, 05 Sep 2026 06:50:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

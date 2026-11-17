@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>NDTV — sample feed</title>
+    <link>https://example-ndtv.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>Cyclone Verath makes landfall near Kalpore, 40,000 evacuated</title>
+      <link>https://example-ndtv.test/news/83334148?utm_source=rss</link>
+      <guid isPermaLink="false">ndtv-83334148</guid>
+      <description><![CDATA[Cyclone Verath crossed the coast near Kalpore early on Friday. State authorities said 40,000 people had been moved to relief camps. No deaths have been confirmed.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:55:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>Kestrels through to final after 3-1 win over Harriers</title>
+      <link>https://example-ndtv.test/news/28597477?utm_source=rss</link>
+      <guid isPermaLink="false">ndtv-28597477</guid>
+      <description><![CDATA[A second-half hat-trick sent the Kestrels into the final. The match was played in front of 42,000 spectators.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:15:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

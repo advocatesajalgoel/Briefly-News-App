@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+  FICTIONAL TEST DATA. Every outlet name below is used only as a routing label;
+  the headlines, people, places and figures are invented for Briefly's test
+  suite and describe no real event.
+-->
+<rss version="2.0">
+  <channel>
+    <title>Hindustan Times — sample feed</title>
+    <link>https://example-hindustan-times.test/</link>
+    <description>Fictional sample feed used by Briefly's tests.</description>
+    <language>en</language>
+    <item>
+      <title>40,000 evacuated as Cyclone Verath makes landfall</title>
+      <link>https://example-hindustan-times.test/news/59238781?utm_source=rss</link>
+      <guid isPermaLink="false">hindustan-times-59238781</guid>
+      <description><![CDATA[Authorities reported that 40,000 people were evacuated. A district official said power supply was disrupted in coastal areas.]]></description>
+      <pubDate>Sat, 05 Sep 2026 08:10:00 +0000</pubDate>
+    </item>
+    <item>
+      <title>City council approves new bus corridor along the eastern ring road</title>
+      <link>https://example-hindustan-times.test/news/38294704?utm_source=rss</link>
+      <guid isPermaLink="false">hindustan-times-38294704</guid>
+      <description><![CDATA[The council approved a 14 km bus corridor. Work is expected to begin in November, an official said.]]></description>
+      <pubDate>Sat, 05 Sep 2026 07:20:00 +0000</pubDate>
+    </item>
+  </channel>
+</rss>

@@ -1,0 +1,503 @@
+{
+  "_readme": [
+    "Source registry for Briefly. `scripts/seed_reference_data.py` loads this into the",
+    "`sources` table; `scripts/verify_feeds.py` fetches every feed_url, honours robots.txt,",
+    "and reports which ones actually work from your network.",
+    "",
+    "IMPORTANT — feed_verified:",
+    "  false  = the URL follows the publisher's documented/published feed pattern but has NOT",
+    "           been confirmed live from this machine. Run scripts/verify_feeds.py before",
+    "           relying on it; correct any that have moved. Feeds get retired and moved often.",
+    "  Entries with `enabled: false` need a commercial licence or an API key and are",
+    "  intentionally left switched off rather than guessed at.",
+    "",
+    "Never add a source here that requires defeating a paywall, logging in, or ignoring",
+    "robots.txt. `access: restricted` means: link out only, never store a summary.",
+    "",
+    "feed_category / section_feeds:",
+    "  A publisher files its own stories into sections, and its section feeds say which.",
+    "  `feed_category` is the section of the main feed; `section_feeds` lists further feeds,",
+    "  each with the Briefly category its items are filed under. They make every section of",
+    "  the app fillable from publishers' own feeds, with or without an aggregator.",
+    "  Like feed_url, these follow each publisher's published feed pattern and are NOT",
+    "  confirmed live from the machine that wrote this file. A feed that has moved is",
+    "  reported in the run log as failed and simply contributes nothing."
+  ],
+  "sources": [
+    {
+      "slug": "google-news",
+      "name": "Google News",
+      "homepage_url": "https://news.google.com",
+      "feed_url": null,
+      "domains": [
+        "news.google.com"
+      ],
+      "kind": "aggregator",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": false,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 20,
+      "notes": "Discovery only. Feed URLs are built in app/ingestion/google_news.py. Never counted as a source on a story card - the credited publisher is."
+    },
+    {
+      "slug": "bbc-news",
+      "name": "BBC News",
+      "homepage_url": "https://www.bbc.com/news",
+      "feed_url": "https://feeds.bbci.co.uk/news/world/rss.xml",
+      "domains": [
+        "bbc.com",
+        "bbc.co.uk"
+      ],
+      "kind": "international",
+      "access": "feed_full",
+      "country": "GB",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "notes": "BBC publishes per-section RSS. Additional sections: /news/rss.xml, /news/business/rss.xml, /news/technology/rss.xml.",
+      "feed_category": "world",
+      "section_feeds": [
+        {
+          "category": "india",
+          "url": "https://feeds.bbci.co.uk/news/world/asia/india/rss.xml"
+        },
+        {
+          "category": "business",
+          "url": "https://feeds.bbci.co.uk/news/business/rss.xml"
+        },
+        {
+          "category": "technology",
+          "url": "https://feeds.bbci.co.uk/news/technology/rss.xml"
+        },
+        {
+          "category": "science",
+          "url": "https://feeds.bbci.co.uk/news/science_and_environment/rss.xml"
+        },
+        {
+          "category": "entertainment",
+          "url": "https://feeds.bbci.co.uk/news/entertainment_and_arts/rss.xml"
+        },
+        {
+          "category": "sports",
+          "url": "https://feeds.bbci.co.uk/sport/rss.xml"
+        }
+      ]
+    },
+    {
+      "slug": "the-guardian",
+      "name": "The Guardian",
+      "homepage_url": "https://www.theguardian.com",
+      "feed_url": "https://www.theguardian.com/world/rss",
+      "domains": [
+        "theguardian.com"
+      ],
+      "kind": "international",
+      "access": "feed_full",
+      "country": "GB",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "notes": "Guardian also offers the Open Platform Content API (free key) which is a better long-term integration than RSS.",
+      "feed_category": "world",
+      "section_feeds": [
+        {
+          "category": "india",
+          "url": "https://www.theguardian.com/world/india/rss"
+        },
+        {
+          "category": "business",
+          "url": "https://www.theguardian.com/business/rss"
+        },
+        {
+          "category": "technology",
+          "url": "https://www.theguardian.com/technology/rss"
+        },
+        {
+          "category": "science",
+          "url": "https://www.theguardian.com/science/rss"
+        },
+        {
+          "category": "sports",
+          "url": "https://www.theguardian.com/sport/rss"
+        },
+        {
+          "category": "entertainment",
+          "url": "https://www.theguardian.com/film/rss"
+        }
+      ]
+    },
+    {
+      "slug": "al-jazeera",
+      "name": "Al Jazeera English",
+      "homepage_url": "https://www.aljazeera.com",
+      "feed_url": "https://www.aljazeera.com/xml/rss/all.xml",
+      "domains": [
+        "aljazeera.com"
+      ],
+      "kind": "international",
+      "access": "feed_full",
+      "country": "QA",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 20
+    },
+    {
+      "slug": "the-hindu",
+      "name": "The Hindu",
+      "homepage_url": "https://www.thehindu.com",
+      "feed_url": "https://www.thehindu.com/news/national/feeder/default.rss",
+      "domains": [
+        "thehindu.com"
+      ],
+      "kind": "national",
+      "access": "feed_full",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "feed_category": "india",
+      "section_feeds": [
+        {
+          "category": "world",
+          "url": "https://www.thehindu.com/news/international/feeder/default.rss"
+        },
+        {
+          "category": "business",
+          "url": "https://www.thehindu.com/business/feeder/default.rss"
+        },
+        {
+          "category": "science",
+          "url": "https://www.thehindu.com/sci-tech/science/feeder/default.rss"
+        },
+        {
+          "category": "technology",
+          "url": "https://www.thehindu.com/sci-tech/technology/feeder/default.rss"
+        },
+        {
+          "category": "sports",
+          "url": "https://www.thehindu.com/sport/feeder/default.rss"
+        },
+        {
+          "category": "entertainment",
+          "url": "https://www.thehindu.com/entertainment/feeder/default.rss"
+        }
+      ]
+    },
+    {
+      "slug": "indian-express",
+      "name": "The Indian Express",
+      "homepage_url": "https://indianexpress.com",
+      "feed_url": "https://indianexpress.com/section/india/feed/",
+      "domains": [
+        "indianexpress.com"
+      ],
+      "kind": "national",
+      "access": "feed_full",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "feed_category": "india",
+      "section_feeds": [
+        {
+          "category": "world",
+          "url": "https://indianexpress.com/section/world/feed/"
+        },
+        {
+          "category": "business",
+          "url": "https://indianexpress.com/section/business/feed/"
+        },
+        {
+          "category": "technology",
+          "url": "https://indianexpress.com/section/technology/feed/"
+        },
+        {
+          "category": "sports",
+          "url": "https://indianexpress.com/section/sports/feed/"
+        },
+        {
+          "category": "entertainment",
+          "url": "https://indianexpress.com/section/entertainment/feed/"
+        }
+      ]
+    },
+    {
+      "slug": "times-of-india",
+      "name": "The Times of India",
+      "homepage_url": "https://timesofindia.indiatimes.com",
+      "feed_url": "https://timesofindia.indiatimes.com/rssfeedstopstories.cms",
+      "domains": [
+        "timesofindia.indiatimes.com",
+        "indiatimes.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "section_feeds": [
+        {
+          "category": "india",
+          "url": "https://timesofindia.indiatimes.com/rssfeeds/-2128936835.cms"
+        },
+        {
+          "category": "world",
+          "url": "https://timesofindia.indiatimes.com/rssfeeds/296589292.cms"
+        },
+        {
+          "category": "business",
+          "url": "https://timesofindia.indiatimes.com/rssfeeds/1898055.cms"
+        },
+        {
+          "category": "technology",
+          "url": "https://timesofindia.indiatimes.com/rssfeeds/66949542.cms"
+        },
+        {
+          "category": "sports",
+          "url": "https://timesofindia.indiatimes.com/rssfeeds/4719148.cms"
+        },
+        {
+          "category": "entertainment",
+          "url": "https://timesofindia.indiatimes.com/rssfeeds/1081479906.cms"
+        }
+      ]
+    },
+    {
+      "slug": "hindustan-times",
+      "name": "Hindustan Times",
+      "homepage_url": "https://www.hindustantimes.com",
+      "feed_url": "https://www.hindustantimes.com/feeds/rss/india-news/rssfeed.xml",
+      "domains": [
+        "hindustantimes.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "feed_category": "india",
+      "section_feeds": [
+        {
+          "category": "world",
+          "url": "https://www.hindustantimes.com/feeds/rss/world-news/rssfeed.xml"
+        },
+        {
+          "category": "business",
+          "url": "https://www.hindustantimes.com/feeds/rss/business/rssfeed.xml"
+        },
+        {
+          "category": "technology",
+          "url": "https://www.hindustantimes.com/feeds/rss/technology/rssfeed.xml"
+        },
+        {
+          "category": "sports",
+          "url": "https://www.hindustantimes.com/feeds/rss/sports/rssfeed.xml"
+        },
+        {
+          "category": "entertainment",
+          "url": "https://www.hindustantimes.com/feeds/rss/entertainment/rssfeed.xml"
+        }
+      ]
+    },
+    {
+      "slug": "ndtv",
+      "name": "NDTV",
+      "homepage_url": "https://www.ndtv.com",
+      "feed_url": "https://feeds.feedburner.com/ndtvnews-top-stories",
+      "domains": [
+        "ndtv.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "section_feeds": [
+        {
+          "category": "india",
+          "url": "https://feeds.feedburner.com/ndtvnews-india-news"
+        },
+        {
+          "category": "world",
+          "url": "https://feeds.feedburner.com/ndtvnews-world-news"
+        },
+        {
+          "category": "business",
+          "url": "https://feeds.feedburner.com/ndtvprofit-latest"
+        },
+        {
+          "category": "technology",
+          "url": "https://feeds.feedburner.com/gadgets360-latest"
+        },
+        {
+          "category": "sports",
+          "url": "https://feeds.feedburner.com/ndtvsports-latest"
+        }
+      ]
+    },
+    {
+      "slug": "economic-times",
+      "name": "The Economic Times",
+      "homepage_url": "https://economictimes.indiatimes.com",
+      "feed_url": "https://economictimes.indiatimes.com/rssfeedstopstories.cms",
+      "domains": [
+        "economictimes.indiatimes.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 20,
+      "feed_category": "business",
+      "section_feeds": [
+        {
+          "category": "business",
+          "url": "https://economictimes.indiatimes.com/markets/rssfeeds/1977021501.cms"
+        },
+        {
+          "category": "technology",
+          "url": "https://economictimes.indiatimes.com/tech/rssfeeds/13357270.cms"
+        }
+      ]
+    },
+    {
+      "slug": "pib-india",
+      "name": "Press Information Bureau (Government of India)",
+      "homepage_url": "https://pib.gov.in",
+      "feed_url": "https://pib.gov.in/RssMain.aspx?ModId=6&Lang=1&Regid=3",
+      "domains": [
+        "pib.gov.in"
+      ],
+      "kind": "official",
+      "access": "feed_full",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Primary source. A story carrying an official statement is marked has_official_source and ranks higher.",
+      "feed_category": "india"
+    },
+    {
+      "slug": "rbi",
+      "name": "Reserve Bank of India (press releases)",
+      "homepage_url": "https://www.rbi.org.in",
+      "feed_url": "https://www.rbi.org.in/Scripts/Rss.aspx",
+      "domains": [
+        "rbi.org.in"
+      ],
+      "kind": "official",
+      "access": "feed_full",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 60,
+      "notes": "Disabled until the feed URL is confirmed by scripts/verify_feeds.py."
+    },
+    {
+      "slug": "reuters",
+      "name": "Reuters",
+      "homepage_url": "https://www.reuters.com",
+      "feed_url": null,
+      "domains": [
+        "reuters.com"
+      ],
+      "kind": "wire",
+      "access": "restricted",
+      "country": "GB",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "notes": "Reuters retired its public RSS feeds. Direct ingestion needs a Reuters Connect / Reuters News API licence. Until then Reuters appears on cards only when Google News credits it, and Briefly shows the headline + link without storing a summary."
+    },
+    {
+      "slug": "associated-press",
+      "name": "Associated Press",
+      "homepage_url": "https://apnews.com",
+      "feed_url": null,
+      "domains": [
+        "apnews.com",
+        "ap.org"
+      ],
+      "kind": "wire",
+      "access": "restricted",
+      "country": "US",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "notes": "AP does not offer a general public RSS feed. Needs an AP Content API agreement. Same treatment as Reuters until licensed."
+    },
+    {
+      "slug": "pti",
+      "name": "Press Trust of India",
+      "homepage_url": "https://www.ptinews.com",
+      "feed_url": null,
+      "domains": [
+        "ptinews.com"
+      ],
+      "kind": "wire",
+      "access": "restricted",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 15,
+      "notes": "Subscription wire. Credited via Google News only."
+    }
+  ],
+  "discovery_queries": [
+    {
+      "category": "india",
+      "query": "India",
+      "when": "1d"
+    },
+    {
+      "category": "business",
+      "query": "Indian economy OR RBI OR markets",
+      "when": "1d"
+    },
+    {
+      "category": "technology",
+      "query": "technology India OR artificial intelligence",
+      "when": "1d"
+    },
+    {
+      "category": "science",
+      "query": "ISRO OR climate OR research study",
+      "when": "2d"
+    }
+  ]
+}
