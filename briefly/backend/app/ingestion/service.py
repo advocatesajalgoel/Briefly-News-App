@@ -375,7 +375,7 @@ class IngestionService:
                     url,
                     aggregator,
                     discovery_channel="google_news",
-                    discovery_query=entry["query"],
+                    discovery_query=f"topic:{entry['category']}" if entry.get("category") else entry["query"],
                 )
             )
         return out
