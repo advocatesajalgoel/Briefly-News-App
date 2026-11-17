@@ -240,16 +240,22 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
             votes[section] += 1
             filed_by_url[section] += 1
         elif topic in by_slug:
-            # A Google News query can be broader than its search terms. The
-            # Independent India rail is a strict publisher whitelist, never
-            # a generic topic label supplied by the aggregator.
+            # Search-feed labels are hints, not editorial decisions. Specialist
+            # sections can only be assigned by their explicit eligibility gates.
             if topic == "india-independent":
                 source = article.source
                 if (
-                    source is not None
+                    india_context
+                    and source is not None
                     and source.slug in _INDEPENDENT_INDIA_SOURCES
                     and (source.country or "").upper() == "IN"
                 ):
+                    votes[topic] += 1
+            elif topic == "arbitration":
+                article_text = clean_text(
+                    f"{article.headline} {article.feed_summary or ''}"
+                )
+                if _is_domestic_indian_arbitration(article_text):
                     votes[topic] += 1
             else:
                 votes[topic] += 1
