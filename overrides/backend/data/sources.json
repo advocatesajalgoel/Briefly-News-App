@@ -854,6 +854,42 @@
       "feed_verified": false,
       "fetch_interval_minutes": 30,
       "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "mondaq-india",
+      "name": "Mondaq India",
+      "homepage_url": "https://www.mondaq.com/india",
+      "feed_url": null,
+      "domains": [
+        "mondaq.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 60,
+      "notes": "Supplementary legal commentary source. No publisher RSS endpoint verified; retain as a link/search source."
+    },
+    {
+      "slug": "indian-kanoon",
+      "name": "Indian Kanoon",
+      "homepage_url": "https://indiankanoon.org",
+      "feed_url": null,
+      "domains": [
+        "indiankanoon.org"
+      ],
+      "kind": "other",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": false,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 60,
+      "notes": "Legal research database, not a newsroom. Use for judgment verification and link-out; do not treat as independent news reporting."
     }
   ],
   "discovery_queries": [
