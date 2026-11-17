@@ -159,8 +159,14 @@ def extract_facts(
     # Rebuild the card clauses from corroborated facts only, regardless of
     # which extraction provider ran. Attributed, disputed and uncertain claims
     # stay in the source transparency panel and are never blended into the card.
-    from app.llm.rule_based import build_summary_clauses
+    from app.llm.rule_based import RuleBasedProvider, build_summary_clauses
 
-    confirmed = [fact for fact in result.facts if fact.kind == "confirmed"]
+    # Independently derive corroboration from the source documents themselves.
+    # A hosted model's "confirmed" label is not accepted as proof on its own.
+    verified = RuleBasedProvider().extract(documents)
+    result.facts = verified.facts
+    result.headline = verified.headline or result.headline
+    result.dek = verified.dek or result.dek
+    confirmed = [fact for fact in verified.facts if fact.kind == "confirmed"]
     result.summary_clauses = build_summary_clauses(confirmed, documents, result.headline)
     return result, report
