@@ -73,6 +73,8 @@ class StoryOut(BaseModel):
     summary_kind: str = "composed"
     summary_source: str | None = None
     dek: str | None = None
+    image_url: str | None = None
+    image_source: str | None = None
     category_slug: str | None = None
     category_name: str | None = None
     published_at: datetime | None = None
