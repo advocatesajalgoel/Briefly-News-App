@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 from app.models import PodcastEpisode, Story
+from app.text.wordcount import count_words
 from app.schemas import (
     DiversityOut,
     EpisodeOut,
@@ -28,20 +29,28 @@ def serialise_story(story: Story, *, include_facts: bool = True) -> StoryOut:
         by_kind=(breakdown.get("breakdown") or {}).get("by_kind", {}),
         by_country=(breakdown.get("breakdown") or {}).get("by_country", {}),
     )
-    sources = [
-        SourceOut(
+    article_by_id = {str(article.id): article for article in story.articles}
+    sources = []
+    for ss in sorted(
+        story.story_sources,
+        key=lambda s: (not s.is_primary_source, s.published_at or s.created_at),
+    ):
+        article = article_by_id.get(str(ss.article_id)) if ss.article_id else None
+        # This is the publisher's own syndicated feed summary, not a Briefly-
+        # generated paraphrase. Keep it verbatim and within the 30-word cap.
+        crux = " ".join((article.feed_summary or "").split()) if article else ""
+        words = crux.split()
+        while words and count_words(" ".join(words)) > 30:
+            words.pop()
+        sources.append(SourceOut(
             source_name=ss.source_name,
             source_kind=ss.source_kind,
             original_headline=ss.original_headline,
             original_url=ss.original_url,
+            crux=" ".join(words) or None,
             published_at=ss.published_at,
             is_primary_source=ss.is_primary_source,
-        )
-        for ss in sorted(
-            story.story_sources,
-            key=lambda s: (not s.is_primary_source, s.published_at or s.created_at),
-        )
-    ]
+        ))
     first_reported_source = min(
         (row for row in story.story_sources if row.published_at is not None),
         key=lambda row: row.published_at,
