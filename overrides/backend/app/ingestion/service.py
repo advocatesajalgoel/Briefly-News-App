@@ -260,6 +260,7 @@ class IngestionService:
         *,
         discovery_channel: str = "publisher_feed",
         discovery_query: str | None = None,
+        diagnostic_query: str | None = None,
     ) -> list[Article]:
         self.stats.feeds_attempted += 1
         cached = feed_source.feed_state or {}
@@ -277,7 +278,7 @@ class IngestionService:
         )
         feed_source.last_fetched_at = datetime.now(UTC)
 
-        report = {"source": feed_source.slug, "url": feed_url, "channel": discovery_channel, "query": discovery_query, "status": "ok", "items": 0}
+        report = {"source": feed_source.slug, "url": feed_url, "channel": discovery_channel, "query": diagnostic_query or discovery_query, "status": "ok", "items": 0}
         self.stats.feeds.append(report)
 
         if not result.ok:
@@ -376,6 +377,7 @@ class IngestionService:
                     aggregator,
                     discovery_channel="google_news",
                     discovery_query=f"topic:{entry['category']}" if entry.get("category") else entry["query"],
+                    diagnostic_query=entry["query"],
                 )
             )
         return out
