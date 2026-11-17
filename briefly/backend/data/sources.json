@@ -476,6 +476,384 @@
       "feed_verified": false,
       "fetch_interval_minutes": 15,
       "notes": "Subscription wire. Credited via Google News only."
+    },
+    {
+      "slug": "scroll-in",
+      "name": "Scroll.in",
+      "homepage_url": "https://scroll.in",
+      "feed_url": "https://feeds.feedburner.com/ScrollinArticles.rss",
+      "domains": [
+        "scroll.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "the-wire",
+      "name": "The Wire",
+      "homepage_url": "https://thewire.in",
+      "feed_url": "https://thewire.in/feed",
+      "domains": [
+        "thewire.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "theprint",
+      "name": "ThePrint",
+      "homepage_url": "https://theprint.in",
+      "feed_url": "https://theprint.in/feed/",
+      "domains": [
+        "theprint.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "newslaundry",
+      "name": "Newslaundry",
+      "homepage_url": "https://www.newslaundry.com",
+      "feed_url": null,
+      "domains": [
+        "newslaundry.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "the-quint",
+      "name": "The Quint",
+      "homepage_url": "https://www.thequint.com",
+      "feed_url": null,
+      "domains": [
+        "thequint.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "the-news-minute",
+      "name": "The News Minute",
+      "homepage_url": "https://www.thenewsminute.com",
+      "feed_url": null,
+      "domains": [
+        "thenewsminute.com"
+      ],
+      "kind": "regional",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "article-14",
+      "name": "Article 14",
+      "homepage_url": "https://article-14.com",
+      "feed_url": null,
+      "domains": [
+        "article-14.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "reporters-collective",
+      "name": "The Reporters' Collective",
+      "homepage_url": "https://reporters-collective.in",
+      "feed_url": null,
+      "domains": [
+        "reporters-collective.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "the-caravan",
+      "name": "The Caravan",
+      "homepage_url": "https://caravanmagazine.in",
+      "feed_url": null,
+      "domains": [
+        "caravanmagazine.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "pari",
+      "name": "People's Archive of Rural India",
+      "homepage_url": "https://ruralindiaonline.org",
+      "feed_url": null,
+      "domains": [
+        "ruralindiaonline.org"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "the-federal",
+      "name": "The Federal",
+      "homepage_url": "https://thefederal.com",
+      "feed_url": null,
+      "domains": [
+        "thefederal.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "eastmojo",
+      "name": "EastMojo",
+      "homepage_url": "https://eastmojo.com",
+      "feed_url": null,
+      "domains": [
+        "eastmojo.com"
+      ],
+      "kind": "regional",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "boom-live",
+      "name": "BOOM Live",
+      "homepage_url": "https://www.boomlive.in",
+      "feed_url": null,
+      "domains": [
+        "boomlive.in"
+      ],
+      "kind": "other",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "alt-news",
+      "name": "Alt News",
+      "homepage_url": "https://www.altnews.in",
+      "feed_url": null,
+      "domains": [
+        "altnews.in"
+      ],
+      "kind": "other",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "factly",
+      "name": "Factly",
+      "homepage_url": "https://factly.in",
+      "feed_url": null,
+      "domains": [
+        "factly.in"
+      ],
+      "kind": "other",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": false,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Listed for a source-specific link/search workflow; no feed URL added until verified."
+    },
+    {
+      "slug": "livelaw",
+      "name": "LiveLaw",
+      "homepage_url": "https://www.livelaw.in",
+      "feed_url": "https://www.livelaw.in/google_feeds.xml",
+      "domains": [
+        "livelaw.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "bar-and-bench",
+      "name": "Bar & Bench",
+      "homepage_url": "https://www.barandbench.com",
+      "feed_url": "https://www.barandbench.com/rss",
+      "domains": [
+        "barandbench.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "verdictum",
+      "name": "Verdictum",
+      "homepage_url": "https://www.verdictum.in",
+      "feed_url": "https://www.verdictum.in/feed",
+      "domains": [
+        "verdictum.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "scc-online",
+      "name": "SCC Online Blog",
+      "homepage_url": "https://www.scconline.com/blog",
+      "feed_url": "https://www.scconline.com/blog/post/feed/",
+      "domains": [
+        "scconline.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "indiacorplaw",
+      "name": "IndiaCorpLaw",
+      "homepage_url": "https://indiacorplaw.in",
+      "feed_url": "https://indiacorplaw.in/feed/",
+      "domains": [
+        "indiacorplaw.in"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+    },
+    {
+      "slug": "indian-arbitration-blog",
+      "name": "Indian Arbitration Blog",
+      "homepage_url": "https://indianarbitrationlaw.com",
+      "feed_url": "https://indianarbitrationlaw.com/feed",
+      "domains": [
+        "indianarbitrationlaw.com"
+      ],
+      "kind": "national",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
     }
   ],
   "discovery_queries": [
@@ -498,6 +876,16 @@
       "category": "science",
       "query": "ISRO OR climate OR research study",
       "when": "2d"
+    },
+    {
+      "category": "arbitration",
+      "query": "(\"arbitration\" OR \"arbitral tribunal\" OR \"arbitral award\" OR \"Arbitration and Conciliation Act\") India (court OR Supreme Court OR High Court OR Section 9 OR Section 11 OR Section 34 OR Section 37)",
+      "when": "2d"
+    },
+    {
+      "category": "india-independent",
+      "query": "site:scroll.in OR site:thewire.in OR site:theprint.in OR site:article-14.com OR site:reporters-collective.in India investigation report",
+      "when": "1d"
     }
   ]
 }
