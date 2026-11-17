@@ -15,7 +15,7 @@ from app.api.deps import (
     require_client,
 )
 from app.enums import ProcessingStatus
-from app.models import Category, Story, StorySource
+from app.models import Article, Category, Story, StorySource
 from app.schemas import CategoryOut, StoryOut, StoryPage
 from app.serializers import serialise_story
 
@@ -24,6 +24,7 @@ router = APIRouter(prefix="/v1", tags=["stories"], dependencies=[Depends(require
 _STORY_LOADERS = (
     selectinload(Story.category),
     selectinload(Story.facts),
+    selectinload(Story.articles).selectinload(Article.source),
     selectinload(Story.story_sources).selectinload(StorySource.source),
 )
 
