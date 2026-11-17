@@ -81,7 +81,7 @@ class Settings(BaseSettings):
     #              the offline extractor did. Without a model there is nothing
     #              that can honestly be called an original summary of a
     #              one-sentence feed item; quoting it is the truthful option.
-    card_mode: str = Field(default="auto", alias="BRIEFLY_CARD_MODE")
+    card_mode: str = Field(default="composed", alias="BRIEFLY_CARD_MODE")
 
     # --- tts ----------------------------------------------------------------
     tts_provider: str = Field(default="local", alias="BRIEFLY_TTS_PROVIDER")
