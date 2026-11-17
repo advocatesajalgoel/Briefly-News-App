@@ -890,6 +890,24 @@
       "feed_verified": false,
       "fetch_interval_minutes": 60,
       "notes": "Legal research database, not a newsroom. Use for judgment verification and link-out; do not treat as independent news reporting."
+    },
+    {
+      "slug": "team-bhp",
+      "name": "Team-BHP",
+      "homepage_url": "https://www.team-bhp.com",
+      "feed_url": "https://www.team-bhp.com/forum/external.php?type=rss2",
+      "domains": [
+        "team-bhp.com"
+      ],
+      "kind": "specialist",
+      "access": "feed_headline",
+      "country": "IN",
+      "language": "en",
+      "is_independent": true,
+      "enabled": true,
+      "feed_verified": false,
+      "fetch_interval_minutes": 30,
+      "notes": "Independent enthusiast publication/community. Its published philosophy says it does not accept car advertisements from manufacturers; RSS 2.0 endpoint is documented in its FAQ and covers guest-viewable forums. Treat member posts as first-person/community material, not independently verified newsroom reporting. Feed must pass Briefly robots/feed checks."
     }
   ],
   "discovery_queries": [
