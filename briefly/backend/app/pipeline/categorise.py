@@ -83,6 +83,47 @@ _URL_SECTIONS: dict[str, str] = {
 # paper's /politics/ desk covers Westminster.
 _INDIA_BY_NAME = {"india", "india-news"}
 
+# Curated publications shown in the separate independent-India rail.
+_INDEPENDENT_INDIA_SOURCES = {
+    "scroll-in", "the-wire", "theprint", "newslaundry", "the-quint",
+    "the-news-minute", "article-14", "reporters-collective", "the-caravan",
+    "pari", "the-federal", "eastmojo", "boom-live", "alt-news", "factly",
+}
+
+_ARBITRATION_TERMS = re.compile(
+    r"\\b(arbitration|arbitral|arbitrator|arbitrators)\\b", re.I
+)
+_INDIAN_ARBITRATION_CONTEXT = re.compile(
+    r"(arbitration and conciliation act|domestic arbitration|indian arbitration law|"
+    r"supreme court of india|supreme court|high court|delhi high court|"
+    r"bombay high court|calcutta high court|madras high court|"
+    r"karnataka high court|kerala high court|allahabad high court|"
+    r"punjab and haryana high court|arbitration act.{0,35}india|"
+    r"india.{0,35}arbitration act|section\\s+(9|11|12|14|15|16|17|29a|31|34|36|37)"
+    r".{0,45}(arbitration|arbitral)|"
+    r"(arbitration|arbitral).{0,45}section\\s+(9|11|12|14|15|16|17|29a|31|34|36|37))",
+    re.I,
+)
+_INTERNATIONAL_COMMERCIAL = re.compile(
+    r"international commercial arbitration|foreign-seated arbitration|"
+    r"foreign seated arbitration|treaty arbitration", re.I
+)
+
+
+def _is_domestic_indian_arbitration(text: str) -> bool:
+    """Conservative gate: arbitration terminology AND a clear Indian-law/court hook."""
+    if not _ARBITRATION_TERMS.search(text):
+        return False
+    if not _INDIAN_ARBITRATION_CONTEXT.search(text):
+        return False
+    # Do not sweep international/treaty arbitration into this domestic section
+    # unless the report also squarely concerns a domestic Indian court proceeding.
+    if _INTERNATIONAL_COMMERCIAL.search(text) and not re.search(
+        r"domestic arbitration|section\\s+(9|11|34|37)", text, re.I
+    ):
+        return False
+    return True
+
 
 def url_section(url: str, *, indian_outlet: bool = True) -> str | None:
     """The category a publisher's own URL places the article in, if it says."""
@@ -156,6 +197,23 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
     if not real:
         return None
     by_slug = {c.slug: c for c in real}
+
+    # 0. Dedicated specialist sections. Arbitration is deliberately gated by
+    #    both arbitration terminology and an Indian Act/court/section reference;
+    #    a passing mention of arbitration is not enough. Independent-India is
+    #    based on the curated publisher whitelist, not an opinion classifier.
+    combined_text = clean_text(" ".join(
+        f"{a.headline} {a.feed_summary or ''}" for a in articles
+    ))
+    if "arbitration" in by_slug and _is_domestic_indian_arbitration(combined_text):
+        return by_slug["arbitration"]
+    if "india-independent" in by_slug and any(
+        a.source is not None
+        and a.source.slug in _INDEPENDENT_INDIA_SOURCES
+        and (a.source.country or "").upper() == "IN"
+        for a in articles
+    ):
+        return by_slug["india-independent"]
 
     # 1. Where each report was filed. One vote per report: the desk named in
     #    its own URL when there is one, otherwise the section of the feed it
