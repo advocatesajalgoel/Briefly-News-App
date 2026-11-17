@@ -200,6 +200,17 @@ a { color: var(--accent); }
 }
 .card.long .headline { font-size: clamp(23px, 6.4vw, 29px); }
 
+.story-image {
+  width: 100%; margin: 16px 0 0; overflow: hidden;
+  border-radius: 10px; background: var(--rule);
+}
+.story-image img {
+  display: block; width: 100%; max-height: 170px; aspect-ratio: 16 / 9;
+  object-fit: cover;
+}
+.story-image figcaption {
+  padding: 5px 2px 0; color: var(--faint); font-size: 10px;
+}
 .summary {
   font-size: clamp(16px, 4.3vw, 18px);
   line-height: 1.52;
@@ -649,6 +660,7 @@ function cardHTML(story, index) {
     <div class="body">
       <h1 class="headline">${esc(story.headline)}</h1>
       <p class="summary">${esc(story.summary)}</p>
+      ${story.image_url ? '<figure class="story-image"><img src="' + esc(story.image_url) + '" alt="' + esc(story.headline) + '" loading="lazy" referrerpolicy="no-referrer"><figcaption>Image supplied by ' + esc(story.image_source || "the publisher") + '</figcaption></figure>' : ""}
       ${story.has_disputed_claims
         ? '<div class="dispute"><span>◈</span><span>Sources disagree on part of this story.</span></div>'
         : ""}
