@@ -535,7 +535,8 @@ const API = {
   stories: "api/stories.json",
   categories: "api/categories.json",
   episodes: "api/episodes.json",
-  status: "api/status.json"
+  status: "api/status.json",
+  sourceHealth: "api/source-health.json"
 };
 
 const state = {
@@ -546,6 +547,7 @@ const state = {
   categories: [],
   episodes: [],
   status: null,
+  sourceHealth: null,
   saved: loadSaved(),
   error: null,
   stale: false
@@ -625,16 +627,18 @@ async function getJSON(path) {
 async function load() {
   state.error = null;
   try {
-    const [stories, categories, episodes, status] = await Promise.all([
+    const [stories, categories, episodes, status, sourceHealth] = await Promise.all([
       getJSON(API.stories),
       getJSON(API.categories).catch(() => []),
       getJSON(API.episodes).catch(() => ({ items: [] })),
-      getJSON(API.status).catch(() => null)
+      getJSON(API.status).catch(() => null),
+      getJSON(API.sourceHealth).catch(() => null)
     ]);
     state.stories = stories.items || [];
     state.categories = categories || [];
     state.episodes = episodes.items || [];
     state.status = status;
+    state.sourceHealth = sourceHealth;
     state.stale = false;
   } catch (error) {
     state.error = error.message;
@@ -885,6 +889,10 @@ function renderAbout() {
   const main = $("main");
   main.className = "panel";
   const status = state.status || {};
+  const sourceHealth = state.sourceHealth || {};
+  const healthRows = sourceHealth.sources || [];
+  const healthLabel = (value) => ({working:"Working",failed:"Failed",restricted_or_skipped:"Blocked / skipped",not_checked:"Not checked"}[value] || "Unknown");
+  const healthColor = (value) => value === "working" ? "var(--accent)" : value === "failed" ? "var(--danger, #d66)" : "var(--muted)";
   main.innerHTML = `
     <h2>How Briefly works</h2>
     <p class="sub">Maximum transparency. Minimum editorial distortion.</p>
@@ -909,6 +917,17 @@ function renderAbout() {
     <div class="row"><span class="grow"><span class="t">What you are reading</span>
       <span class="s">Built-in sample stories. Every story, outlet and place is invented.</span></span></div>` : ""}
 
+    <div class="label">Independent publisher feed health</div>
+    <p class="sub">Direct feed checks and publisher-domain discovery are shown separately. A discovery result is not a guarantee that the publisher's own feed is working.</p>
+    ${healthRows.length ? healthRows.map((source) => `
+      <div class="row">
+        <span class="grow">
+          <span class="t">${esc(source.name)}</span>
+          <span class="s">${esc(source.methods.join(" · "))} · ${esc(source.articles_published)} stories in this build</span>
+        </span>
+        <span class="s" style="color:${healthColor(source.status)}">${esc(healthLabel(source.status))}</span>
+      </div>`).join("") : '<p class="sub">Publisher health data will appear after the next successful pipeline run.</p>'}
+    ${sourceHealth.summary ? `<p class="sub">${esc(sourceHealth.summary.working)} working · ${esc(sourceHealth.summary.failed)} failed · ${esc(sourceHealth.summary.not_checked)} not checked</p>` : ""}
     <div class="label">What every card tells you</div>
     ${[
       ["Who reported it", "Every publisher, with their own headline and a link to the original."],
