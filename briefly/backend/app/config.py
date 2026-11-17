@@ -71,7 +71,7 @@ class Settings(BaseSettings):
     llm_timeout_seconds: float = Field(default=60.0, alias="BRIEFLY_LLM_TIMEOUT_SECONDS")
     anthropic_api_key: str = Field(default="", alias="ANTHROPIC_API_KEY")
     openai_api_key: str = Field(default="", alias="OPENAI_API_KEY")
-    summary_max_words: int = Field(default=30, alias="BRIEFLY_SUMMARY_MAX_WORDS")
+    summary_max_words: int = Field(default=22, alias="BRIEFLY_SUMMARY_MAX_WORDS")
     # How many stories one processing run takes, best-sourced first.
     process_batch_size: int = Field(default=200, alias="BRIEFLY_PROCESS_BATCH_SIZE")
     # Whose words go on the card.
