@@ -64,7 +64,7 @@ def _entry_image(entry) -> str | None:
     # RSS descriptions commonly include the publisher's own lead image.
     for field in ("summary", "description"):
         html = entry.get(field) or ""
-        match = re.search(r"<img[^>]+src=['\\\"]([^'\\\"]+)['\\\"]", html, re.I)
+        match = re.search(r"""<img[^>]+src=['"]([^'"]+)['"]""", html, re.I)
         if match:
             candidates.append(match.group(1))
     for value in candidates:
