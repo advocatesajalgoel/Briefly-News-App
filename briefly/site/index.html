@@ -633,7 +633,7 @@ function renderRail() {
   rail.className = "rail";
   const present = new Set(state.stories.map((s) => s.category_slug));
   rail.innerHTML = state.categories
-    .filter((c) => c.slug === "for-you" || present.has(c.slug))
+    .filter((c) => c.slug === "for-you" || present.has(c.slug) || ["arbitration", "india-independent"].includes(c.slug))
     .map((c) => `<button role="tab" data-section="${esc(c.slug)}"
        aria-selected="${c.slug === state.section}">${esc(c.name)}</button>`)
     .join("");
