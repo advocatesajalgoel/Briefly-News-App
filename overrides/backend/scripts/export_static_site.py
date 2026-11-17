@@ -235,8 +235,10 @@ def main() -> int:
             for item in story.get("sources", [])
             if item.get("source_name") == source.get("name")
         )
-        if any(f.get("status") == "ok" for f in attempts):
-            health_status = "working"
+        if any(f.get("status") == "ok" for f in direct):
+            health_status = "direct_feed_working"
+        elif any(f.get("status") == "ok" for f in discovery):
+            health_status = "discovery_working"
         elif attempts and all(f.get("status") == "failed" for f in attempts):
             health_status = "failed"
         elif attempts:
@@ -259,7 +261,8 @@ def main() -> int:
         "sources": health_sources,
         "summary": {
             "publishers_configured": len(health_sources),
-            "working": sum(x["status"] == "working" for x in health_sources),
+            "direct_feed_working": sum(x["status"] == "direct_feed_working" for x in health_sources),
+            "discovery_working": sum(x["status"] == "discovery_working" for x in health_sources),
             "failed": sum(x["status"] == "failed" for x in health_sources),
             "not_checked": sum(x["status"] == "not_checked" for x in health_sources),
             "articles_published": sum(x["articles_published"] for x in health_sources),
