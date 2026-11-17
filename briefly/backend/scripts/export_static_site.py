@@ -199,6 +199,73 @@ def main() -> int:
         "tts_provider": settings.tts_provider,
     })
 
+    # Per-publisher collection health. A domain-search result is discovery,
+    # not proof of a successful direct publisher feed; keep those metrics apart.
+    run_data = {}
+    if args.run_stats and Path(args.run_stats).exists():
+        try:
+            run_data = json.loads(Path(args.run_stats).read_text("utf-8"))
+        except (ValueError, OSError):
+            run_data = {}
+    ingest_data = run_data.get("ingest", {})
+    feed_rows = ingest_data.get("feeds", []) or []
+    source_rows = [
+        row for row in load_sources_file().get("sources", [])
+        if row.get("slug") in {
+            "scroll-in", "the-wire", "theprint", "newslaundry", "the-quint",
+            "the-news-minute", "article-14", "reporters-collective", "the-caravan",
+            "pari", "the-federal", "eastmojo", "boom-live", "alt-news", "factly",
+        }
+    ]
+    health_sources = []
+    for source in source_rows:
+        slug = source["slug"]
+        domain = (source.get("domains") or [""])[0]
+        direct = [f for f in feed_rows if f.get("source") == slug]
+        discovery = [
+            f for f in feed_rows
+            if f.get("source") == "google-news"
+            and f.get("query")
+            and domain
+            and f"site:{domain}" in f.get("query", "")
+        ]
+        attempts = direct + discovery
+        articles_count = sum(
+            1 for story in stories["items"]
+            for item in story.get("sources", [])
+            if item.get("source_name") == source.get("name")
+        )
+        if any(f.get("status") == "ok" for f in attempts):
+            health_status = "working"
+        elif attempts and all(f.get("status") == "failed" for f in attempts):
+            health_status = "failed"
+        elif attempts:
+            health_status = "restricted_or_skipped"
+        else:
+            health_status = "not_checked"
+        health_sources.append({
+            "slug": slug,
+            "name": source.get("name"),
+            "status": health_status,
+            "enabled": bool(source.get("enabled")),
+            "methods": (["publisher_rss"] if source.get("feed_url") else [])
+                       + (["publisher_domain_search"] if domain else []),
+            "direct_feed": direct[-1] if direct else None,
+            "discovery": discovery[-1] if discovery else None,
+            "articles_published": articles_count,
+        })
+    _write(api / "source-health.json", {
+        "built_at": datetime.now(UTC).isoformat(),
+        "sources": health_sources,
+        "summary": {
+            "publishers_configured": len(health_sources),
+            "working": sum(x["status"] == "working" for x in health_sources),
+            "failed": sum(x["status"] == "failed" for x in health_sources),
+            "not_checked": sum(x["status"] == "not_checked" for x in health_sources),
+            "articles_published": sum(x["articles_published"] for x in health_sources),
+        },
+    })
+
     if sample:
         print("\nNOTE: this build carries the SAMPLE stories, and says so on screen.")
     print(f"\nDone. {len(stories['items'])} stories, "
