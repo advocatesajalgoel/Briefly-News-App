@@ -419,6 +419,20 @@ body.sheet-open .sheet-backdrop { opacity: 1; pointer-events: auto; }
   font-size: 10px; letter-spacing: .045em; text-transform: uppercase;
 }
 .src-crux-missing { color: var(--faint); font-style: italic; }
+.source-detail { display:block; margin:8px 0; border:1px solid var(--rule); border-radius:12px; overflow:hidden; }
+.source-detail > summary { list-style:none; cursor:pointer; padding:12px; }
+.source-detail > summary::-webkit-details-marker { display:none; }
+.source-detail[open] > summary { border-bottom:1px solid var(--rule); }
+.source-detail .src-head { margin-top:5px; }
+.source-detail .src-detail-body { padding:10px 12px 12px; }
+.source-detail .src-crux { display:-webkit-box; -webkit-box-orient:vertical; -webkit-line-clamp:3; line-clamp:3; overflow:hidden; margin:0; }
+.source-detail .src-original { display:inline-flex; margin-top:10px; color:var(--accent); font-size:12px; font-weight:650; }
+.timeline { margin:18px 0 4px; padding-left:14px; border-left:2px solid var(--rule); }
+.timeline-item { position:relative; padding:0 0 14px 12px; }
+.timeline-item:last-child { padding-bottom:0; }
+.timeline-item:before { content:""; position:absolute; left:-19px; top:5px; width:8px; height:8px; border-radius:50%; background:var(--accent); }
+.timeline-time { font-size:10px; color:var(--muted); letter-spacing:.04em; }
+.timeline-title { font-size:12px; line-height:1.4; margin-top:3px; }
 
 .disputed-block {
   margin-top: 18px; padding: 14px; border-radius: 14px;
@@ -936,6 +950,31 @@ function render() {
   });
 }
 
+function sourceCruxHTML(source) {
+  const text = String(source.crux || "").trim();
+  if (!text) return '<p class="src-crux src-crux-missing">Publisher feed summary unavailable. No substitute text has been generated.</p>';
+  // Bold only key names/figures repeated in this publisher's own headline.
+  const stop = new Set(["this","that","with","from","after","before","over","under","into","about","says","said","will","has","have","been","were","their","there","which","while","where","when","what","court","case"]);
+  const candidates = String(source.original_headline || "").match(/[A-Z][A-Za-z0-9.'’-]*|\b\d[\d,.%/-]*\b/g) || [];
+  const key = new Set(candidates.filter(w => /^\d/.test(w) || (w.length > 3 && !stop.has(w.toLowerCase()))).map(w => w.toLowerCase()));
+  const html = text.split(/(\s+)/).map(part => {
+    const clean = part.replace(/^[^A-Za-z0-9]+|[^A-Za-z0-9%/-]+$/g, "");
+    return clean && key.has(clean.toLowerCase()) ? '<strong>' + esc(part) + '</strong>' : esc(part);
+  }).join("");
+  const count = text.split(/\s+/).filter(Boolean).length;
+  return '<p class="src-crux"><strong>Publisher crux · ' + count + ' words</strong><br>' + html + '</p>';
+}
+
+function sourceTimelineHTML(sources) {
+  const dated = (sources || []).filter(s => s.published_at && !Number.isNaN(new Date(s.published_at).getTime()))
+    .slice().sort((a,b) => new Date(a.published_at) - new Date(b.published_at));
+  if (!dated.length) return '<p class="sheet-note">Publisher timestamps are unavailable for this story.</p>';
+  return '<div class="timeline">' + dated.map((s,i) => {
+    const when = new Date(s.published_at).toLocaleString("en-IN", {timeZone:"Asia/Kolkata", day:"numeric", month:"short", hour:"2-digit", minute:"2-digit", hour12:true});
+    return '<div class="timeline-item"><div class="timeline-time">' + esc(when) + ' IST' + (i === 0 ? ' · FIRST REPORT' : '') + '</div><div class="timeline-title">' + esc(s.source_name) + ' — ' + esc(s.original_headline) + '</div></div>';
+  }).join("") + '</div>';
+}
+
 /* --- sources sheet -------------------------------------------------------- */
 function openSheet(story) {
   const sources = story.sources || [];
@@ -943,51 +982,58 @@ function openSheet(story) {
   const rank = diversityRank(div.level);
   const disputedFacts = (story.facts || []).filter((f) => f.kind === "disputed");
 
-  $("sheet-body").innerHTML = `
+  $("sheet-body").innerHTML = \`
     <div style="font-size:10.5px;font-weight:600;letter-spacing:.11em;
                 text-transform:uppercase;color:var(--muted);margin-bottom:8px">
-      ${sources.length === 1 ? "1 source" : `${sources.length} sources`}</div>
-    <h2 class="sheet-title">${esc(story.headline)}</h2>
-    <p class="sheet-note">${esc(CONFIDENCE_NOTE[story.confidence] || "")}</p>
+      \${sources.length === 1 ? "1 source" : \`\${sources.length} sources\`}</div>
+    <h2 class="sheet-title">\${esc(story.headline)}</h2>
+    <p class="sheet-note">\${esc(CONFIDENCE_NOTE[story.confidence] || "")}</p>
 
     <div class="diversity">
       <div class="diversity-top"><span>Source diversity</span>
-        <b>${esc((div.level || "low").toUpperCase())}</b></div>
-      <div class="bars" aria-hidden="true">${[1, 2, 3]
-        .map((n) => `<i class="${n <= rank ? "on" : ""}"></i>`).join("")}</div>
-      <ul>${(div.lines || []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul>
-      <p class="caveat">${esc(div.disclaimer
+        <b>\${esc((div.level || "low").toUpperCase())}</b></div>
+      <div class="bars" aria-hidden="true">\${[1, 2, 3]
+        .map((n) => \`<i class="\${n <= rank ? "on" : ""}"></i>\`).join("")}</div>
+      <ul>\${(div.lines || []).map((l) => \`<li>\${esc(l)}</li>\`).join("")}</ul>
+      <p class="caveat">\${esc(div.disclaimer
         || "Source diversity counts where reporting came from. It is not a measurement of bias.")}</p>
     </div>
 
     <div style="font-size:10.5px;font-weight:600;letter-spacing:.11em;
                 text-transform:uppercase;color:var(--muted);margin:22px 0 4px">
-      Who reported it</div>
-    <p class="sheet-note" style="margin:4px 0 10px">Source cruxes use each publisher’s syndicated feed text (maximum 30 words), not the full article.</p>
-    ${sources.map((s) => `
-      <a class="src" href="${esc(s.original_url || "#")}" target="_blank" rel="noopener noreferrer"
-         style="text-decoration:none;color:inherit">
-        <span class="src-top">
-          <span class="src-name">${esc(s.source_name)}</span>
-          ${s.is_primary_source ? '<span class="src-tag">Primary</span>' : ""}
-          <span class="src-arrow">↗</span>
-        </span>
-        <p class="src-head">${esc(s.original_headline)}</p>
-        ${s.crux
-          ? `<p class="src-crux"><strong>Publisher feed crux · ${s.crux.trim().split(/\s+/).filter(Boolean).length} words</strong><br>${esc(s.crux)}</p>`
-          : '<p class="src-crux src-crux-missing">Publisher summary not available; no substitute text has been generated.</p>'}
-        <div class="src-meta">${esc(sourceKind(s.source_kind))}${
-          s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
-      </a>`).join("")}
+      Compare publisher accounts</div>
+    <p class="sheet-note" style="margin:4px 0 10px">Tap a publisher to read its crux (up to three lines). Bold text marks key names or figures also present in that publisher’s headline. Open the original for full reporting.</p>
+    \${sources.map((s) => \`
+      <details class="source-detail">
+        <summary>
+          <span class="src-top">
+            <span class="src-name">\${esc(s.source_name)}</span>
+            \${s.is_primary_source ? '<span class="src-tag">Primary</span>' : ""}
+            <span class="src-arrow">⌄</span>
+          </span>
+          <p class="src-head">\${esc(s.original_headline)}</p>
+          <div class="src-meta">\${esc(sourceKind(s.source_kind))}\${s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
+        </summary>
+        <div class="src-detail-body">
+          \${sourceCruxHTML(s)}
+          <a class="src-original" href="\${esc(s.original_url || "#")}" target="_blank" rel="noopener noreferrer">Read original report ↗</a>
+        </div>
+      </details>\`).join("")}
 
-    ${disputedFacts.length ? `<div class="disputed-block">
+    <div style="font-size:10.5px;font-weight:600;letter-spacing:.11em;
+                text-transform:uppercase;color:var(--muted);margin:22px 0 4px">
+      Coverage timeline · IST</div>
+    <p class="sheet-note" style="margin:4px 0 8px">Chronological order of publisher timestamps available to Briefly.</p>
+    \${sourceTimelineHTML(sources)}
+
+    \${disputedFacts.length ? \`<div class="disputed-block">
       <div class="who">Disputed or conflicting facts</div>
-      ${disputedFacts.map((f) => `<p><b>${esc(f.attributed_to || "Source account")}:</b> ${esc(f.text)}</p>`).join("")}
-    </div>` : ""}
+      \${disputedFacts.map((f) => \`<p><b>\${esc(f.attributed_to || "Source account")}:</b> \${esc(f.text)}</p>\`).join("")}
+    </div>\` : ""}
 
     <p class="sheet-note" style="margin-top:22px">Briefly does not claim to be unbiased.
       It shows you who reported what, when, and where accounts differ, and links you to
-      the originals so you can check any of it yourself.</p>`;
+      the originals so you can check any of it yourself.</p>\`;
 
   document.body.classList.add("sheet-open");
   $("sheet-body").scrollTop = 0;
