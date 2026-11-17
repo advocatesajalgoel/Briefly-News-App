@@ -982,20 +982,20 @@ function openSheet(story) {
   const rank = diversityRank(div.level);
   const disputedFacts = (story.facts || []).filter((f) => f.kind === "disputed");
 
-  $("sheet-body").innerHTML = \`
+  $("sheet-body").innerHTML = `
     <div style="font-size:10.5px;font-weight:600;letter-spacing:.11em;
                 text-transform:uppercase;color:var(--muted);margin-bottom:8px">
-      \${sources.length === 1 ? "1 source" : \`\${sources.length} sources\`}</div>
-    <h2 class="sheet-title">\${esc(story.headline)}</h2>
-    <p class="sheet-note">\${esc(CONFIDENCE_NOTE[story.confidence] || "")}</p>
+      ${sources.length === 1 ? "1 source" : `${sources.length} sources`}</div>
+    <h2 class="sheet-title">${esc(story.headline)}</h2>
+    <p class="sheet-note">${esc(CONFIDENCE_NOTE[story.confidence] || "")}</p>
 
     <div class="diversity">
       <div class="diversity-top"><span>Source diversity</span>
-        <b>\${esc((div.level || "low").toUpperCase())}</b></div>
-      <div class="bars" aria-hidden="true">\${[1, 2, 3]
-        .map((n) => \`<i class="\${n <= rank ? "on" : ""}"></i>\`).join("")}</div>
-      <ul>\${(div.lines || []).map((l) => \`<li>\${esc(l)}</li>\`).join("")}</ul>
-      <p class="caveat">\${esc(div.disclaimer
+        <b>${esc((div.level || "low").toUpperCase())}</b></div>
+      <div class="bars" aria-hidden="true">${[1, 2, 3]
+        .map((n) => `<i class="${n <= rank ? "on" : ""}"></i>`).join("")}</div>
+      <ul>${(div.lines || []).map((l) => `<li>${esc(l)}</li>`).join("")}</ul>
+      <p class="caveat">${esc(div.disclaimer
         || "Source diversity counts where reporting came from. It is not a measurement of bias.")}</p>
     </div>
 
@@ -1003,37 +1003,37 @@ function openSheet(story) {
                 text-transform:uppercase;color:var(--muted);margin:22px 0 4px">
       Compare publisher accounts</div>
     <p class="sheet-note" style="margin:4px 0 10px">Tap a publisher to read its crux (up to three lines). Bold text marks key names or figures also present in that publisher’s headline. Open the original for full reporting.</p>
-    \${sources.map((s) => \`
+    ${sources.map((s) => `
       <details class="source-detail">
         <summary>
           <span class="src-top">
-            <span class="src-name">\${esc(s.source_name)}</span>
-            \${s.is_primary_source ? '<span class="src-tag">Primary</span>' : ""}
+            <span class="src-name">${esc(s.source_name)}</span>
+            ${s.is_primary_source ? '<span class="src-tag">Primary</span>' : ""}
             <span class="src-arrow">⌄</span>
           </span>
-          <p class="src-head">\${esc(s.original_headline)}</p>
-          <div class="src-meta">\${esc(sourceKind(s.source_kind))}\${s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
+          <p class="src-head">${esc(s.original_headline)}</p>
+          <div class="src-meta">${esc(sourceKind(s.source_kind))}${s.published_at ? " · " + esc(relative(s.published_at)) : ""}</div>
         </summary>
         <div class="src-detail-body">
-          \${sourceCruxHTML(s)}
-          <a class="src-original" href="\${esc(s.original_url || "#")}" target="_blank" rel="noopener noreferrer">Read original report ↗</a>
+          ${sourceCruxHTML(s)}
+          <a class="src-original" href="${esc(s.original_url || "#")}" target="_blank" rel="noopener noreferrer">Read original report ↗</a>
         </div>
-      </details>\`).join("")}
+      </details>`).join("")}
 
     <div style="font-size:10.5px;font-weight:600;letter-spacing:.11em;
                 text-transform:uppercase;color:var(--muted);margin:22px 0 4px">
       Coverage timeline · IST</div>
     <p class="sheet-note" style="margin:4px 0 8px">Chronological order of publisher timestamps available to Briefly.</p>
-    \${sourceTimelineHTML(sources)}
+    ${sourceTimelineHTML(sources)}
 
-    \${disputedFacts.length ? \`<div class="disputed-block">
+    ${disputedFacts.length ? `<div class="disputed-block">
       <div class="who">Disputed or conflicting facts</div>
-      \${disputedFacts.map((f) => \`<p><b>\${esc(f.attributed_to || "Source account")}:</b> \${esc(f.text)}</p>\`).join("")}
-    </div>\` : ""}
+      ${disputedFacts.map((f) => `<p><b>${esc(f.attributed_to || "Source account")}:</b> ${esc(f.text)}</p>`).join("")}
+    </div>` : ""}
 
     <p class="sheet-note" style="margin-top:22px">Briefly does not claim to be unbiased.
       It shows you who reported what, when, and where accounts differ, and links you to
-      the originals so you can check any of it yourself.</p>\`;
+      the originals so you can check any of it yourself.</p>`;
 
   document.body.classList.add("sheet-open");
   $("sheet-body").scrollTop = 0;
