@@ -899,7 +899,7 @@
       "domains": [
         "team-bhp.com"
       ],
-      "kind": "specialist",
+      "kind": "other",
       "access": "feed_headline",
       "country": "IN",
       "language": "en",
@@ -907,7 +907,7 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Independent enthusiast publication/community. Its published philosophy says it does not accept car advertisements from manufacturers; RSS 2.0 endpoint is documented in its FAQ and covers guest-viewable forums. Treat member posts as first-person/community material, not independently verified newsroom reporting. Feed must pass Briefly robots/feed checks."
+      "notes": "Independent enthusiast publication/community. Its published philosophy says it does not accept car advertisements from manufacturers. RSS 2.0 endpoint is documented in its FAQ and covers guest-viewable forums. Treat member posts as first-person/community material, not independently verified newsroom reporting. Feed is not yet verified by Briefly; it must pass robots/feed checks."
     }
   ],
   "discovery_queries": [
@@ -1040,6 +1040,10 @@
       "category": "india-independent",
       "query": "site:factly.in (fact check OR fact-check OR verification OR viral claim OR misinformation OR investigation)",
       "when": "2d"
+    },
+    {
+      "category": "automobile",
+      "query": "automotive news India car launches electric vehicles vehicle recalls safety ratings road tests"
     }
   ]
 }
