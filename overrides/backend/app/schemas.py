@@ -79,6 +79,7 @@ class StoryOut(BaseModel):
     category_name: str | None = None
     published_at: datetime | None = None
     first_reported_at: datetime | None = None
+    first_reported_source: str | None = None
     last_reported_at: datetime | None = None
     source_count: int = 0
     independent_source_count: int = 0
