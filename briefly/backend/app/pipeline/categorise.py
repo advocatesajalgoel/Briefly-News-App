@@ -207,7 +207,12 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
     ))
     if "arbitration" in by_slug and _is_domestic_indian_arbitration(combined_text):
         return by_slug["arbitration"]
-    if "india-independent" in by_slug and any(
+    india_context = bool(re.search(
+        r"\b(india|indian|delhi|mumbai|bengaluru|chennai|kolkata|hyderabad|"
+        r"supreme court of india|parliament|lok sabha|rajya sabha)\b",
+        combined_text, re.I,
+    ))
+    if "india-independent" in by_slug and india_context and any(
         a.source is not None
         and a.source.slug in _INDEPENDENT_INDIA_SOURCES
         and (a.source.country or "").upper() == "IN"
