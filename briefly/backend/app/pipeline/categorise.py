@@ -206,11 +206,17 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
     ))
     if "arbitration" in by_slug and _is_domestic_indian_arbitration(combined_text):
         return by_slug["arbitration"]
-    india_context = bool(re.search(
-        r"\b(india|indian|delhi|mumbai|bengaluru|chennai|kolkata|hyderabad|"
-        r"supreme court of india|parliament|lok sabha|rajya sabha)\b",
-        combined_text, re.I,
-    ))
+    # Include the maintained Indian place gazetteer as well as explicit
+    # national institutions. Many local investigations name only a district,
+    # state or city and never repeat the word "India" in a short feed blurb.
+    india_context = bool(
+        re.search(
+            r"\b(india|indian|delhi|mumbai|bengaluru|chennai|kolkata|hyderabad|"
+            r"supreme court of india|parliament|lok sabha|rajya sabha)\b",
+            combined_text, re.I,
+        )
+        or india_places_in(combined_text)
+    )
     if "india-independent" in by_slug and india_context and any(
         a.source is not None
         and a.source.slug in _INDEPENDENT_INDIA_SOURCES
