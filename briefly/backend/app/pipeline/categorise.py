@@ -206,6 +206,12 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
     ))
     if "arbitration" in by_slug and _is_domestic_indian_arbitration(combined_text):
         return by_slug["arbitration"]
+    # Team-BHP is a vehicle-specialist publisher; its reporting and member
+    # submissions belong in the dedicated automobile section.
+    if "automobile" in by_slug and any(
+        a.source is not None and a.source.slug == "team-bhp" for a in articles
+    ):
+        return by_slug["automobile"]
     # Include the maintained Indian place gazetteer as well as explicit
     # national institutions. Many local investigations name only a district,
     # state or city and never repeat the word "India" in a short feed blurb.
