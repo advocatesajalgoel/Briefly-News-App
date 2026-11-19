@@ -90,35 +90,88 @@ _INDEPENDENT_INDIA_SOURCES = {
     "pari", "the-federal", "eastmojo", "boom-live", "alt-news", "factly",
 }
 
+# --- the Arbitration desk ----------------------------------------------------
+#
+# A story is filed here only when BOTH are true:
+#   1. it uses arbitration's own words — arbitration, arbitral (tribunal,
+#      award), arbitrator, or the Arbitration and Conciliation Act / "A&C Act";
+#   2. it is about arbitration in India — the Act is named, a named Indian
+#      court or an Indian place is, or an Indian outlet reports a court or a
+#      section of the Act ("Section 37 Court", "U/S 34", "Supreme Court", "HC").
+# and it is NOT about international, treaty or foreign-seated arbitration
+# (SIAC, ICC, LCIA, DIFC, ICSID, investment treaties, foreign awards, a
+# "global arbitration hub"), unless it is an Indian court proceeding under the
+# Act's domestic sections. "Supreme Court" alone counts only from an Indian
+# outlet, because a British paper's Supreme Court is in London.
+
 _ARBITRATION_TERMS = re.compile(
-    r"\b(arbitration|arbitral|arbitrator|arbitrators)\b", re.I
+    r"\b(?:arbitration|arbitral|arbitrator|arbitrators)\b|\bA\s?&\s?C\s+Act\b", re.I
 )
+_INDIAN_HIGH_COURTS = (
+    r"allahabad|andhra pradesh|bombay|calcutta|chhattisgarh|delhi|gauhati|gujarat|"
+    r"himachal pradesh|jammu (?:and|&) kashmir(?: and ladakh)?|jharkhand|karnataka|"
+    r"kerala|madhya pradesh|madras|manipur|meghalaya|orissa|odisha|patna|"
+    r"punjab (?:and|&) haryana|rajasthan|sikkim|telangana|tripura|uttarakhand"
+)
+# Indian on its face, whoever is reporting.
 _INDIAN_ARBITRATION_CONTEXT = re.compile(
-    r"(arbitration and conciliation act|domestic arbitration|indian arbitration law|"
-    r"supreme court of india|delhi high court|bombay high court|calcutta high court|"
-    r"madras high court|karnataka high court|kerala high court|allahabad high court|"
-    r"punjab and haryana high court|gujarat high court|rajasthan high court|"
-    r"patna high court|indian court.{0,45}arbitration|arbitration.{0,45}indian court|"
-    r"india.{0,45}arbitration|arbitration.{0,45}india|"
-    r"section\s+(9|11|12|14|15|16|17|29a|31|34|36|37).{0,45}arbitration act)",
+    r"arbitration and conciliation act|\bA\s?&\s?C\s+Act\b|domestic arbitration|"
+    r"indian arbitration|supreme court of india|"
+    rf"\b(?:{_INDIAN_HIGH_COURTS})\s+high\s+court\b|"
+    r"\bindia(?:n|'s|’s)?\b",
+    re.I,
+)
+_NAMED_INDIAN_COURT = re.compile(
+    rf"supreme court of india|\b(?:{_INDIAN_HIGH_COURTS})\s+high\s+court\b", re.I
+)
+# Indian only because an Indian outlet is the one saying it.
+_COURT_OR_SECTION = re.compile(
+    r"\bsupreme court\b|\bhigh court\b|\bcommercial court\b|\bdistrict court\b|"
+    r"\b(?:section|sec\.?|u/s\.?)\s*\d{1,2}[a-z]?\b",
+    re.I,
+)
+_COURT_ABBREVIATION = re.compile(r"\b(?:SC|HC|NCLT|NCLAT)\b")  # case-sensitive
+# Court work under Part I of the Act: domestic even when a foreign party is in it.
+_PART_ONE_PROCEEDING = re.compile(
+    r"domestic arbitration|"
+    r"\b(?:section|sec\.?|u/s\.?)\s*(?:8|9|11|12|13|14|15|16|17|29a|31|33|34|36|37)\b",
     re.I,
 )
 _INTERNATIONAL_COMMERCIAL = re.compile(
-    r"international commercial arbitration|foreign-seated arbitration|"
-    r"foreign seated arbitration|treaty arbitration", re.I
+    r"international (?:commercial )?arbitration|foreign[- ]seated|foreign (?:arbitral )?award|"
+    r"treaty arbitration|investment treaty|investor[- ]state|\bISDS\b|\bICSID\b|"
+    r"permanent court of arbitration|court of arbitration|\bSIAC\b|"
+    r"singapore international arbitration|\bLCIA\b|london court of international|"
+    r"\bHKIAC\b|\bDIFC\b|\bICC (?:arbitration|court|rules)\b|"
+    r"(?:global|international) arbitration hub|indus waters",
+    re.I,
 )
 
 
-def _is_domestic_indian_arbitration(text: str) -> bool:
-    """Conservative gate: arbitration terminology AND a clear Indian-law/court hook."""
+def _is_domestic_indian_arbitration(text: str, *, indian_outlet: bool = False) -> bool:
+    """Arbitration's own words AND an Indian hook, and not foreign arbitration."""
     if not _ARBITRATION_TERMS.search(text):
         return False
-    if not _INDIAN_ARBITRATION_CONTEXT.search(text):
+    court_hook = indian_outlet and bool(
+        _COURT_OR_SECTION.search(text) or _COURT_ABBREVIATION.search(text)
+    )
+    indian = bool(
+        _INDIAN_ARBITRATION_CONTEXT.search(text) or india_places_in(text) or court_hook
+    )
+    if not indian:
         return False
-    # Do not sweep international/treaty arbitration into this domestic section
-    # unless the report also squarely concerns a domestic Indian court proceeding.
-    if _INTERNATIONAL_COMMERCIAL.search(text) and not re.search(
-        r"domestic arbitration|section\s+(9|11|34|37)", text, re.I
+    part_one = bool(_PART_ONE_PROCEEDING.search(text)) and (
+        court_hook or bool(_NAMED_INDIAN_COURT.search(text))
+        or bool(re.search(r"arbitration and conciliation act|\bA\s?&\s?C\s+Act\b", text, re.I))
+    )
+    # International, treaty or foreign-seated arbitration belongs elsewhere —
+    # unless an Indian court is hearing it under the Act's domestic sections.
+    if _INTERNATIONAL_COMMERCIAL.search(text) and not part_one:
+        return False
+    # Abroad (a symposium in New Zealand, an arbitration in London) and no
+    # Indian court or section in sight: not a domestic Indian matter.
+    if foreign_places_in(text) and not (
+        part_one or court_hook or _NAMED_INDIAN_COURT.search(text)
     ):
         return False
     return True
@@ -204,7 +257,13 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
     combined_text = clean_text(" ".join(
         f"{a.headline} {a.feed_summary or ''}" for a in articles
     ))
-    if "arbitration" in by_slug and _is_domestic_indian_arbitration(combined_text):
+    if "arbitration" in by_slug and any(
+        _is_domestic_indian_arbitration(
+            clean_text(f"{a.headline} {a.feed_summary or ''}"),
+            indian_outlet=_is_indian_outlet(a),
+        )
+        for a in articles
+    ):
         return by_slug["arbitration"]
     # Team-BHP is a vehicle-specialist publisher; its reporting and member
     # submissions belong in the dedicated automobile section.
@@ -267,7 +326,9 @@ def categorise(articles: list[Article], categories: list[Category]) -> Category 
                 article_text = clean_text(
                     f"{article.headline} {article.feed_summary or ''}"
                 )
-                if _is_domestic_indian_arbitration(article_text):
+                if _is_domestic_indian_arbitration(
+                    article_text, indian_outlet=_is_indian_outlet(article)
+                ):
                     votes[topic] += 1
             else:
                 votes[topic] += 1

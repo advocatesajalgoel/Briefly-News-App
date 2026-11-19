@@ -302,8 +302,12 @@ def process_story(db: Session, story: Story, *, published_headlines: list[str] |
     # that is the honest choice rather than the lazy one.
     card_mode = settings.resolved_card_mode(extraction.provider)
     wording_document: SourceDocument | None = None
+    headline_only = False
     if card_mode == "excerpt":
-        wording = choose_wording(documents, limit=settings.summary_max_words)
+        wording = choose_wording(
+            documents, limit=settings.summary_max_words, allow_headline_only=True
+        )
+        headline_only = wording.headline_only
         wording_document = next(
             (d for d in documents if d.index == wording.source_index), None
         )
@@ -391,12 +395,18 @@ def process_story(db: Session, story: Story, *, published_headlines: list[str] |
         summary_word_limit=settings.summary_max_words,
         summary_kind=story.summary_kind,
         wording_document=wording_document,
+        headline_only=headline_only,
     )
     if not any(f.kind == "confirmed" and f.slot == "what" for f in extraction.facts):
+        # Not confirmed is not the same as false. A judgment reported by one
+        # law reporter is still a judgment; it is shown, labelled REPORTED
+        # with its single source, and never presented as CONFIRMED (the
+        # confidence label above is computed from the facts, not from this).
+        # Set BRIEFLY_REQUIRE_CORROBORATION=true to hold such stories instead.
         report.add(
             "no_corroborated_core_fact",
             "No core event fact is corroborated by multiple independent sources or an official source",
-            "blocker",
+            "blocker" if settings.require_corroboration else "warning",
         )
     story.qc_report = {
         **report.as_dict(),
