@@ -535,7 +535,7 @@
       "slug": "newslaundry",
       "name": "Newslaundry",
       "homepage_url": "https://www.newslaundry.com",
-      "feed_url": "https://www.newslaundry.com/stories.rss",
+      "feed_url": "https://www.newslaundry.com/stories.rss?time-period=last-24-hours",
       "domains": [
         "newslaundry.com"
       ],
@@ -547,13 +547,13 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Public stories RSS candidate; verify through Briefly's own fetch diagnostics. Google News publisher-domain discovery is also enabled."
+      "notes": "Checked 19 Nov 2026 in a browser: the bare /stories.rss is empty; with time-period=last-24-hours it carried 10 items, almost all headline-only. robots.txt disallows Claude, Open AI and some SEO crawlers by name and has no rule against other agents. Disable this source if you would rather not fetch from a site that blocks AI crawlers."
     },
     {
       "slug": "the-quint",
       "name": "The Quint",
       "homepage_url": "https://www.thequint.com",
-      "feed_url": null,
+      "feed_url": "https://www.thequint.com/stories.rss?time-period=last-24-hours",
       "domains": [
         "thequint.com"
       ],
@@ -565,13 +565,13 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
+      "notes": "Checked 19 Nov 2026 in a browser: the bare /stories.rss is an empty channel; with time-period=last-24-hours it carried 17 items, each with a description. robots.txt (User-agent *) disallows /story/ and /preview/ but not the feed."
     },
     {
       "slug": "the-news-minute",
       "name": "The News Minute",
       "homepage_url": "https://www.thenewsminute.com",
-      "feed_url": null,
+      "feed_url": "https://www.thenewsminute.com/stories.rss?time-period=last-24-hours",
       "domains": [
         "thenewsminute.com"
       ],
@@ -583,7 +583,7 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
+      "notes": "Checked 19 Nov 2026 in a browser: the bare /stories.rss is empty; with time-period=last-24-hours it carried 25 items. robots.txt names a few crawlers (Semrush, Ahref, Dotbot, Claude, Open AI) and disallows them; it has no rule for other agents, so BrieflyNewsBot is permitted under RFC 9309. Disable this source if you would rather not fetch from a site that blocks AI crawlers."
     },
     {
       "slug": "article-14",
@@ -661,7 +661,7 @@
       "slug": "the-federal",
       "name": "The Federal",
       "homepage_url": "https://thefederal.com",
-      "feed_url": null,
+      "feed_url": "https://thefederal.com/feed",
       "domains": [
         "thefederal.com"
       ],
@@ -673,13 +673,13 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
+      "notes": "Checked 19 Nov 2026 in a browser: /feed carried 95 items. robots.txt User-agent * Allow /."
     },
     {
       "slug": "eastmojo",
       "name": "EastMojo",
       "homepage_url": "https://eastmojo.com",
-      "feed_url": null,
+      "feed_url": "https://www.eastmojo.com/feed/",
       "domains": [
         "eastmojo.com"
       ],
@@ -691,13 +691,13 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
+      "notes": "Checked 19 Nov 2026 in a browser: /feed/ carried 10 items. robots.txt disallows only /wp-json/."
     },
     {
       "slug": "boom-live",
       "name": "BOOM Live",
       "homepage_url": "https://www.boomlive.in",
-      "feed_url": null,
+      "feed_url": "https://www.boomlive.in/google_feeds.xml",
       "domains": [
         "boomlive.in"
       ],
@@ -709,7 +709,7 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
+      "notes": "Checked 19 Nov 2026 in a browser: /google_feeds.xml carried 4 items (/feed carried 3). robots.txt User-agent * Allow /."
     },
     {
       "slug": "alt-news",
@@ -733,7 +733,7 @@
       "slug": "factly",
       "name": "Factly",
       "homepage_url": "https://factly.in",
-      "feed_url": null,
+      "feed_url": "https://factly.in/feed/",
       "domains": [
         "factly.in"
       ],
@@ -745,7 +745,7 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Enabled for publisher-domain discovery via Google News; direct feed endpoint pending verification."
+      "notes": "Checked 19 Nov 2026 in a browser: /feed/ carried 10 items. robots.txt disallows only wp-admin and wp-login."
     },
     {
       "slug": "livelaw",
@@ -769,7 +769,7 @@
       "slug": "bar-and-bench",
       "name": "Bar & Bench",
       "homepage_url": "https://www.barandbench.com",
-      "feed_url": "https://www.barandbench.com/rss",
+      "feed_url": "https://www.barandbench.com/stories.rss?time-period=last-24-hours",
       "domains": [
         "barandbench.com"
       ],
@@ -781,7 +781,7 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+      "notes": "Checked 19 Nov 2026: /rss answers 404 and the bare /stories.rss is an empty channel; /stories.rss?time-period=last-24-hours carried 79 items. robots.txt: User-agent * Allow /."
     },
     {
       "slug": "verdictum",
@@ -805,7 +805,7 @@
       "slug": "scc-online",
       "name": "SCC Online Blog",
       "homepage_url": "https://www.scconline.com/blog",
-      "feed_url": "https://www.scconline.com/blog/post/feed/",
+      "feed_url": "https://www.scconline.com/blog/feed/",
       "domains": [
         "scconline.com"
       ],
@@ -817,7 +817,13 @@
       "enabled": true,
       "feed_verified": false,
       "fetch_interval_minutes": 30,
-      "notes": "Feed URL identified from publisher/feed directory; not yet verified by Briefly's own feed verifier."
+      "notes": "Checked 19 Nov 2026: /blog/post/feed/ answers 404; /blog/feed/ and the arbitration tag feed /blog/post/tag/arbitration/feed/ each carried 10 items. robots.txt: User-agent * with an empty Disallow. The tag feed also carries international arbitration (e.g. Dubai); the Arbitration desk's own gate keeps those out.",
+      "section_feeds": [
+        {
+          "category": "arbitration",
+          "url": "https://www.scconline.com/blog/post/tag/arbitration/feed/"
+        }
+      ]
     },
     {
       "slug": "indiacorplaw",
