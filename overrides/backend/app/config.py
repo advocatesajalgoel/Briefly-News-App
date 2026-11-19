@@ -52,6 +52,13 @@ class Settings(BaseSettings):
     respect_robots: bool = Field(default=True, alias="BRIEFLY_RESPECT_ROBOTS")
     max_articles_per_feed: int = Field(default=60, alias="BRIEFLY_MAX_ARTICLES_PER_FEED")
     ingest_lookback_hours: int = Field(default=36, alias="BRIEFLY_INGEST_LOOKBACK_HOURS")
+    # Reports that pass the Arbitration desk's gate are kept this long instead.
+    # Judgments are not stale after a day and law reporters file a handful a
+    # week, so a 36-hour window leaves the desk nearly empty. Nothing else is
+    # kept longer: every other section still uses the window above.
+    arbitration_lookback_hours: int = Field(
+        default=168, alias="BRIEFLY_ARBITRATION_LOOKBACK_HOURS"
+    )
     google_news_hl: str = Field(default="en-IN", alias="BRIEFLY_GOOGLE_NEWS_HL")
     google_news_gl: str = Field(default="IN", alias="BRIEFLY_GOOGLE_NEWS_GL")
     google_news_ceid: str = Field(default="IN:en", alias="BRIEFLY_GOOGLE_NEWS_CEID")
