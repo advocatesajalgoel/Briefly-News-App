@@ -158,6 +158,17 @@ class IngestionService:
         return created
 
     # -- persistence ------------------------------------------------------
+    def _kept_for_arbitration(self, raw: RawArticle, publisher: Source) -> bool:
+        """An older report the Arbitration desk keeps for its longer window."""
+        from app.pipeline.categorise import is_domestic_indian_arbitration_report
+
+        hours = max(self.settings.arbitration_lookback_hours, self.settings.ingest_lookback_hours)
+        if raw.published_at is None or raw.published_at < datetime.now(UTC) - timedelta(hours=hours):
+            return False
+        return is_domestic_indian_arbitration_report(
+            raw.headline, raw.feed_summary, country=publisher.country
+        )
+
     def _persist(self, raw: RawArticle, publisher: Source, feed_source: Source) -> Article | None:
         cutoff = datetime.now(UTC) - timedelta(hours=self.settings.ingest_lookback_hours)
         event = {
@@ -168,7 +179,14 @@ class IngestionService:
             "discovery_channel": raw.discovery_channel,
             "discovery_query": raw.discovery_query,
         }
-        if raw.published_at and raw.published_at < cutoff:
+        if raw.published_at and raw.published_at < cutoff and self._kept_for_arbitration(
+            raw, publisher
+        ):
+            event["note"] = (
+                "older than the usual window; kept because it passes the Arbitration "
+                "desk's domestic-arbitration test"
+            )
+        elif raw.published_at and raw.published_at < cutoff:
             self.stats.articles_stale += 1
             self.stats.article_events.append({**event, "decision": "rejected", "stage": "freshness", "reason": "older_than_lookback", "cutoff": cutoff.isoformat()})
             return None
