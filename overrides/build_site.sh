@@ -53,7 +53,11 @@ export BRIEFLY_ENV="${BRIEFLY_ENV:-production}"
 export BRIEFLY_LLM_PROVIDER="${BRIEFLY_LLM_PROVIDER:-rule_based}"
 export BRIEFLY_TTS_PROVIDER="${BRIEFLY_TTS_PROVIDER:-local}"
 export BRIEFLY_STORAGE_BACKEND=local
-export BRIEFLY_PROCESS_BATCH_SIZE="${BRIEFLY_PROCESS_BATCH_SIZE:-400}"
+# Every cluster from this run is processed (a fresh database holds 800-1,000 on
+# a normal day). With fewer, the smaller desks — Arbitration above all, whose
+# stories are usually reported by one law reporter — were never even looked at,
+# because processing goes best-sourced first.
+export BRIEFLY_PROCESS_BATCH_SIZE="${BRIEFLY_PROCESS_BATCH_SIZE:-3000}"
 # Say who is asking, with a link back to the repository that is running this.
 export BRIEFLY_USER_AGENT="${BRIEFLY_USER_AGENT:-BrieflyNewsBot/1.0 (+https://github.com/${GITHUB_REPOSITORY:-briefly})}"
 
