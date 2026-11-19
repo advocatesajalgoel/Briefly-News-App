@@ -81,7 +81,15 @@ class Settings(BaseSettings):
     #              the offline extractor did. Without a model there is nothing
     #              that can honestly be called an original summary of a
     #              one-sentence feed item; quoting it is the truthful option.
-    card_mode: str = Field(default="composed", alias="BRIEFLY_CARD_MODE")
+    card_mode: str = Field(default="auto", alias="BRIEFLY_CARD_MODE")
+    # Whether a story needs its core fact confirmed by a second independent
+    # outlet (or an official source) before it may be shown at all.
+    #   false (default) — single-outlet stories are shown, labelled REPORTED
+    #                     with "1 source", never CONFIRMED.
+    #   true            — they are held. Specialist desks such as Arbitration,
+    #                     where one law reporter is often the only outlet
+    #                     covering a judgment, then stay mostly empty.
+    require_corroboration: bool = Field(default=False, alias="BRIEFLY_REQUIRE_CORROBORATION")
 
     # --- tts ----------------------------------------------------------------
     tts_provider: str = Field(default="local", alias="BRIEFLY_TTS_PROVIDER")
