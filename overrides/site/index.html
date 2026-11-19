@@ -248,6 +248,12 @@ a { color: var(--accent); }
   overflow: hidden;
 }
 
+.wording {
+  margin: 8px 0 0; font-family: var(--sans); font-size: 12px; line-height: 1.4;
+  color: var(--muted);
+}
+.wording b { color: var(--ink); font-weight: 600; }
+
 .dispute {
   display: flex; gap: 7px; align-items: flex-start;
   margin-top: 13px; font-size: 13px; color: var(--disputed);
@@ -737,6 +743,20 @@ function renderArbitrationRail() {
   ).join("");
 }
 
+// Whose words are on the card. Without an AI model Briefly does not write its
+// own summary: the headline and opening line are one publisher's, unaltered,
+// and the card says whose. When that publisher's feed carried only a headline,
+// the card says that too, rather than leaving a gap that looks like a fault.
+function wordingHTML(story) {
+  const who = story.summary_source;
+  if (story.summary_kind !== "excerpt" || !who) return "";
+  if (!story.summary) {
+    return `<p class="wording">Headline as published by <b>${esc(who)}</b>. Its feed gave
+      no summary — open the sources below to read the full report.</p>`;
+  }
+  return `<p class="wording">Headline and opening line in <b>${esc(who)}</b>’s own words.</p>`;
+}
+
 function cardHTML(story, index) {
   const level = story.confidence || "reported";
   const sources = story.sources || [];
@@ -757,7 +777,8 @@ function cardHTML(story, index) {
     <hr class="rule">
     <div class="body">
       <h1 class="headline">${esc(story.headline)}</h1>
-      <p class="summary">${esc(story.summary)}</p>
+      ${story.summary ? `<p class="summary">${esc(story.summary)}</p>` : ""}
+      ${wordingHTML(story)}
       ${story.image_url ? '<figure class="story-image"><img src="' + esc(story.image_url) + '" alt="' + esc(story.headline) + '" loading="lazy" referrerpolicy="no-referrer"><figcaption>Image supplied by ' + esc(story.image_source || "the publisher") + '</figcaption></figure>' : ""}
       ${story.has_disputed_claims
         ? '<div class="dispute"><span>◈</span><span>Sources disagree on part of this story.</span></div>'
