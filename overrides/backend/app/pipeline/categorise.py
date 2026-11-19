@@ -177,6 +177,15 @@ def _is_domestic_indian_arbitration(text: str, *, indian_outlet: bool = False) -
     return True
 
 
+def is_domestic_indian_arbitration_report(
+    headline: str, summary: str = "", *, country: str | None = None
+) -> bool:
+    """The Arbitration desk's gate, applied to one report before it is stored."""
+    text = clean_text(f"{headline} {summary or ''}")
+    indian_outlet = country is None or country.upper() == "IN"
+    return _is_domestic_indian_arbitration(text, indian_outlet=indian_outlet)
+
+
 def url_section(url: str, *, indian_outlet: bool = True) -> str | None:
     """The category a publisher's own URL places the article in, if it says."""
     segments = [seg.lower() for seg in urlsplit(url or "").path.split("/") if seg]

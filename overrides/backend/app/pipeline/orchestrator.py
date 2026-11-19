@@ -27,7 +27,7 @@ from app.models import (
     Story,
     StorySource,
 )
-from app.pipeline.categorise import categorise
+from app.pipeline.categorise import categorise, is_domestic_indian_arbitration_report
 from app.pipeline.clustering import Cluster, build_items, cluster_items
 from app.pipeline.diversity import SourceFacet, compute_diversity, describe
 from app.pipeline.facts import extract_facts
@@ -188,14 +188,28 @@ def run_clustering(db: Session, *, lookback_hours: int | None = None) -> dict:
     stats = StageStats("clustering")
     lookback = lookback_hours or settings.ingest_lookback_hours
     cutoff = datetime.now(UTC) - timedelta(hours=lookback)
+    # The Arbitration desk keeps its reports longer (see config); everything
+    # older than the usual window that is not one of them is left out.
+    long_cutoff = datetime.now(UTC) - timedelta(
+        hours=max(lookback, settings.arbitration_lookback_hours)
+    )
+
+    def in_window(article: Article) -> bool:
+        if article.published_at is None or article.published_at >= cutoff:
+            return True
+        return is_domestic_indian_arbitration_report(
+            article.headline, article.feed_summary or "",
+            country=article.source.country if article.source else None,
+        )
 
     pending = db.scalars(
         select(Article)
         .options(selectinload(Article.source))
-        .where(Article.status == ProcessingStatus.PENDING, Article.published_at >= cutoff)
+        .where(Article.status == ProcessingStatus.PENDING, Article.published_at >= long_cutoff)
         .order_by(Article.published_at.desc())
         .limit(1500)
     ).all()
+    pending = [a for a in pending if in_window(a)]
     # Recently clustered articles are included so a new report can join the
     # story it belongs to instead of starting a near-duplicate one.
     recent = db.scalars(
@@ -203,12 +217,13 @@ def run_clustering(db: Session, *, lookback_hours: int | None = None) -> dict:
         .options(selectinload(Article.source))
         .where(
             Article.status != ProcessingStatus.PENDING,
-            Article.published_at >= cutoff,
+            Article.published_at >= long_cutoff,
             Article.story_id.is_not(None),
         )
         .order_by(Article.published_at.desc())
         .limit(1500)
     ).all()
+    recent = [a for a in recent if in_window(a)]
 
     stats.processed = len(pending)
     if not pending:
